@@ -1,0 +1,30 @@
+<div id="socialnet_us" class="snUsMemberlistViewProfile">
+<!-- IF SCRIPT_NAME == 'memberlist' --><h3>{L_SN_US_USER_STATUS_WALL}</h3><!-- ENDIF -->
+	<a name="socialnet_us" id="top"></a>
+	<!-- IF SN_MODULE_USERSTATUS_CAN_POST_STATUS -->       
+		<div class="snUsMembShareStatus">
+			<div class="snUsShare">
+				<textarea id="snUsWallInput" style="height:20px"></textarea>
+				<!-- INCLUDE socialnet/userstatus_fetch.html -->
+				<input type="button" name="snUsWallButton" class="ui-button ui-widget ui-state-default ui-corner-all" wall="{SN_US_USER_ID}" value="{L_SN_US_SHARE_STATUS}" />
+			</div>   
+			<div class="clear"></div>
+		</div>      
+	<!-- ENDIF -->
+
+	<div id="socialnet_us_profile" class="snUsProfile">
+	  <!-- INCLUDE socialnet/userstatus_status.html -->
+	  <!-- IF SN_US_DISPLAY_LOAD_MORE_STATUS -->
+			<div class="snUsMore">
+				<a href="javascript://" class="snUsGetMore" user="{SN_US_USER_ID}">{L_SN_US_LOAD_MORE}</a>
+				<img src="{T_IMAGESET_PATH}/socialnet/ajax-loader2.gif" alt="" class="snUsStatusLoader" style="display:none" />
+			</div>
+		<!-- ENDIF -->
+	</div>
+	
+	<!-- IF not .us_status -->
+		<div id="snUsNoStatus">
+			<span class="snUsername">{USERNAME}</span> {L_SN_US_HAS_NO_STATUS}
+		</div>
+	<!-- ENDIF -->
+</div>

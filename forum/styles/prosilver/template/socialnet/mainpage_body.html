@@ -1,0 +1,75 @@
+<!-- INCLUDE overall_header.html -->
+
+<div id="socialnet_mainpage">
+	<!-- STARTING LEFT COLUMN -->
+	<div id="left-column" class="snMpLeftColumn">
+		<!-- INCLUDE socialnet/block_myprofile.html -->
+		<!-- INCLUDE socialnet/block_menu.html -->
+		<!-- INCLUDE socialnet/block_search.html -->
+		<!-- INCLUDE socialnet/block_online_users.html -->
+	</div>
+	<!-- ENDING LEFT COLUMN -->
+	
+	<!-- STARTING RIGHT COLUMN -->
+	<div id="right-column" class="snMpRightColumn">
+		<!-- INCLUDE socialnet/block_friends_suggestions.html -->		
+		<!-- INCLUDE socialnet/block_friend_requests.html -->		
+		<!-- INCLUDE socialnet/block_birthday.html -->		
+		<!-- INCLUDE socialnet/block_recent_discussions.html -->		
+		<!-- INCLUDE socialnet/block_statistics.html -->		
+	</div>
+	<!-- ENDING RIGHT COLUMN -->
+	
+	<!-- STARTING MIDDLE COLUMN -->
+	<div id="middle_column"	class="snUsProfile snMpNoRightBorder">
+		<!-- IF S_SN_MP_VIEW_MAIN -->
+
+  		<!-- IF SN_MODULE_USERSTATUS_ENABLED -->
+  		<div id="snMpShareStatus">
+  			<textarea id="snMpInput"></textarea>
+  			<!-- INCLUDE socialnet/userstatus_fetch.html -->
+  			<div class="snMpButtonOver">
+  				<input type="button" name="snMpButton" class="ui-button ui-widget ui-state-default ui-corner-all" value="{L_SN_US_SHARE_STATUS}"/>
+  			</div>
+  		</div>
+  		<div class="clear"></div>
+  		<div class="snMpLoadNewsOver">
+  			<a href="javascript:void(0);" class="snMpLoadNews">{L_SN_MP_LOAD_NEWS}</a>
+  		</div>
+  		<!-- ENDIF -->
+
+  		<!-- IF .mp_entries -->
+    		<!-- INCLUDE socialnet/mainpage_body_entries.html -->
+    		<!-- IF B_SN_MP_MORE_ENTRIES -->
+      		<div class="snMpMoreBottom">
+      			<a href="javascript://" class="snMpGetMore" user="{USER_ID}">{L_SN_US_LOAD_MORE}</a>
+      			<img src="{T_IMAGESET_PATH}/socialnet/ajax-loader2.gif" alt="" class="snMpStatusLoader" style="display:none" />
+      		</div>
+    		<!-- ENDIF -->
+  		<!-- ELSE -->
+    		<div class="snMpNoEntry">
+    			{L_SN_MP_NO_ENTRY}
+    		</div>
+  		<!-- ENDIF -->
+
+		<!-- ELSEIF S_SN_MP_VIEW_SUGGESTIONS -->
+
+  		<!-- IF SN_FMS_BLOCK_SUGGESTIONFULL_IS_NOT_EMPTY -->
+  		  {SN_FMS_BLOCK_SUGGESTIONFULL_CONTENT}<div class="clear"></div>
+    		{SN_FMS_BLOCK_SUGGESTIONFULL_PAGINATION_STRING}<div class="clear"></div>
+  		<!-- ELSE -->
+    		<div class="snMpNoEntry">
+    			{L_SN_MP_NO_SUGGESTIONS}
+    		</div>
+  		<!-- ENDIF -->
+
+		<!-- ELSEIF S_SN_MP_NOTIFY -->
+			<!-- INCLUDE socialnet/mainpage_notify.html -->
+		<!-- ELSEIF not S_USER_LOGGED_IN -->
+			<!-- INCLUDE socialnet/block_login.html -->
+		<!-- ENDIF -->
+	</div>
+	<!-- ENDING MIDDLE COLUMN -->
+</div>
+
+<!-- INCLUDE overall_footer.html -->

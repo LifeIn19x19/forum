@@ -1,0 +1,51 @@
+<!-- IF S_DISPLAY_WELCOME -->
+<div class="snMpRightBlock forabg">
+	<div class="inner">
+		<span class="corners-top"><span></span></span>
+		<ul class="topiclist"><li class="header"><dl><dt style="width:auto;">{L_SN_MP_WELCOME_TITLE}</dt></dl></li></ul>
+		<h3>{L_SN_MP_WELCOME_TITLE}</h3>
+	</div>
+</div>
+<div class="snMpRightBlocktext">{L_SN_MP_WELCOME_TEXT}</div>
+<!-- ENDIF -->
+
+<div class="snMpRightBlock forabg">
+	<div class="inner">
+		<span class="corners-top"><span></span></span>
+		<ul class="topiclist"><li class="header"><dl><dt style="width:auto;">{L_LOGIN} &bull; <a href="{U_REGISTER}">{L_REGISTER}</a></dt></dl></li></ul>
+		<h3>{L_LOGIN}</h3>
+	</div>
+</div>
+<div class="snMpRightBlocktext">
+	<form action="{U_SN_MAINPAGE}" method="post">
+		<fieldset style="width:60%;margin:0 auto;">
+			<dl style="line-height: 0.8em">
+				<dt style="width:150px;"><label for="username">{L_USERNAME}</label></dt>
+				<dd style="width:210px;font-weight: bold;"><label for="passowrd">{L_PASSWORD}</label></dd>
+			</dl>
+			<dl style="line-height: 0.8em">
+				<dt style="width:150px;"><input type="text" name="username" id="username" size="25" title="{L_USERNAME}" class="inputbox" style="width:140px" /></dt>
+				<dd style="width:210px;">
+					<input type="password" name="password" id="password" size="25" title="{L_PASSWORD}" class="inputbox" style="width:140px;" />
+					<input type="submit" class="button1" name="login" value="{L_LOGIN}" style="" />
+				</dd>
+			</dl>
+			<dl style="font-size:0.9em;">
+				<dt style="width:150px;"><input type="checkbox" name="autologin" id="autologin" /> <label for="autologin" style="font-weight:normal">{L_SN_MP_KEEP_LOGGEDIN}</label></dt>
+				<dd style="width:210px">
+					<a href="{U_SEND_PASSWORD}">{L_FORGOT_PASS}</a>
+					<br />
+					<a href="{U_REGISTER}">{L_REGISTER}</a>					
+				</dd>
+			</dl>
+		</fieldset>
+		{S_HIDDEN_FIELDS}
+	</form>
+	<!-- IF LOGIN_ERROR -->
+	<div class="error">{LOGIN_ERROR}</div>
+	<!-- ENDIF -->
+</div>
+<!-- IF CAPTCHA_TEMPLATE and S_CONFIRM_CODE -->
+<!-- DEFINE $CAPTCHA_TAB_INDEX = 3 -->
+<!-- INCLUDE {CAPTCHA_TEMPLATE} -->
+<!-- ENDIF -->

@@ -1,0 +1,14 @@
+<!-- IF S_USER_LOGGED_IN and B_SN_BLOCK_ONLINE_USERS_ENABLED -->
+	<div class="snMpLeftBlock forabg">
+		<div class="inner"><span class="corners-top"><span></span></span>
+			<ul class="topiclist"><li class="header"><dl><dt style="width:auto;">{L_SN_MP_ONLINE_FRIENDS}</dt></dl></li></ul>
+			<h3>{L_SN_MP_ONLINE_FRIENDS}</h3>
+		</div>
+	</div>
+	<div class="mpImOnlineUsers"><!-- BEGIN block_user_online -->
+		<div class="snImUserLine<!-- IF block_user_online.B_IS_ONLINE --> snImChatWith<!-- ENDIF -->" style="background-image:url('{block_user_online.ONLINE}')">
+		{block_user_online.AVATAR}
+		{block_user_online.USERNAME}
+		</div>
+		<!-- END block_user_online --></div>
+<!-- ENDIF -->

@@ -1,0 +1,158 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr" lang="en-US">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=8" />
+    <title>EidoGo Player - lifein19x19.com</title>
+
+    <style type="text/css">
+    body, html {
+        margin: 0;
+        padding: 0;
+        border: 0;
+        overflow: hidden;
+        background-color: #555555;
+    }
+    .ie6_warning {
+        display: none;
+    }
+
+    </style>
+    <link rel="stylesheet" media="all" type="text/css" href="eidogo/player/css/player.css" />
+    <link rel="stylesheet" media="all" type="text/css" href="wp-eidogo.css" />
+    <script type="text/javascript" src="eidogo/player/js/all.compressed.js"></script>
+    <script type="text/javascript"><!--
+        var broken_browser = false;
+    --></script>
+    <!--[if lt IE 7]>
+    <script type="text/javascript">
+        var broken_browser = true;
+    </script>
+    <style type="text/css">
+        .ie6_warning {
+            display: block;
+        }
+        html {
+            border: 1px dotted #cc0000;
+        }
+        html, body {
+            color: black;
+            background-color: #ffcccc;
+            padding: 10px;
+            font-family: "Trebuchet MS", "Arial", "Helvetica", sans-serif;
+        }
+    </style>
+    <![endif]-->
+</head>
+<body>
+    <div id="player-container"></div>
+    <p class="ie6_warning">
+    Embedded SGF files are not supported in Internet Explorer 6.
+    Consider downloading one of the following:<br />
+    <a href="http://www.microsoft.com/windows/internet-explorer/default.aspx">Internet Explorer 8</a><br />
+    <a href="http://www.getfirefox.com/">Mozilla Firefox</a><br />
+    <a href="http://www.google.com/chrome">Google Chrome</a><br />
+    <a href="http://www.opera.com/">Opera</a>
+    </p>
+    <script type="text/javascript"><!--
+
+        function initPlayer() {
+
+            // Find my frame element and get the data from the following node
+            var myFrame = window.frameElement
+            var dataNode = myFrame.nextSibling
+            while (dataNode != null && dataNode.nodeType == 3)
+                dataNode = dataNode.nextSibling
+            if (dataNode == null)
+                return false
+
+            // Turn on a few features for full mode
+            if (dataNode.className == 'eidogo-full') {
+                var config = {
+                    container:          "player-container",
+                    theme:              "full",
+                    mode:               "view",
+                    enableShortcuts:    true,
+                    showComments:       true,
+                    showPlayerInfo:     true,
+                    showGameInfo:       true,
+                    showTools:          true,
+                    showOptions:        true,
+                    showNavTree:        true
+                }
+
+            } else if (dataNode.className == 'eidogo-problem') {
+                var config = {
+                    container:          "player-container",
+                    theme:              "problem",
+                    enableShortcuts:    false,
+                    problemMode:        true,
+                    markVariations:     false,
+                    markNext:           false,
+                    shrinkToFit:        true
+                }
+
+            } else {
+                // Default to compact mode
+                var config = {
+                    container:          "player-container",
+                    theme:              "compact",
+                    mode:               "view",
+                    enableShortcuts:    true,
+                    showComments:       true,
+                    showPlayerInfo:     true,
+                    showGameInfo:       false,
+                    showTools:          true,
+                    showOptions:        true
+                }
+            }
+
+            // If it looks like a URL, treat is as such, otherwise treat it as SGF data
+            var sgfData = dataNode.innerHTML.replace(/<br ?\/?>/gi, "\n").replace(/^\s\s*/, '').replace(/\s\s*$/, '')
+            if (/^(http|https|ftp):/.test(sgfData)) {
+                if (/^https?:\/\/(www\.)?lifein19x19\./.test(sgfData)) {
+                    config.sgfUrl = sgfData
+                    var isWWW = /^https?:\/\/www\./
+                    if (isWWW.test(document.location) && !isWWW.test(config.sgfUrl))
+                        config.sgfUrl = config.sgfUrl.replace('lifein19x19', 'www.lifein19x19')
+                    else if (!isWWW.test(document.location) && isWWW.test(config.sgfUrl))
+                        config.sgfUrl = config.sgfUrl.replace('www.lifein19x19', 'lifein19x19')
+                } else {
+                    config.sgfUrl = "backend/fetch.php?url=" + encodeURIComponent(sgfData)
+                }
+                var ls = sgfData.lastIndexOf('/')
+                if (ls != -1) {
+                    config.downloadUrl = sgfData.substr(0, ls+1)
+                    config.gameName = sgfData.substr(ls+1)
+                }
+            } else {
+                config.sgf = sgfData
+                config.downloadUrl = 'backend/fake-download.php?data='
+                config.gameName = sgfData.replace('%', '%25').replace('+', '%2b').replace('&', '%26')
+                        .replace('?', '%3f').replace('=', '%3d').replace('/', '%2f')
+                        .replace('#', '%23').replace("\n", '%0a')
+            }
+
+            if (config.shrinkToFit) {
+                config.hooks = {
+                    initGame: function () {
+                        var container = document.getElementById('player-container');
+                        if (container.firstChild.offsetWidth && container.firstChild.offsetHeight && config.shrinkToFit) {
+                            myFrame.style.width = container.firstChild.offsetWidth + 'px'
+                            myFrame.style.height = container.firstChild.offsetHeight + 'px'
+                        }
+                    }
+                }
+            }
+
+            // Create the player in the given container
+            var player = new eidogo.Player(config);
+
+            return true;
+        }
+        if (!broken_browser)
+            initPlayer();
+
+    --></script>
+</body>
+</html>

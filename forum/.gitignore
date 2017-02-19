@@ -1,0 +1,14 @@
+config.php
+
+images/avatars/upload/*
+!images/avatars/upload/index.htm
+
+files/*
+!files/index.htm
+!files/.htaccess
+
+cache/*
+!cache/index.htm
+!cache/.htaccess
+
+store/backup*.gz

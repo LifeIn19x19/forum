@@ -1,0 +1,80 @@
+<!-- INCLUDE ucp_header.html -->
+
+<h2>{L_TITLE}</h2>
+<div class="panel">
+  <div class="inner"><span class="corners-top"><span></span></span>            
+  
+    <!-- IF ERROR -->
+      <p class="error">{ERROR}</p>
+    <!-- ENDIF -->          
+    
+    <!-- IF .users -->
+      <form id="ucp_im_history_user" method="post" action="{S_UCP_ACTION}">
+        <p style="margin:0;">
+          <span style="font-weight:bold;">{L_IM_HISTORY_SELECT_USER}:</span>
+          <select name="u" style="width: 20%;">
+            <option value="">&nbsp;</option>
+            <!-- BEGIN users -->
+              <option value="{users.USER_ID}"<!-- IF users.SELECTED --> selected="selected"<!-- ENDIF -->>{users.USERNAME}</option>
+            <!-- END users -->
+          </select>    
+        {S_HIDDEN_FIELDS}
+        {S_FORM_TOKEN}
+        <input type="submit" name="submit" value="{L_SELECT}" class="button1"/>
+        </p>
+      </form>
+    <!-- ELSE -->
+      <p class="error">{L_IM_NO_HISTORY}</p>
+    <!-- ENDIF -->
+    
+    <!-- IF .history -->
+      <!-- BEGIN users -->
+        <!-- IF users.SELECTED -->
+          <h3>{L_IM_HISTORY_WITH} {users.USERNAME}</h3>
+        <!-- ENDIF -->
+      <!-- END users -->   
+      
+      <div class="pagination">{MSG_TOTAL} &bull; {PAGE_NUMBER}<!-- IF PAGINATION --> &bull; <span>{PAGINATION}</span><!-- ENDIF --></div>
+      
+        <div class="clear"></div>
+        
+      <fieldset class="fields3">
+        <!-- BEGIN history -->
+          <dl>
+            <dt class="snImHistory <!-- IF history.B_INCOMING -->incoming<!-- ENDIF -->">{history.USERNAME} &bull; {history.TIME}</dt>
+            <dd>{history.MESSAGE}</dd>
+          </dl>
+        <!-- END history -->
+      </fieldset>
+      
+      <div class="pagination">{MSG_TOTAL} &bull; {PAGE_NUMBER}<!-- IF PAGINATION --> &bull; <span>{PAGINATION}</span><!-- ENDIF --></div>
+    <!-- ENDIF -->
+    
+  <span class="corners-bottom"><span></span></span></div>
+</div>
+
+<!-- IF .history -->
+  <form id="ucp_im_history_user" method="post" action="{U_EXPORT_IM}"> 
+    <input type="submit" name="export" value="{L_EXPORT_IM_HISTORY}" class="button1" />
+  </form>
+<!-- ENDIF -->
+    
+<style type="text/css">
+	fieldset.fields3 dl {
+		border-bottom: 1px solid #bbb;
+	}
+	
+	fieldset.fields3 dt {
+		width: auto;
+		float: none;
+		padding-left: 20px;
+	}
+	fieldset.fields3 dd {
+		width: auto;
+		margin-left: 20px;
+		margin-right: 0;
+		font-size: 1.2em;
+	}
+</style>          
+
+<!-- INCLUDE ucp_footer.html -->

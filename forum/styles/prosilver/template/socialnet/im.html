@@ -1,0 +1,71 @@
+<!-- IF SN_IM_MODE eq 'startIM' -->
+<div id="socialnet_im" class="snImDockWrapper ui-bar" style="position:absolute;top:-9999px;left:-9999px;display:none;" data-position="fixed" data-role="footer">
+	<div id="snImOnline" class="snImGroup">
+		<div class="snImButton<!-- IF SN_IM_ONLINELIST_SHOW --> snImOpener<!-- ENDIF -->" id="snImOnlineCount" style="background-image:url('{T_IMAGESET_PATH}/socialnet/im_list_{S_SN_IM_ONLINE}.png')">
+			<span class="label">{L_SN_IM_CHAT}</span>
+			<span class="count">(<!-- IF SN_IM_ONLINE -->{SN_IM_ONLINE_COUNT}<!-- ELSE -->0<!-- ENDIF -->)</span>
+		</div>
+		<div id="snImOnlineBlock" class="snImBlock" style="<!-- IF not SN_IM_ONLINELIST_SHOW -->display:none;<!-- ENDIF -->;">
+			<div class="snImTitle">{L_SN_IM_CHAT}</div>
+			<div class="snImButtons">
+				<div class="snImSound ui-icon ui-icon-volume-<!-- IF S_SN_IM_USER_SOUND -->on<!-- ELSE -->off<!-- ENDIF -->" title="{L_SN_IM_SOUND}"></div>
+				<div class="snImLoginLogout">
+    				<label class="snImLogin<!-- IF SN_IM_ONLINE --> selected<!-- ENDIF -->"><span>{L_SN_IM_LOGIN}</span></label>
+    				<label class="snImLogout<!-- IF not SN_IM_ONLINE --> selected<!-- ENDIF -->"><span>{L_SN_IM_LOGOUT}</span></label>
+    			</div>
+    		<div class="clear"></div>
+    		</div>
+			<div id="snImOnlineList">{SN_IM_ONLINELIST}</div>
+		</div>
+	</div>
+	<div class="snImGroup snImButton snImNav snImPrev"><!-- IF S_CONTENT_DIRECTION eq 'ltr' -->&raquo;<!-- ELSE -->&laquo;<!-- ENDIF --></div>
+	<div id="snImChatBoxes" class="snImGroup snImChatBoxes">
+<!-- ENDIF -->
+	<!-- BEGIN sn_im_chatbox -->
+	<!-- IF not sn_im_chatbox.B_SN_IM_ONLY_MESSAGE -->
+	<div id="snImChatBox{sn_im_chatbox.USER_ID}" class="snImGroup snImChatBox">
+		<div class="snImButton snActionBlock<!-- IF sn_im_chatbox.S_OPEN --> snImOpener<!-- ENDIF -->">
+			<span class="snImUnread" style="display:none">0</span>
+			<div class="snActions">
+                
+				<div class="snImClose snActionClose"></div>
+			</div>
+			{sn_im_chatbox.USERNAME_TO}
+			<span class="snImStatus snIm<!-- IF sn_im_chatbox.STATUS eq 2 -->Online<!-- ELSEIF sn_im_chatbox.STATUS eq 1 -->Away<!-- ELSE -->Offline<!-- ENDIF -->"></span>
+            <span class="snImTyping"></span>
+		</div>
+		<div id="snImChatBoxBlock{sn_im_chatbox.USER_ID}" class="snImBlock" style="<!-- IF not sn_im_chatbox.S_OPEN -->display: none<!-- ENDIF -->">
+			<div class="snImTitle">
+				<span class="snImCBAvatar">{sn_im_chatbox.AVATAR}</span>
+				{sn_im_chatbox.USERNAME_TO_NO_COLOR}
+				</div>
+			<div class="snImButtons">
+				<a href="{sn_im_chatbox.U_UCP_IM_HISTORY}"><span class="ui-icon snImCBHistory"></span></a>
+				<a href="{sn_im_chatbox.USERNAME_TO_PROFILE}"><span class="ui-icon snImCBProfile"></span></a>
+				<div class="clear"></div>
+			</div>
+			<div class="snImMsgs">
+	<!-- ENDIF -->
+				<!-- BEGIN message -->
+				  <div class="snImMsg" time="{sn_im_chatbox.message.TIME}">
+				    <!-- IF not S_TIME --><span class="snImMsgTime"></span><!-- ENDIF -->
+						<span class="snUsername"><!-- IF sn_im_chatbox.message.S_ME -->{SN_IM_USERNAME}<!-- ELSE -->{sn_im_chatbox.U_PROFILE_USER}<!-- ENDIF -->:</span>
+						{sn_im_chatbox.message.MESSAGE}
+					</div>
+				<!-- END message -->
+  <!-- IF not sn_im_chatbox.B_SN_IM_ONLY_MESSAGE -->
+			</div>
+			<div class="snImTextarea"><textarea name="msg" class="snImMessage {uid:{sn_im_chatbox.USER_ID}}"></textarea></div>
+		</div>
+	</div>
+	<!-- ENDIF -->
+	<!-- END sn_im_chatbox -->
+<!-- IF SN_IM_MODE eq 'startIM' -->
+	</div>
+	<div class="snImGroup snImButton snImNav snImNext"><!-- IF S_CONTENT_DIRECTION eq 'rtl' -->&raquo;<!-- ELSE -->&laquo;<!-- ENDIF --></div>
+	<div id="snImMsgArrived">
+		<!--a href="{T_SOCIALNET_STYLE_PATH}/im-new-message.swf"></a-->
+		<a href="{T_SOCIALNET_STYLE_PATH}/sound/player_mp3_button.swf" title="mp3={T_SOCIALNET_STYLE_PATH}/sound/{S_SN_IM_USER_SOUNDNAME}&autoplay=1&showslider=0&width=0&height=0&loop=0&volume=100"></a>
+	</div>
+</div>
+<!-- ENDIF -->

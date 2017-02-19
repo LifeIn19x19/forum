@@ -1,0 +1,38 @@
+<!-- IF B_SN_BLOCK_MENU_ENABLED -->		
+	<ul class="snMenu" style="width: 100%;border:none;">
+		<li class="snMpLeftMenuMain<!-- IF S_SN_MP_VIEW_MAIN or not S_USER_LOGGED_IN --> active ui-corner-all<!-- ENDIF -->">
+			<a href="{U_SN_MAINPAGE}">{L_SN_MP_MAINPAGE}</a>
+		</li>
+		<li class="snMpLeftMenuForum">
+			<a href="{U_INDEX}">{L_SN_MP_BOARD}</a>
+		</li>
+		<!-- IF S_DISPLAY_PM -->
+		<li class="snMpLeftMenuPm">
+			<a href="{U_PRIVATEMSGS}"><!-- IF S_USER_UNREAD_PRIVMSG neq 0 --><span class="num_cube">{S_USER_UNREAD_PRIVMSG}</span><!-- ENDIF -->{L_SN_MP_PRIVATE_MESSAGE}</a>
+		</li>
+    <!-- ENDIF -->
+		<!-- IF S_USER_LOGGED_IN -->
+		<li class="snMpLeftMenuFriendsReq">
+			<a href="{U_MANAGE_FRIEND}"><!-- IF S_NUM_FRIEND_REQUESTS > 0 --><span class="num_cube">{S_NUM_FRIEND_REQUESTS}</span><!-- ENDIF -->{L_SN_MP_MANAGE_FRIENDS}</a>
+		</li>
+		<!-- ENDIF -->
+		<!-- IF SN_MODULE_NOTIFY_ENABLED -->
+		<li class="snMpLeftMenuNotify<!-- IF S_SN_MP_NOTIFY --> active ui-corner-all<!-- ENDIF -->">
+			<a href="{U_VIEW_NOTIFY}"><span class="num_cube" id="snNtfCube"<!-- IF S_SN_USER_UNREAD_NOTIFY eq 0 --> style="display:none"<!-- ENDIF -->><!-- IF S_SN_USER_UNREAD_NOTIFY neq 0 -->{S_SN_USER_UNREAD_NOTIFY}<!-- ENDIF --></span>{L_SN_MP_NOTIFY}</a>
+		</li>
+		<!-- ENDIF -->
+		<!-- IF S_DISPLAY_MEMBERLIST -->
+		<li class="snMpLeftMenuMemberList">
+			<a href="{U_MEMBERLIST}">{L_SN_MP_VIEW_MEMBERLIST}</a>
+		</li>
+    <!-- ENDIF -->
+		<!-- IF S_USER_LOGGED_IN -->
+		<li class="snMpLeftMenuLogout">
+			<a href="{U_LOGIN_LOGOUT}&redirect=./mainpage.php">{L_SN_MP_LOG_OUT}</a>
+		</li>
+		<!-- ENDIF -->
+		{SN_BLOCK_MENU_HTML}
+	</ul>
+	
+<div class="clear"></div>
+<!-- ENDIF -->

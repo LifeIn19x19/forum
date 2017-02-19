@@ -1,0 +1,81 @@
+<!-- BEGIN us_status -->
+<!-- IF not us_status.B_SN_US_NOT_ONLY_COMMENT -->
+<div class="snUsStatusBlock" id="snUsStatus{us_status.STATUS_ID}">
+	<span class="status_poster_avatar">
+		<a href="{us_status.U_PROFILE}" title="{us_status.POSTER_USERNAME_NO_COLOR}">{us_status.POSTER_AVATAR}</a>
+	</span>
+	<div class="snUsStatusBox snActionBlockHidden">
+		<div class="snActions">
+			<!-- IF us_status.DELETE_STATUS -->
+			 <div class="snUsDeleteStatus snActionDelete" name="{us_status.STATUS_ID}" wallid="{us_status.WALL_ID}"></div>
+		    <!-- ENDIF -->
+		</div>
+		<span class="snUsername">{us_status.U_POSTER_PROFILE}</span>
+		<!-- IF us_status.ANOTHER_WALL --><strong style="font-size:1.1em">&raquo;</strong> <span class="snUsername">{us_status.U_WALL_PROFILE}</span>&nbsp;<!-- ENDIF -->
+		<!-- IF not us_status.B_ISPAGE -->{us_status.TEXT}<!-- ELSE -->
+		<div class="snUsPageURL"><a href="{us_status.PAGE_URL}" title="{us_status.PAGE_TITLE}">{us_status.PAGE_URL}</a></div>
+		<div class="snUsPagePreview">
+			<!-- IF us_status.PAGE_VIDEO neq '' -->
+			<div class="snUsPageVideo">{us_status.PAGE_VIDEO}</div>
+			<div class="snUsVideoOverlay">&nbsp;</div>
+			<!-- ENDIF -->
+			<!-- IF us_status.PAGE_IMAGE neq '' -->
+			<div class="snUsPageImage"><img src="{us_status.PAGE_IMAGE}" width="130" alt="image"/></div>
+			<!-- ENDIF -->
+		</div>
+		<div class="clear" style="display:none"></div>
+		<div class="snUsPageTitle">{us_status.PAGE_TITLE}</div>
+		<div class="snUsPageDesc">{us_status.PAGE_DESC_TEXT}</div>
+		<!-- IF us_status.PAGE_VIDEO neq '' -->
+		<div class="snUsPageInfo">{us_status.PAGE_VIDEOI}</div>
+		<div class="snUsPageProvider"><a href="{us_status.PAGE_VIDEOP}" title="{us_status.PAGE_VIDEOI}">{us_status.PAGE_VIDEOP}</a></div>
+		
+		<!-- ENDIF -->		
+		<div class="snUsPageAdditional">{us_status.PAGE_ADDITIONAL}</div>
+		<div class="clear"></div>
+		<!-- ENDIF -->
+		<span class="status_time">{us_status.TIME}
+			<!-- IF us_status.B_SN_US_CAN_COMMENT -->&bull;
+			<a href="javascript://" class="snUsCommentStatus">{L_SN_US_COMMENT_STATUS}</a><!-- ENDIF -->
+		</span>
+	</div>
+    <!-- IF us_status.SN_US_MORE_COMMENTS && B_LOAD_FIRST_USERSTATUS_COMMENTS -->
+    <div class="snUsMore">
+      <a href="javascript://" class="snUsGetMoreComments behind" user="{SN_US_USER_ID}"><span class="snUsCommentsCount">{us_status.SN_US_MORE_COMMENTS}</span> {L_SN_US_LOAD_MORE_COMMENTS}</a>
+      <img src="{T_IMAGESET_PATH}/socialnet/ajax-loader2.gif" alt="" class="snUsCommentsLoader" style="display:none;"/>
+    </div>
+    <!-- ENDIF -->
+	<!-- ENDIF -->
+	<!-- BEGIN us_comment -->
+	<div class="snUsCommentBox snActionBlockHidden" id="snUsStatusComment{us_comment.COMMENT_ID}" style="display:<!-- IF us_status.B_SN_US_NOT_ONLY_COMMENT -->none<!-- ELSE -->block<!-- ENDIF -->">
+		<span class="comment_poster_avatar"><a href="{us_comment.U_POSTER_PROFILE}">{us_comment.POSTER_AVATAR}</a></span>
+		<div class="snActions">
+			<!-- IF us_comment.DELETE_COMMENT -->
+			<div class="snUsDeleteComment snActionDelete delete_comment" name="{us_comment.COMMENT_ID}">
+			</div><!-- ENDIF -->
+		</div>
+		<div class="comment_text">
+			<a href="{us_comment.U_POSTER_PROFILE}" title="{us_comment.POSTER_USERNAME_NO_COLOR}"><span class="snUsername">{us_comment.POSTER_USERNAME}</span></a> {us_comment.TEXT}
+		</div>
+		<span class="status_time">{us_comment.TIME}</span>
+	</div>
+	<!-- END us_comment -->
+	<!-- IF not us_status.B_SN_US_NOT_ONLY_COMMENT -->
+	<!-- IF us_status.SN_US_MORE_COMMENTS && not B_LOAD_FIRST_USERSTATUS_COMMENTS -->
+	<div class="snUsMore">
+		<a href="javascript://" class="snUsGetMoreComments before" user="{SN_US_USER_ID}"><span class="snUsCommentsCount">{us_status.SN_US_MORE_COMMENTS}</span> {L_SN_US_LOAD_MORE_COMMENTS}</a>
+		<img src="{T_IMAGESET_PATH}/socialnet/ajax-loader2.gif" alt="" class="snUsCommentsLoader" style="display:none;"/>
+	</div>
+	<!-- ENDIF -->
+	<!-- IF us_status.B_SN_US_CAN_COMMENT -->
+	<div class="snUsShareComment" name="{us_status.STATUS_ID}">
+		<textarea id="snUsTextarea{us_status.STATUS_ID}" class="snUsInputComment" name="{us_status.STATUS_ID}" style="height:20px"></textarea>
+		<div class="snUsButtonCommentOver">
+			<input type="button" name="snUsButtonComment" sid="{us_status.STATUS_ID}" class="ui-button ui-widget ui-state-default ui-corner-all" value="{L_SN_US_COMMENT_STATUS}" />
+		</div>
+		<div class="clear"></div>
+	</div>
+	<!-- ENDIF -->
+</div>
+<!-- ENDIF -->
+<!-- END us_status -->

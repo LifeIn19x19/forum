@@ -1,0 +1,28 @@
+	<!-- IF S_ALLOW_LAST_POSTS and B_SN_BLOCK_RECENT_DISCUSSIONS_ENABLED -->
+		<div class="snMpRightBlock forabg">
+			<div class="inner"><span class="corners-top"><span></span></span>
+				<ul class="topiclist"><li class="header"><dl><dt style="width:100%;display:block;">
+          {L_SN_MP_LAST_POSTS}
+        </dt></dl></li></ul>
+				<h3>{L_SN_MP_LAST_POSTS}</h3>
+			</div>
+		</div>
+		<div class="snMpRightBlocktext">
+			<!-- BEGIN last_posts -->
+			<div class="snMpRightBlocktext">
+				<a href="{last_posts.POST_LINK}" title="{last_posts.TOPIC_TITLE}">{last_posts.TOPIC_TITLE}</a>
+				<br />
+				<span class="snMpPostTime">
+					<span>{last_posts.POST_TIME} · {L_SN_IN}</span>
+					<a href="{last_posts.TOPIC_FORUM_LINK}">{last_posts.TOPIC_FORUM}</a>
+				</span>
+			</div>
+			<!-- END last_posts -->
+			<!-- IF not .last_posts -->
+			<div class="snMpRightBlocktext">
+				{L_SN_MP_NO_DISCUSSION}
+			</div>
+			<!-- ENDIF -->
+			<div class="clear"></div>
+		</div>
+	<!-- ENDIF -->

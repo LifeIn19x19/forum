@@ -1,0 +1,397 @@
+/*  phpBB 3.0 Style Sheet
+    --------------------------------------------------------------
+    Style name:         lifein19x19
+    Based on style:     proSilver (this is the default phpBB 3 style)
+    Original author:    subBlue ( http://www.subBlue.com/ )
+    Modified by:        fwiffo ( http://www.fortmyersgo.org )
+
+    Copyright 2010 phpBB Group ( http://www.phpbb.com/ )
+    --------------------------------------------------------------
+*/
+
+/* Reset everything */
+* {
+    margin: 0;
+    padding: 0;
+}
+
+html, body, img, table, fieldset {
+    border: 0;
+}
+
+html {
+    overflow-y: scroll; /* Make vertical scrollbar always visible */
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+    font-size: 100%;
+}
+
+/* Global styles */
+html {
+    font-size: 100%;
+    background: #f2ddb5 url("{T_THEME_PATH}/images/bg-parchment.jpg");
+    height: 100%;
+}
+
+body {
+    font-family: "Trebuchet MS", "Trebuchet", "Arial", sans-serif;
+    font-size: 80%;
+    line-height: 18px;
+    background: transparent url("{T_THEME_PATH}/images/stones-bottom-left.jpg") no-repeat scroll left bottom;
+    min-height: 100%;
+}
+
+ul, ol, p, h1, h2, h3, h4, h5, h6 {
+    margin-bottom: 18px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: normal;
+    font-family: "Georgia", "Times New Roman", serif;
+}
+
+h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
+    text-decoration: none;
+}
+
+h1 a:hover, h2 a:hover, h3 a:hover, h4 a:hover, h5 a:hover, h6 a:hover {
+    text-decoration: underline;
+}
+
+h1 {
+    font-size: 200%;
+    line-height: 36px;
+}
+
+h2 {
+    font-size: 150%;
+}
+
+h3 {
+    font-size: 130%;
+}
+
+h4 {
+    font-size: 120%;
+}
+
+h5 {
+    font-size: 110%;
+}
+
+h6 {
+    font-size: 100%;
+}
+
+a {
+    color: #334080;
+}
+
+a:hover {
+    color: #4759b3;
+}
+
+hr {
+    border: 0;
+    border-top: 1px solid #555555;
+    height: 1px;
+    margin: 0 0 18px 0;
+    display: block;
+    clear: both;
+}
+
+hr.dashed {
+    border-top: 1px dashed #555555;
+}
+
+hr.divider {
+    display: none;
+}
+
+p.right {
+    text-align: right;
+}
+
+/* Main blocks */
+#wrap, #simple-wrap {
+    background: transparent url("{T_THEME_PATH}/images/stones-top-right.jpg") no-repeat scroll right top;
+}
+
+#page-header, #page-body, #page-footer {
+    margin: 0 auto;
+    padding: 0 30px;
+    max-width: 900px;
+    min-width: 640px;
+}
+
+#page-header {
+    padding-top: 10px;
+}
+
+/* Logo/header area */
+.headerbar {
+    background: transparent url("{T_THEME_PATH}/images/tile-brown.png");
+    color: white;
+    height: 80px;
+    overflow: hidden;
+    margin: 0 -15px 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    font-family: "Verdana", "Arial", sans-serif;
+    font-size: 90%;
+}
+
+.headerbar a {
+    color: white;
+    text-decoration: none;
+}
+
+#site-description {
+    display: inline;
+    float: left;
+    width: 600px;
+}
+
+#site-description h1, #site-description p {
+    display: none;
+}
+
+#search-box {
+    display: inline;
+    float: right;
+    margin-right: 15px;
+    text-align: right;
+    margin-top: 35px;
+}
+
+/* nav bar */
+.navbar, .topic-actions {
+    background: transparent url("{T_THEME_PATH}/images/tile-green.png");
+    color: #334080;
+    overflow: hidden;
+    margin: 0 -15px 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    padding: 6px 9px 6px 14px;
+    border: 1px solid white;
+    font-family: "Verdana", "Arial", sans-serif;
+    font-size: 85%;
+    clear: both;
+}
+
+.topic-actions .search-box {
+    float: right;
+    padding-right: 5px;
+}
+
+.navbar ul {
+    list-style: none;
+}
+
+.navbar a {
+    color: #334080;
+    text-decoration: none;
+}
+
+.navbar a:hover {
+    text-decoration: underline;
+}
+
+.icon-home {
+    font-weight: bold;
+}
+
+.linklist {
+    list-style: none;
+    width: 100%;
+    float: left;
+    clear: left;
+    margin-bottom: 0;
+}
+
+.linklist li {
+    display: inline;
+    padding-right: 5px;
+}
+
+.rightside {
+    float: right;
+}
+
+.linklist.leftside {
+    width: auto;
+}
+
+.linklist.rightside {
+    width: auto;
+    clear: right;
+}
+
+.mcp {
+    float: right;
+    margin: 0;
+}
+
+h2.topic-title, p.moderators {
+    margin-bottom: 10px;
+}
+
+h3.view-online {
+    margin-bottom: 0;
+}
+
+/* Footer */
+.copyright {
+    color: #555555;
+    font-size: 85%;
+    text-align: center;
+    padding-bottom: 50px;
+}
+
+.copyright a {
+    color: #555555;
+}
+
+.copyright strong a {
+    color: #334080;
+}
+
+.copyright strong a:hover {
+    color: #4759b3;
+}
+
+/* Icons */
+.sitehome a:first-child, .icon-faq a:first-child, .icon-members a:first-child,
+.icon-home a:first-child, .icon-ucp a:first-child, .icon-register a:first-child,
+.icon-logout a:first-child, .icon-bookmark a:first-child, .icon-bump a:first-child,
+.icon-subscribe a:first-child, .icon-unsubscribe a:first-child,
+.icon-pages a:first-child, .icon-search a:first-child {
+    background: transparent none no-repeat scroll left center;
+    padding: 2px 0 2px 17px;
+}
+
+.sitehome         a:first-child { background-image: url("{T_THEME_PATH}/images/icon_home.gif"); }
+.icon-faq         a:first-child { background-image: url("{T_THEME_PATH}/images/icon_faq.gif"); }
+.icon-members     a:first-child { background-image: url("{T_THEME_PATH}/images/icon_members.gif"); }
+.icon-home        a:first-child { background-image: url("{T_THEME_PATH}/images/icon_home.gif"); }
+.icon-ucp         a:first-child { background-image: url("{T_THEME_PATH}/images/icon_ucp.gif"); }
+.icon-register    a:first-child { background-image: url("{T_THEME_PATH}/images/icon_register.gif"); }
+.icon-logout      a:first-child { background-image: url("{T_THEME_PATH}/images/icon_logout.gif"); }
+.icon-bookmark    a:first-child { background-image: url("{T_THEME_PATH}/images/icon_bookmark.gif"); }
+.icon-bump        a:first-child { background-image: url("{T_THEME_PATH}/images/icon_bump.gif"); }
+.icon-subscribe   a:first-child { background-image: url("{T_THEME_PATH}/images/icon_subscribe.gif"); }
+.icon-unsubscribe a:first-child { background-image: url("{T_THEME_PATH}/images/icon_unsubscribe.gif"); }
+.icon-pages       a:first-child { background-image: url("{T_THEME_PATH}/images/icon_pages.gif"); }
+.icon-search      a:first-child { background-image: url("{T_THEME_PATH}/images/icon_search.gif"); }
+
+a.print, a.sendemail, a.fontsize {
+    display: block;
+    text-indent: -1000px;
+    overflow: hidden;
+    width: 1px;
+    background: transparent none no-repeat scroll left top;
+}
+
+a.print {
+    background-image: url("{T_THEME_PATH}/images/icon_print.gif");
+    width: 22px;
+}
+
+a.sendemail {
+    background-image: url("{T_THEME_PATH}/images/icon_sendemail.gif");
+    width: 22px;
+}
+
+a.fontsize {
+    background-image: url("{T_THEME_PATH}/images/icon_fontsize.gif");
+    width: 29px;
+    background-position: 0 -1px;
+}
+
+a.fontsize:hover {
+    background-position: 0 -20px;
+    text-decoration: none;
+}
+
+/* View Topic */
+.post {
+    background-color: white;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    padding: 15px;
+    margin: 0 -15px 10px;
+    float: left;
+}
+
+.post .postbody {
+    float: right;
+    margin-left: 172px;
+}
+
+.postprofile {
+    float: left;
+    width: 141px;
+    margin-right: -157px;
+    padding-right: 15px;
+    border-right: 1px solid #555555;
+    font-family: "Verdana", "Arial", sans-serif;
+    font-size: 85%;
+}
+
+.profile-icons {
+    list-style: none;
+    float: right;
+}
+
+.profile-icons li {
+    display: inline;
+}
+
+.postbody .profile-icons a {
+    padding-left: 10px;
+}
+
+.postprofile .profile-icons a {
+    padding-right: 10px;
+}
+
+.back2top {
+    clear: left;
+}
+
+.topiclist {
+    list-style: none;
+}
+
+.forumbg {
+    clear: both;
+    background-color: white;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+    width: 100%;
+    float: left;
+    margin: 0 -15px;
+    padding: 15px;
+}
+
+form#jumpbox {
+    clear: both;
+}
+
+/*
+    color: #f2ddb5; beige
+    color: #6f4000; brown
+    color: #a42f2f; red
+    color: #d9ece2; green
+    color: #555555; gray
+    color: #333333; dgray
+    color: #334080; blue
+    color: #4759b3; lblue
+    font-family: "Trebuchet MS", "Trebuchet", "Arial", sans-serif;
+    font-family: "Verdana", "Arial", sans-serif;
+    font-family: "Georgia", "Times New Roman", serif;
+*/
+

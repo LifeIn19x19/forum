@@ -1,0 +1,20 @@
+Tapatalk API for phpBB is free and open source software released under the
+GNU General Public License v2. (https://www.phpbb.com/downloads/license/)
+
+Installation Instruction:
+http://tapatalk.com/activate_tapatalk.php?plugin=phpbb (Requires AUTOMOD to be installed. If you do not need Push Notification, you can skip AUTOMO and simply upload the "mobiquo" folder to your forum root directory as a clean install.)
+
+Change Log:
+http://support.tapatalk.com/threads/tapatalk-for-phpbb-plugin-release-announcement-and-changelog.3691/
+
+Lookup Tags for stable versions:
+https://github.com/tapatalk/tapatalk-phpbb3/tags
+
+Download (All versions):
+https://github.com/tapatalk/tapatalk-phpbb3/downloads
+
+Developer API:
+http://tapatalk.com/api/api.php (Requires Login)
+
+Contribution:
+Feel free to fork your own fix and request to merge to master.

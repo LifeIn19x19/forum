@@ -1,0 +1,8 @@
+<!-- IF not SN_FMS_BLOCK_USER_AJAX_LOAD --><div id="snFMSUsersBlockContent_{SN_FMS_BLOCK_USER_PAGINATION_MODE}" class="snFMSUsers snFMSUsers-{SN_FMS_BLOCK_USER_PAGINATION_MODE}"><!-- ENDIF -->
+<!-- BEGIN sn_fms_block_user --><span class="snFasFriend snFMSUser-{SN_FMS_BLOCK_USER_PAGINATION_MODE} ui-widget-content ui-corner-all" uid="{sn_fms_block_user.USER_ID}" title="{sn_fms_block_user.USERNAME_NO_COLOR}">
+		<!-- IF SN_FMS_BLOCK_USER_B_CHECKBOX --><input type="checkbox" name="{SN_FMS_BLOCK_USER_CHECKBOX_NAME}[]" value="{sn_fms_block_user.USER_ID}" /><!-- ENDIF -->
+		<span class="user_avatar ui-widget ui- widget-header ui- corner-all"><!-- IF SN_FMS_BLOCK_PROFILE_LINK --><a href="{sn_fms_block_user.U_PROFILE}"><!-- ENDIF -->{sn_fms_block_user.AVATAR}<!-- IF SN_FMS_BLOCK_PROFILE_LINK --></a><!-- ENDIF --></span>
+		<span class="snFmsUsername">{sn_fms_block_user.USER_PROFILE}</span>
+		<!-- IF sn_fms_block_user.U_ADD_FRIEND --><br /><span><a href="{sn_fms_block_user.U_ADD_FRIEND}">{L_ADD_FRIEND}</a></span><!-- ENDIF -->
+	</span><!-- END sn_fms_block_user -->
+<!-- IF not SN_FMS_BLOCK_USER_AJAX_LOAD --></div><!-- ENDIF -->

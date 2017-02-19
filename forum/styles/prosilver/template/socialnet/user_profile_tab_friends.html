@@ -1,0 +1,63 @@
+<form>
+	<div id="snUpFriendsButtons" style="width:100%;margin-bottom:4px;margin-top:-5px;" user="{USER_ID}" limit="{FMS_LIMIT}">
+		<input type="radio" id="snUpFriendsRadio1" name="snUpFriendsRadio" mode="friendprofiletab" />
+		<label for="snUpFriendsRadio1">{L_SN_UP_FRIENDS}</label>
+		<!-- IF not S_OWN_PROFILE -->
+		<input type="radio" id="snUpFriendsRadio2" name="snUpFriendsRadio" mode="mutual" />
+		<label for="snUpFriendsRadio2">{L_MUTUAL}</label>
+    <!-- ENDIF -->
+		<!--input type="radio" id="snUpFriendsRadio3" name="snUpFriendsRadio" mode="suggestion" />
+		<label for="snUpFriendsRadio3">{L_SUGGESTIONS}</label-->
+		<!-- IF S_OWN_PROFILE and S_NOT_USED -->
+		<input type="radio" id="snUpFriendsRadio4" name="snUpFriendsRadio" mode="foes" />
+		<label for="snUpFriendsRadio4">{L_FOES}</label><!-- ENDIF -->
+	</div>
+</form>
+<div class="clear"></div>
+<div class="snJSUpFriendsContent_friends">
+	<div id="snFMSUsersBlockPagination_friendprofiletab" class="pagination"></div>
+	<div id="snFMSUsersBlockPagination_mutual" class="pagination"></div>
+	<div id="snFMSUsersBlockPagination_suggestion" class="pagination"></div>
+	<div id="snFMSUsersBlockPagination_foes" class="pagination"></div>
+	<div class="clear"></div>
+	<div id="snFMSUsersBlockContent_friendprofiletab" class="snFMSUsers snFMSUsers-friendprofiletab"></div>
+	<div id="snFMSUsersBlockContent_mutual" class="snFMSUsers snFMSUsers-mutual"></div>
+	<div id="snFMSUsersBlockContent_suggestion" class="snFMSUsers snFMSUsers-suggestion"></div>
+	<div id="snFMSUsersBlockContent_foes" class="snFMSUsers snFMSUsers-foes"></div>
+	<!--	{SN_FMS_BLOCK_FRIENDPROFILE_CONTENT}<div class="clear"></div>
+	{SN_FMS_BLOCK_FRIENDPROFILE_PAGINATION_STRING}<div class="clear"></div> -->
+</div>
+<script type="text/javascript">
+	jQuery(document).ready(function($) {
+		if($('#snUpFriendsButtons').size() > 0) {
+			
+			
+			$('#snUpFriendsButtons').buttonset();
+			$('#snUpFriendsButtons label').css({
+				width : Math.max(Math.floor(99 / $('#snUpFriendsButtons label').size(), 16)) + '%'
+			});
+
+			$('#snUpFriendsButtons input[type=radio]').click(function() {
+				$.cookie(socialnet_cfg.cookie.name + 'snUpFriendsTab', $(this).attr('id'), socialnet_cfg.cookie);
+				var m = $(this).attr('mode');
+				var par = $(this).parent('#snUpFriendsButtons');
+
+				fms_Uload(m, 0, par.attr('limit'), par.attr('user'), false, false);
+
+				$('.snJSUpFriendsContent_friends').children('div[id^="snFMSUsersBlock"]').hide();
+				$('.snJSUpFriendsContent_friends').children('div[id^="snFMSUsersBlock"][id$=' + m + ']').show();
+
+			});
+			var snUpFriendsButtons_start = $.cookie(socialnet_cfg.cookie.name + 'snUpFriendsTab');
+			if(snUpFriendsButtons_start == null || $('#' + snUpFriendsButtons_start).size() == 0) {
+				snUpFriendsButtons_start = $('#snUpFriendsButtons input[type=radio]:first-child').attr('id');
+			}
+			$('#' + snUpFriendsButtons_start).trigger('click');
+
+			if($('#snUpFriendsButtons input').size() == 1){
+				$('#snUpFriendsButtons').hide();
+			}
+		}
+
+	})
+</script>

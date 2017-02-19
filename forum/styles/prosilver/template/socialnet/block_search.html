@@ -1,0 +1,11 @@
+<!-- IF S_DISPLAY_SEARCH and B_SN_BLOCK_SEARCH_ENABLED -->
+	<div class="snMpSearch">
+		<form action="{U_SEARCH}" method="post">
+			<fieldset>
+				<input type="text" value="<!-- IF SEARCH_WORDS-->{SEARCH_WORDS}<!-- ELSE -->{L_SEARCH_MINI}<!-- ENDIF -->" name="keywords" id="search-text" maxlength="128" title="{L_SEARCH_KEYWORDS}" class="inputbox" onclick="if(this.value=='{LA_SEARCH_MINI}')this.value='';" onblur="if(this.value=='')this.value='{LA_SEARCH_MINI}';" />
+				<input type="image" src="{T_IMAGESET_PATH}/socialnet/mp_search.gif" id="search-submit" />
+				{S_SEARCH_HIDDEN_FIELDS}
+			</fieldset>
+		</form>
+	</div>
+<!-- ENDIF -->

@@ -1,0 +1,35 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml">
+  <head>
+ 
+<script
+  type="text/javascript"
+  src="http://wave-api.appspot.com/public/embed.js">
+</script>
+
+
+  </head>
+ 
+  <body>
+  
+  <div id="wave" style="width: 100%; height: 20000px"></div>
+  
+  <script type="text/javascript">
+
+
+   var text=window.location + "";
+  var waveidArray=text.split('w%252B');
+  var waveid=waveidArray[1];
+var waveurl='googlewave.com!w+'+waveid
+
+  var wave = new WavePanel('https://wave.google.com/wave/');
+  wave.setUIConfig('white', 'black', 'Arial', '13px');
+  wave.loadWave(waveurl);
+  wave.init(document.getElementById('wave'));
+</script>
+
+
+
+  </body>
+</html>

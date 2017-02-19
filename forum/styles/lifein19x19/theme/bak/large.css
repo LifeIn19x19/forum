@@ -1,0 +1,12 @@
+body {
+    font-size: 100%;
+    line-height: 22px;
+}
+
+ul, ol, p, h1, h2, h3, h4, h5, h6 {
+    margin-bottom: 22px;
+}
+
+h1, h2 {
+    line-height: 44px;
+}

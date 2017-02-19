@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<Module>
+<ModulePrefs title="GOSWF go/baduk/weiqi SGF viewer" width="640" height="480" >
+<Require feature="flash" />
+</ModulePrefs>
+<UserPref name="goswfFile" datatype="string" display_name="Goswf file URL" required="true" default_value="http://sites.google.com/site/siteName/goswf.swf" />
+<UserPref name="sgfFile" datatype="string" display_name="SGF file path" required="true" default_value="{TEXT}" />
+<Content type="html">
+<![CDATA[
+<div class="main_box">
+<div id="flashcontainer" style="text-align: center;"></div>
+</div>
+<script type="text/javascript">
+// Global variables
+var prefs = new _IG_Prefs(__MODULE_ID__);
+var s_fil=_unesc(_trim(prefs.getString("goswfFile"))) + "?nav=D86F1E&bg=FEDFB4&url=" + _unesc(_trim(prefs.getString("sgfFile")));
+// Play .swf file
+function displayReader()
+{
+// Play .swf file.
+_IG_EmbedFlash(s_fil, "flashcontainer", {swf_version: 8, id: "goswf", width: "100%", height: "100%"})
+}
+// When gadget first loads, display SWF
+_IG_RegisterOnloadHandler(displayReader);
+</script>
+]]>
+</Content>
+</Module>

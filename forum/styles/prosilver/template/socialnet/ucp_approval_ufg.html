@@ -1,0 +1,120 @@
+<!-- INCLUDE ucp_header.html -->
+<h2>{L_TITLE}</h2>
+
+<!-- IF ERROR -->
+<div class="panel">
+	<div class="inner"><span class="corners-top"><span></span></span>
+		<p class="error">{ERROR}</p>
+    <span class="corners-bottom"><span></span></span></div>
+</div>
+<!-- ENDIF -->
+      
+<form id="fms_ufggcreate" method="post" action="{U_ACTION}">
+	<div class="panel">
+		<div class="inner"><span class="corners-top"><span></span></span>
+			<h3>{L_UFG_CREATE}</h3> 
+			
+			<fieldset class="fields2">
+				<dl>
+					<dt>{L_UFG_CREATE_EXPLAIN}</dt>
+					<dd><input type="text" name="add" id="add" class="inputbox" values="{GROUPS}" /></dd>     
+				</dl>
+			</fieldset>  
+			
+      <fieldset class="submit-buttons">
+        <input type="reset" value="{L_RESET}" name="reset" class="button2" />&nbsp;
+        <input type="submit" name="submit" value="{L_SUBMIT}" class="button1" />
+        {S_HIDDEN_FIELDS}
+        {S_FORM_TOKEN}
+      </fieldset>     
+      
+    <span class="corners-bottom"><span></span></span></div>
+	</div>
+</form>
+
+<!-- IF SN_FMS_BLOCK_FRIEND_IS_NOT_EMPTY and .ufg -->
+<form id="ucp_ufg" method="post" action="{U_ACTION}">
+	<div class="panel">
+		<div class="inner">
+			<span class="corners-top"><span></span></span>
+			<h3>{L_SN_REMOVE_FRIENDS}</h3>
+			<p class="explain">{L_UFG_DRAG_FRIENDS_INTO_UFG}</p>
+			<fieldset>
+				<dl>
+					<dd class="snFasBlock">
+						<div class="snFasFriendsBlock ufg">
+						{SN_FMS_BLOCK_FRIEND_CONTENT}
+						</div>
+					</dd>
+				</dl>
+			</fieldset>
+			{SN_FMS_BLOCK_FRIEND_PAGINATION_STRING}<div class="clear"></div>
+			<span class="corners-bottom"><span></span></span>
+		</div>
+	</div>
+</form>
+<!-- ENDIF -->
+
+<!-- IF .ufg -->
+<form id="fms_ufgmanage" method="post" action="{U_ACTION}">
+	<div class="panel">
+		<div class="inner"><span class="corners-top"><span></span></span>
+			<h3>{L_UFG_MANAGE}</h3>
+			<div id="gacc" class="snFasBlock"> 
+				<!-- BEGIN ufg -->
+				<h3 gid="{ufg.GID}"><div class="snActions"><span class="snFmsGroupDelete snActionDelete" gid="{ufg.GID}"></span></div><a href="#">{ufg.NAME} (<span class="counter">{ufg.COUNT}</span>)</a></h3>
+				<div gid="{ufg.GID}" class="snFasFriendsBlock grps snFMSUsers" style="min-height:100px;"></div>
+				<!-- END ufg -->
+			</div> 
+		<span class="corners-bottom"><span></span></span></div>
+	</div>
+</form>
+<!-- ENDIF -->
+<style type="text/css">
+	.snFasFriend {
+		border: 1px solid #ccc;
+		border-radius: 6px;
+/*		background: #e6e6e6 url("{T_THEME_PATH}/images/ui-bg_highlight-hard_75_e6e6e6_1x100.png") repeat-x 50% 50%;*/
+		width: 160px;
+		display: inline-block;
+		cursor: move;
+	}
+	
+	.snFasFriend.red {
+		background: #faa none no-repeat 0 0;
+	}
+	
+	.snFasFriend.ui-draggable span.user_avatar {
+		display: inline-block;
+		float: left;
+		margin-right: 5px;
+	}
+	.ui-accordion .ui-accordion-header {
+		margin-top: 0px;
+		margin-bottom: 4px;
+	}
+
+	.ui-accordion .ui-accordion-content {
+		margin-top: -4px;
+		margin-bottom: 6px;
+		padding: 2px 4px;
+	}
+	
+	#gacc h3 .snActions {
+		padding: 0.5em;
+		display: inline-block;
+		float: right;
+	}
+	#gacc h3 .snActions .snActionDelete {
+		background-position: 100% -15px;
+	}
+	#gacc h3:hover .snActions .snActionDelete {
+		background-position: 100% -30px;
+	}
+	#gacc h3:hover .snActions .snActionDelete:hover {
+		background-position: 100% 100%;
+	}
+</style>
+
+
+<!-- INCLUDE ucp_footer.html -->

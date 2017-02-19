@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+	<?xml-stylesheet type="text/xsl" href="./contrib/modx.prosilver.en.xsl"?>
+		<!--For security purposes, please check: http://www.phpbb.com/mods/ for the latest version of this MOD. Although MODs are checked before being allowed in the MODs Database there is no guarantee that there are no security problems within the MOD. No support will be given for MODs not found within the MODs Database which can be found at http://www.phpbb.com/mods/-->
+		<mod xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.phpbb.com/mods/xml/modx-1.2.5.xsd">
+	<header>
+		<license>http://opensource.org/licenses/gpl-license.php GNU General Public License v2</license>
+			<title lang="en">Tapatalk</title>
+				<description lang="en">Tapatalk Api for the forum.</description>
+				<author-notes lang="en">Installation and Update describtion (https://support.tapatalk.com/threads/phpbb-installation-update-uninstall-process.21535/)
+				</author-notes>
+		<author-group>
+			<author>
+				<realname>Tapatalk INC</realname>
+				<username>Tapatalk INC</username>
+				<homepage>http://www.tapatalk.com</homepage>
+				<contributions-group>
+				  <contributions status="current" from="2009-08-13"  position="Developer"/>
+				</contributions-group>
+			</author>
+		</author-group>
+		<mod-version>4.3.1</mod-version>
+		<installation>
+			<level>intermediate</level>
+			<time>1800</time>
+			<target-version>3.0.x</target-version>
+		</installation>
+		<history>
+			<entry>
+				<date>2012-08-25</date>
+				<rev-version>3.4.0</rev-version>
+				<changelog lang="en">
+					<change>Fixed function 'send_status_line' missing issue</change>
+					<change>Fixed phpbb 404 response code issue</change>
+					<change>Fixed global announcement permission check issue</change>
+					<change>Fixed return empty data not error message when no search result</change>
+					<change>Fixed modified ban and delete all of a users posts, or just ban and cannot delete all the posts</change>
+					<change>Fixed block a user via "Moderation Area", access via Tapatalk still work.</change>
+					<change>Increase the compatibility of the phpbb 3.0.0 version.</change>
+					<change>Add push notification support (For automod installation only)</change>
+				</changelog>
+			</entry>
+			<entry>
+				<date>2012-08-31</date>
+				<rev-version>3.4.1</rev-version>
+				<changelog lang="en">
+					<change>Fixed some small installation issues</change>
+					<change>Fixed Permission Problem with Latest Update</change>
+					<change>Fixed hide forum areas but posts are not be hidden</change>
+					<change>Fixed conflict with Mini-Chat</change>
+				</changelog>
+			</entry>
+			<entry>
+				<date>2012-09-06</date>
+				<rev-version>3.4.2</rev-version>
+				<changelog lang="en">
+					<change>Fixed some samll install issues</change>
+					<change>Fixed undefined variable</change>
+					<change>Modified the plugin ACP Permission</change>
+				</changelog>
+			</entry>
+			<entry>
+				<date>2012-09-14</date>
+				<rev-version>3.4.3</rev-version>
+				<changelog lang="en">
+					<change>Fixed can not login to ACP by using firefox issues</change>
+					<change>Fixed can not delete posts by using firefox</change>
+					<change>Fixed language constant string missing (LOG_CONFIG_MOBIQUO and acl_acp_moiquo) .</change>
+					<change>Fixed push time out error</change>
+					<change>Added push conditions check in push.php</change>
+					<change>Fixed error when post with emoji </change>
+					<change>Fixed repeating the first page of unread posts in the second page</change>
+					<change>Fixed Syntax Error in SQL Statement on Login phpBB on PostgreSQL</change>
+					<change>Fixed a undefined error when edit a pm</change>
+				</changelog>
+			</entry>
+			<entry>
+				<date>2012-10-18</date>
+				<rev-version>3.5.0</rev-version>
+				<changelog lang="en">
+					<change>Display optimization for all native bbcode </change>
+					<change>Add push notification key in tapatalk option</change>
+					<change>Optimize plugin entry file interface from browser</change>
+					<change>Add alerts data for tapatalk user (need app support)</change>
+					<change>Add advanced custom forum icon configuration support</change>
+					<change>Some minor bugs fix</change>
+				</changelog>
+			</entry>
+			<entry>
+				<date>2012-12-18</date>
+				<rev-version>3.6.0</rev-version>
+				<changelog lang="en">
+					<change>fix If a user's nickname has a special char In it, Can not send PMs to him</change>
+					<change>fix don not show captcha when login more than three times</change>
+					<change>fix push notification being sent for moderated postings </change>
+					<change>fix "Show First Post Only to Guest" not work with Tapatalk plugin</change>
+					<change>Add read only control based on forum id</change>
+					<change>enhance attachment type</change>
+					<change>Add register function (need app side support) .</change>
+					<change>add separate detect display words from js .</change>
+				</changelog>
+			</entry>
+			<entry>
+				<date>2013-01-02</date>
+				<rev-version>3.6.1</rev-version>
+				<changelog lang="en">
+					<change>fix Popup fails to redirect to iTunes store</change>
+					<change>fix SQL error when tapatalk user table is empty</change>
+					<change>fix some install instruction error</change>
+				</changelog>
+			</entry>
+			<entry>
+				<date>2013-03-22</date>
+				<rev-version>3.7.0</rev-version>
+				<changelog lang="en">
+					<change>optimize online user display</change>
+					<change>add custom content replacement</change>
+					<change>add rename topic function</change>
+					<change>add update password function</change>
+					<change>add forget password function</change>
+					<change>add update email function</change>
+					<change>some bugs fixed</change>
+				</changelog>
+			</entry>
+			<entry>
+				<date>2013-04-01</date>
+				<rev-version>3.7.1</rev-version>
+				<changelog lang="en">
+					<change>fix undefine index notice in some pages</change>
+					<change>fix sql error when topic_watch table have invalid data</change>
+					<change>optimize register function</change>
+					<change>fix no No Prompt for App Download</change>
+				</changelog>
+			</entry>
+			<entry>
+				<date>2013-04-18</date>
+				<rev-version>3.8.0</rev-version>
+				<changelog lang="en">
+					<change>short content optimization</change>
+					<change>new smartbanner deploy</change>
+					<change>browser online page optimize for BYO</change>
+					<change>fix UTF-8 non-ASCII chars showing as "?" In push notifications</change>
+					<change>Optimize push feature.</change>
+					<change>other bug fix.</change>
+				</changelog>
+			</entry>
+			<entry>
+				<date>2013-06-28</date>
+				<rev-version>3.9.0</rev-version>
+				<changelog lang="en">
+					<change>Better suppport for Tapatalk ID users to sign in forum easiler</change>
+					<change>Better support of displaying avatar.</change>
+					<change>Some bugs fixed </change>
+				</changelog>
+			</entry>
+			<entry>
+				<date>2013-08-12</date>
+				<rev-version>4.0.0</rev-version>
+				<changelog lang="en">
+					<change>Push control remove from forum ACP .</change>
+					<change>User profile synchronization when sign_in .</change>
+					<change>Add search_user function . </change>
+					<change>Add ignore_user function . </change>
+					<change>Optimize sign in function .</change>
+					<change>Other bugs fixed .</change>
+				</changelog>
+			</entry>
+			<entry>
+				<date>2013-10-16</date>
+				<rev-version>4.1.0</rev-version>
+				<changelog lang="en">
+					<change>flag poll in thread functions.</change>
+					<change>optimize tapatalk hosted image display.</change>
+					<change>enhance mention push notification compatibility.</change>
+					<change>optimize smartbanner. </change>
+					<change>optimize push notification.</change>
+					<change>fix join on column "author" with no index</change>
+					<change>fix some Compatibility issues with old phpBB systyem</change>
+					<change>fix smartbanner issue</change>
+					<change>fix post changed unsubscribe when edit post with Tapatalk</change>
+					<change>other small bugs fixed</change>
+				</changelog>
+			</entry>
+			<entry>
+				<date>2013-10-17</date>
+				<rev-version>4.1.1</rev-version>
+				<changelog lang="en">
+					<change>fix app welcome page display issue for https site. </change>
+					<change>optimize get tapatalk notifcatios speed.</change>
+					<change>fix undefined "tapatalk_push_key" error when update.</change>
+				</changelog>
+			</entry>
+			<entry>
+				<date>2013-11-8</date>
+				<rev-version>4.2.0</rev-version>
+				<changelog lang="en">
+					<change>optimize intall and update setups. </change>
+					<change>other small bugs fixed.</change>
+				</changelog>
+			</entry>
+			<entry>
+				<date>2014-2-14</date>
+				<rev-version>4.3.0</rev-version>
+				<changelog lang="en">
+					<change>remove forum verision in mobiquo.php page</change>
+					<change>advanced quote support</change>
+					<change>update tapatalk icon on online page</change>
+					<change>iOS emoji support on web page(need app side support)</change>
+					<change>Add SSO/Register Options in Forum ACP</change>
+					<change>User report bug fix</change>
+				</changelog>
+			</entry>
+			<entry>
+				<date>2014-2-19</date>
+				<rev-version>4.3.1</rev-version>
+				<changelog lang="en">
+					<change>Remove function with php5.3 </change>
+				</changelog>
+			</entry>
+		</history>
+		<link-group>
+			<link type="template" href="contrib/subsilver2.xml" lang="en">SubSilver2</link>
+		</link-group>
+	</header>
+	<action-group>
+		<copy>
+			<file from="root/umil/*.*" to="umil/*.*" />
+			<file from="root/mobiquo_install.php" to="mobiquo_install.php" />
+			<file from="root/includes/acp/*.*" to="includes/acp/*.*" />
+			<file from="root/adm/style/*.*" to="adm/style/*.*" />
+			<file from="root/mobiquo/*.*" to="mobiquo/*.*" />
+			<file from="root/language/*.*" to="language/*.*" />
+		</copy>
+		<open src="includes/functions_posting.php">
+			<edit>
+				<find><![CDATA[	$url = append_sid($url, 'f=' . $data['forum_id'] . $params) . $add_anchor;]]></find>
+				<action type="after-add"><![CDATA[	// BEGIN mobiquo Mod push service
+	if(file_exists($phpbb_root_path.(!empty($config['tapatalkdir']) ? $config['tapatalkdir'] : 'mobiquo').'/hook/functions_posting_hook.php'))
+    {
+        include  $phpbb_root_path.(!empty($config['tapatalkdir']) ? $config['tapatalkdir'] : 'mobiquo').'/hook/functions_posting_hook.php';
+    }
+	// END mobiquo Mod]]></action>
+			</edit>		
+		</open>
+		<open src="viewonline.php">
+			<edit>
+				<find><![CDATA[preg_match('#^([a-z0-9/_-]+)#i', $row['session_page'], $on_page);]]></find>
+				<action type="after-add"><![CDATA[	//start taptalk hook
+    if(file_exists($phpbb_root_path.(!empty($config['tapatalkdir']) ? $config['tapatalkdir'] : 'mobiquo').'/hook/online_hook.php'))
+    {
+        include  $phpbb_root_path.(!empty($config['tapatalkdir']) ? $config['tapatalkdir'] : 'mobiquo').'/hook/online_hook.php';
+    }
+    //end tapatalk hook]]></action>
+			</edit>		
+		</open>
+		<open src="includes/functions_privmsgs.php">
+			<edit>
+				<find><![CDATA[// Send Notifications]]></find>
+				<action type="after-add"><![CDATA[	// BEGIN mobiquo Mod push service
+	if(file_exists($phpbb_root_path.(!empty($config['tapatalkdir']) ? $config['tapatalkdir'] : 'mobiquo').'/hook/functions_privmsgs_hook.php'))
+    {
+        include  $phpbb_root_path.(!empty($config['tapatalkdir']) ? $config['tapatalkdir'] : 'mobiquo').'/hook/functions_privmsgs_hook.php';
+    }
+	// END mobiquo Mod]]></action>
+			</edit>		
+		</open>
+		
+		<open src="includes/functions.php">
+			<edit>
+				<find><![CDATA[	if (strpos($user_lang, '-x-') !== false)]]></find>
+				<action type="before-add"><![CDATA[	$tapatalk_dir = !empty($config['tapatalkdir']) ? $config['tapatalkdir'] : 'mobiquo';
+	if(file_exists($phpbb_root_path.$tapatalk_dir.'/hook/head_output_hook.php'))
+	{
+		include $phpbb_root_path.$tapatalk_dir.'/hook/head_output_hook.php';
+	}]]></action>
+			</edit>
+			<edit>
+				<find><![CDATA['ROOT_PATH'			=> $phpbb_root_path,]]></find>
+				<action type="after-add"><![CDATA[	    //tapatalk add
+		'TAPATALK_HEAD'     => $app_head_include,]]></action>
+			</edit>
+		</open>
+		<open src="viewtopic.php">
+			<edit>
+				<find><![CDATA[$message = censor_text($row['post_text']);]]></find>
+				<action type="after-add"><![CDATA[	if(file_exists($phpbb_root_path.(!empty($config['tapatalkdir']) ? $config['tapatalkdir'] : 'mobiquo').'/hook/viewtopic_hook.php'))
+    {
+        include  $phpbb_root_path.(!empty($config['tapatalkdir']) ? $config['tapatalkdir'] : 'mobiquo').'/hook/viewtopic_hook.php';
+    }]]></action>
+			</edit>
+		</open>
+		<open src="styles/prosilver/template/overall_header.html">
+			<edit>
+				<find><![CDATA[</title>]]></find>
+				<action type="after-add"><![CDATA[{TAPATALK_HEAD}]]></action>
+			</edit>	
+			<edit>
+				<find><![CDATA[<body id="phpbb" class="section-{SCRIPT_NAME} {S_CONTENT_DIRECTION}">]]></find>
+				<action type="after-add"><![CDATA[<!-- Tapatalk Detect body start --> 
+<script type="text/javascript">tapatalkDetect()</script>
+<!-- Tapatalk Detect banner body end -->]]></action>
+			</edit>	
+		</open>
+		<php-installer><![CDATA[mobiquo_install.php]]></php-installer>
+<diy-instructions lang="en"><![CDATA[*** NOTE: If you are installing via Automod you may skip to step 2 ***
+1. Make all edits to all files and upload them to your forum.    
+2. Browse to the file mobiquo_install.php in the root of your forum to make the database changes (eg, http://mysite.com/mobiquo_install.php).
+3. Delete the mobiquo_install.php file from the root of your forum.
+4. Clear the cache in the GENERAL, set the settings for the tapatalk under the ".Mods" tab.  
+5. Enjoy the Mod!!
+]]></diy-instructions>
+</action-group>
+</mod>

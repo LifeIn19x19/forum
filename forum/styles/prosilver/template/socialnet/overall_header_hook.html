@@ -1,0 +1,122 @@
+<link href="{T_THEME_PATH}/jquery-ui.custom.css" rel="stylesheet" type="text/css" media="screen, projection" />
+<link href="{T_THEME_PATH}/jquery-ui.menu.css" rel="stylesheet" type="text/css" media="screen, projection" />
+<script type="text/javascript" src="{T_SOCIALNET_JS_PATH}/jquery-1.6.2.min.js"></script>
+<script type="text/javascript" src="{T_SOCIALNET_JS_PATH}/jquery.metadata.js"></script>
+<script type="text/javascript" src="{T_SOCIALNET_JS_PATH}/jquery_cookie.js"></script>
+<script type="text/javascript" src="{T_SOCIALNET_JS_PATH}/jquery.timers.js"></script>   
+<script type="text/javascript" src="{T_SOCIALNET_JS_PATH}/jquery.hoverIntent.min.js"></script>
+<script type="text/javascript" src="{T_SOCIALNET_JS_PATH}/jquery.text-overflow.min.js"></script>
+<script type="text/javascript" src="{T_SOCIALNET_JS_PATH}/jquery.textarea-expander.js"></script>
+<script type="text/javascript" src="{T_SOCIALNET_JS_PATH}/jquery.watermark.min.js"></script>
+<script type="text/javascript" src="{T_SOCIALNET_JS_PATH}/jquery-ui-1.8.16.custom.min.js"></script>
+<script type="text/javascript" src="{T_SOCIALNET_JS_PATH}/jquery.ui.menu.js"></script>
+<script type="text/javascript" src="{T_SOCIALNET_JS_PATH}/jquery.form.js"></script>
+<script type="text/javascript" src="{T_SOCIALNET_JS_PATH}/jquery.titlealert.js"></script>
+<script type="text/javascript" src="{T_SOCIALNET_JS_PATH}/jquery.detectmobilebrowser.js"></script>
+<script type="text/javascript" src="{T_SOCIALNET_JS_PATH}/jquery.editable.js"></script>
+<script type="text/javascript" src="{T_SOCIALNET_JS_PATH}/m.socialnet.js"></script>
+<script type="text/javascript" src="{T_SOCIALNET_JS_PATH}/m.confirmbox.js"></script>
+<script type="text/javascript">
+// <![CDATA[
+	socialnet_cfg.cookie = {name:'{COOKIE_NAME}',path:'{COOKIE_PATH}',domain:'{COOKIE_DOMAIN}', secure:'{COOKIE_SECURE}'=='1'};
+	socialnet_cfg.allow_load = {B_AJAX_LOAD_ALLOW};
+	socialnet_cfg.rtl = '{S_CONTENT_DIRECTION}' == 'rtl' ? true: false;
+
+    confirmBox_cfg.enable = '{S_SN_CB_ENABLE}' == '1' ? true : false;
+    confirmBox_cfg.resizable = '{S_SN_CB_RESIZABLE}' == '1' ? true : false;
+    confirmBox_cfg.draggable = '{S_SN_CB_DRAGGABLE}' == '1' ? true : false;
+    confirmBox_cfg.modal = '{S_SN_CB_MODAL}' == '1' ? true : false;
+    confirmBox_cfg.width = '{S_SN_CB_WIDTH}';
+    confirmBox_cfg.button_confirm = '{L_SN_US_CONFIRM}';
+    confirmBox_cfg.button_cancel = '{L_SN_US_CANCEL}';
+    confirmBox_cfg.button_close = '{L_SN_US_CLOSE}';
+    confirmBox_cfg.postMinChar = {I_POST_MIN_CHARS};
+// ]]>
+</script>
+<!-- IF SN_MODULE_APPROVAL_ENABLED -->
+<script type="text/javascript" src="{T_SOCIALNET_JS_PATH}/m.approval.js"></script>
+<script type="text/javascript">
+// <![CDATA[
+	fas_cfg.url = '{SOCIALNET_ROOT_PATH}approval.php';
+	fas_cfg.urlFMS = '{SOCIALNET_ROOT_PATH}fms_users.php';
+	fas_cfg.noFriends = '{L_FAS_FRIENDGROUP_NO_TOTAL}';
+// ]]>
+</script>
+<!-- ENDIF -->
+<!-- IF SN_MODULE_NOTIFY_ENABLED -->
+	<script type="text/javascript" src="{T_SOCIALNET_JS_PATH}/jquery.jgrowl_minimized.js"></script>
+	<script type="text/javascript" src="{T_SOCIALNET_JS_PATH}/m.notify.js"></script>
+	<script type="text/javascript">
+	// <![CDATA[
+	ntf_cfg.url = '{SOCIALNET_ROOT_PATH}notify.php';
+	ntf_cfg.settings.theme = '{S_SN_NTF_THEME}';
+	ntf_cfg.settings.position = socialnet_cfg.rtl ? 'bottom-right' : 'bottom-left';
+	// ]]>
+	</script>
+<!-- ENDIF -->
+<!-- IF SN_MODULE_IM_ENABLED -->
+    <script type="text/javascript" src="{T_SOCIALNET_JS_PATH}/m.im.js"></script>
+    <script type="text/javascript">
+    // <![CDATA[
+      //im_cfg.rtl = socialnet_cfg.rtl;
+      im_cfg.url = '{SOCIALNET_ROOT_PATH}im.php';
+      im_cfg.root_path = '{SOCIALNET_ROOT_PATH}';
+      im_cfg.new_message = '{L_SN_IM_NEW_MESSAGE}';
+      im_cfg.names.me = '{S_SN_USERNAME}';
+      im_cfg.youAreOffline = '{L_SN_IM_YOU_ARE_OFFLINE}';
+      im_cfg.title_new = '{L_SN_IM_NEW_MESSAGE}';
+      im_cfg.sound = '{S_SN_IM_USER_SOUND}' == '1' ? true: false;
+      im_cfg.isOnline = '{SN_IM_ONLINE}' == '1' ? true: false;
+      im_cfg.timers.chat_Open = {SN_IM_MIN_CHECK};
+      im_cfg.timers.chat_Close = {SN_IM_MAX_CHECK};
+    // ]]>
+    </script>
+<!-- ENDIF -->
+<!-- IF SN_MODULE_USERSTATUS_ENABLED -->
+    <script type="text/javascript" src="{T_SOCIALNET_JS_PATH}/m.userstatus.js"></script>
+    <script type="text/javascript">
+    // <![CDATA[                            
+      us_cfg.watermark = '{L_SN_US_WHATS_ON_YOUR_MIND}';
+      us_cfg.emptyStatus = '{L_SN_US_EMPTY_STATUS}';
+      us_cfg.watermarkComment = '{L_SN_US_WRITE_COMMENT}';
+      us_cfg.emptyComment = '{L_SN_US_EMPTY_COMMENT}';
+      us_cfg.url = '{SOCIALNET_ROOT_PATH}userstatus.php';
+      us_cfg.urlFetch = '{SOCIALNET_ROOT_PATH}fetch.php';
+      us_cfg.deleteStatusTitle = '{L_SN_CB_DELETE_STATUS_TITLE}';
+      us_cfg.deleteStatusText = '{L_SN_CB_DELETE_STATUS_TEXT}';
+      us_cfg.deleteCommentTitle = '{L_SN_CB_DELETE_COMMENT_TITLE}';
+      us_cfg.deleteCommentText = '{L_SN_CB_DELETE_COMMENT_TEXT}';
+    // ]]>       
+    </script>
+<!-- ENDIF -->
+<!-- IF SN_MODULE_MAINPAGE_ENABLED and S_ON_MAINPAGE and B_SN_BLOCK_ONLINE_USERS_ENABLED -->
+  <script type="text/javascript" src="{T_SOCIALNET_JS_PATH}/m.mainpage.js"></script>
+  <script type="text/javascript">
+  // <![CDATA[
+    mp_cfg.watermark = '{L_SN_US_WHATS_ON_YOUR_MIND}';
+    mp_cfg.watermarkComment = '{L_SN_US_WRITE_COMMENT}';
+    mp_cfg.emptyStatus = '{L_SN_US_EMPTY_STATUS}';
+    mp_cfg.emptyComment = '{L_SN_US_EMPTY_COMMENT}';
+    mp_cfg.url = '{SOCIALNET_ROOT_PATH}mainpage.php';
+    mp_cfg.status_url = '{SOCIALNET_ROOT_PATH}userstatus.php';
+    mp_cfg.noOnlineUser = '{L_SN_IM_NO_ONLINE_USER}';
+    mp_cfg.deleteStatusTitle = '{L_SN_CB_DELETE_STATUS_TITLE}';
+  	mp_cfg.deleteStatusText = '{L_SN_CB_DELETE_STATUS_TEXT}';
+  	mp_cfg.deleteCommentTitle = '{L_SN_CB_DELETE_COMMENT_TITLE}';
+  	mp_cfg.deleteCommentText = '{L_SN_CB_DELETE_COMMENT_TEXT}';
+  	mp_cfg.blockOnlineUsers = '{B_SN_BLOCK_ONLINE_USERS_ENABLED}' == '1';
+  	mp_cfg.tikTakOnline = {I_SN_BLOCK_ONLINE_USERS_CHECK_TIME};
+  // ]]>
+  </script>
+<!-- ENDIF -->
+<!-- IF SN_MODULE_PROFILE_ENABLED -->
+   <script type="text/javascript" src="{T_SOCIALNET_JS_PATH}/m.profile.js"></script>
+   <script type="text/javascript">
+   up_cfg.url = '{U_UP_TAB_WALL}';
+   up_cfg.urlAJAX = '{U_UP_AJAXURL}';
+   up_cfg.spinner = '{L_SN_UP_TABS_SPINNER}';
+   up_cfg.dateFormat = 'd. MM yy';
+   up_cfg.monthNames = [{SN_UP_MONTH_NAMES}];
+   up_cfg.monthNamesShort = [{SN_UP_MONTH_NAMES_SHORT}];
+   </script>
+<!-- ENDIF -->

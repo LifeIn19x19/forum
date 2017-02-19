@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+	<?xml-stylesheet type="text/xsl" href="modx.prosilver.en.xsl"?>
+		<!--For security purposes, please check: http://www.phpbb.com/mods/ for the latest version of this MOD. Although MODs are checked before being allowed in the MODs Database there is no guarantee that there are no security problems within the MOD. No support will be given for MODs not found within the MODs Database which can be found at http://www.phpbb.com/mods/-->
+		<mod xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.phpbb.com/mods/xml/modx-1.2.5.xsd">
+	<header>
+		<license>http://opensource.org/licenses/gpl-license.php GNU General Public License v2</license>
+			<title lang="en">Tapatalk 3.8.0 to 3.8.1</title>
+				<description lang="en">Updates mod to 3.8.1 from 3.8.0</description>
+		<author-group>
+			<author>
+				<realname>tapatalk</realname>
+				<username>tapatalk</username>
+				<homepage>http://www.tapatalk.com</homepage>
+				<contributions-group>
+				  <contributions status="past" from="2009-08-13" to="2013-4-02" position="Developer"/>
+				</contributions-group>
+			</author>
+		</author-group>
+		<mod-version>3.8.1</mod-version>
+		<installation>
+			<level>easy</level>
+			<time>300</time>
+			<target-version>3.0.0 above</target-version>
+		</installation>
+		<link-group>
+			<link type="parent" href="../install.xml" lang="en">Main Install File</link>
+		</link-group>
+	</header>
+	<action-group>
+		<copy>
+			<file from="root/mobiquo_install.php" to="mobiquo_install.php" />
+			<file from="root/includes/acp/*.*" to="includes/acp/*.*" />
+			<file from="root/mobiquo/*.*" to="mobiquo/*.*" />
+			<file from="root/language/*.*" to="language/*.*" />
+			<file from="root/umil/*.*" to="umil/*.*" />
+		</copy>
+		<open src="includes/functions.php">
+			<edit>
+				<find><![CDATA[         $user->add_lang('mods/info_acp_mobiquo');
+	if(file_exists($phpbb_root_path.(!empty($config['tapatalkdir']) ? $config['tapatalkdir'] : 'mobiquo').'/include/function_hook.php'))
+	{
+		require_once $phpbb_root_path.(!empty($config['tapatalkdir']) ? $config['tapatalkdir'] : 'mobiquo').'/include/function_hook.php';
+		$tapatalk_location_url = get_tapatlk_location();
+	}
+	else 
+	{
+		$tapatalk_location_url = '';
+	}]]></find>
+				<action type="replace-with"><![CDATA[         $tapatalk_dir = !empty($config['tapatalkdir']) ? $config['tapatalkdir'] : 'mobiquo';
+	if(file_exists($phpbb_root_path.$tapatalk_dir.'/include/head_output_hook.php'))
+	{
+		include $phpbb_root_path.$tapatalk_dir.'/include/head_output_hook.php';
+	}]]></action>
+			</edit>
+		</open>
+		<open src="includes/functions.php">
+			<edit>
+				<find><![CDATA[		'TAPATALK_APP_IOS_ID'      => isset($config['tapatalk_app_ios_id']) ? addslashes($config['tapatalk_app_ios_id']) : '' ,
+		'TAPATALK_APP_BANNER_MSG'      => isset($config['tapatalk_app_banner_msg']) ? addslashes(preg_replace("/\r?\n/", "<br />",$config['tapatalk_app_banner_msg'])) : '' ,
+		'TAPATALK_ANDROID_URL' => isset($config['tapatalk_android_url']) ? addslashes($config['tapatalk_android_url']) : '' ,
+		'TAPATALK_KINDLE_URL' => isset($config['tapatalk_kindle_url']) ? addslashes($config['tapatalk_kindle_url']) : '' ,
+		'TAPATALK_DIR' => generate_board_url().'/' . (!empty($config['tapatalkdir']) ? $config['tapatalkdir'] : 'mobiquo' ) ,
+		'TAPATALK_LOCATION_URL' => $tapatalk_location_url,]]></find>
+				<action type="replace-with"><![CDATA[		//tapatalk add
+		'TAPATALK_HEAD'     => $app_head_include,]]></action>
+			</edit>
+		</open>
+		<open src="styles/prosilver/template/overall_header.html">
+			<edit>
+				<find><![CDATA[<script type="text/javascript">
+var is_mobile_skin      = '0';  
+var app_ios_id          = '{TAPATALK_APP_IOS_ID}';
+var app_banner_message  = '{TAPATALK_APP_BANNER_MSG}';
+var app_forum_name      = '{SITENAME}';
+var app_android_url     = '{TAPATALK_ANDROID_URL}';
+var app_kindle_url      = '{TAPATALK_KINDLE_URL}';
+var tapatalk_dir_url    = '{TAPATALK_DIR}';
+var app_location_url    = '{TAPATALK_LOCATION_URL}';
+</script>
+<link href="{TAPATALK_DIR}/smartbanner/appbanner.css" rel="stylesheet" type="text/css" media="screen">
+<script type="text/javascript" src="{TAPATALK_DIR}/smartbanner/appbanner.js"></script>]]></find>
+				<action type="replace-with"><![CDATA[{TAPATALK_HEAD}]]></action>
+			</edit>	
+		</open>
+		
+		<php-installer><![CDATA[mobiquo_install.php]]></php-installer>
+<diy-instructions lang="en"><![CDATA[*** NOTE: If you are installing via Automod you may skip to step 2 ***
+1. Make all edits to all files and upload them to your forum.    
+2. Browse to the file mobiquo_install.php in the root of your forum to make the database changes (eg, http://mysite.com/mobiquo_install.php).
+3. Delete the mobiquo_install.php file from the root of your forum.
+4. Clear the cache in the GENERAL, set the settings for the tapatalk under the ".Mods" tab.  
+5. Enjoy the Mod!!
+]]></diy-instructions>
+</action-group>
+</mod>

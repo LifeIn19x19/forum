@@ -1,0 +1,9 @@
+body {
+    font-size: 90%;
+    line-height: 20px;
+}
+
+h1, h2,
+dd.posts, dd.topics, dd.views {
+    line-height: 40px;
+}

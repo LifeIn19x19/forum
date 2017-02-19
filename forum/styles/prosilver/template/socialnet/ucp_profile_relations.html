@@ -1,0 +1,191 @@
+<!-- INCLUDE ucp_header.html -->
+                                                                                                                           
+<script type="text/javascript">
+// <![CDATA[
+jQuery(document).ready(function($) {    
+
+  function show_hide(value_div, hide_div, values) {
+    var value = $(value_div).val();
+    var show = jQuery.inArray(value, values);  
+    
+  	if ( show != -1 ) {
+  		$(hide_div).show();
+  	}
+  	else {
+  		$(hide_div).hide();
+  	}
+  }
+  
+  show_hide("#relationship_status", "#relationship_partner", ["2", "3", "4", "5", "6"]);
+	$("#relationship_status").change(function() {
+    	show_hide("#relationship_status", "#relationship_partner", ["2", "3", "4", "5", "6"]);
+	});
+  
+	show_hide("#family_status", "#family_partner", ["20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41"]);
+	$("#family_status").change(function() {
+    	show_hide("#family_status", "#family_partner", ["20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "32", "33", "34", "35", "36", "37", "38", "39", "40", "41"]);
+	});
+	
+  var select_friends_url = '{U_SELECT_FRIENDS}';
+ 
+  select_friends_url = select_friends_url.replace(/&amp;/g, '&');
+
+	$("#relationship_user, #family_user").autocomplete({
+		source: select_friends_url, 
+		minLength: 2,
+		delay: 300
+	});
+
+	$( "#anniversary_picker" ).datepicker({
+		changeMonth: true,
+		changeYear: true,
+		appendText: '(dd-mm-yyyy)',
+		dateFormat: 'dd-mm-yy',
+		firstDay: 1,
+		nextText: '{L_NEXT}',
+		prevText: '{L_PREVIOUS}',
+		yearRange: '1905:c',
+		dayNames: ['{L_SN_UP_SUNDAY}', '{L_SN_UP_MONDAY}', '{L_SN_UP_TUESDAY}', '{L_SN_UP_WEDNESDAY}', '{L_SN_UP_THURSDAY}', '{L_SN_UP_FRIDAY}', '{L_SN_UP_SATURDAY}'], 
+		dayNamesMin: ['{L_SN_UP_SUNDAY_MIN}', '{L_SN_UP_MONDAY_MIN}', '{L_SN_UP_TUESDAY_MIN}', '{L_SN_UP_WEDNESDAY_MIN}', '{L_SN_UP_THURSDAY_MIN}', '{L_SN_UP_FRIDAY_MIN}', '{L_SN_UP_SATURDAY_MIN}'],
+		monthNamesShort: ['{L_SN_UP_JANUARY_MIN}', '{L_SN_UP_FEBRUARY_MIN}', '{L_SN_UP_MARCH_MIN}', '{L_SN_UP_APRIL_MIN}', '{L_SN_UP_MAY_MIN}', '{L_SN_UP_JUNE_MIN}', '{L_SN_UP_JULY_MIN}', '{L_SN_UP_AUGUST_MIN}', '{L_SN_UP_SEPTEMBER_MIN}', '{L_SN_UP_OCTOBER_MIN}', '{L_SN_UP_NOVEMBER_MIN}', '{L_SN_UP_DECEMBER_MIN}']
+	});
+
+});
+// ]]>
+</script>
+
+<h2>{L_TITLE}</h2>
+
+<form id="ucp" method="post" action="{U_ACTION}">
+
+  <div class="panel">
+  	<div class="inner"><span class="corners-top"><span></span></span>
+    	<fieldset>  
+        <!-- IF ERROR --><p class="error">{ERROR}</p><!-- ENDIF -->       
+      	<dl>
+      		<dt><label for="relationship_status">{L_SN_UP_RELATIONSHIP}:</label></dt>
+          <dd>
+            <select name="relationship_status" id="relationship_status" style="width: 31%;">
+              <option value="">{L_SN_UP_SELECT_RELATIONSHIP}</option>
+							<option value="1">{L_SN_UP_SINGLE}</option>
+							<option value="2">{L_SN_UP_IN_RELATIONSHIP}</option>
+							<option value="3">{L_SN_UP_ENGAGED}</option>
+							<option value="4">{L_SN_UP_MARRIED}</option>
+							<option value="5">{L_SN_UP_ITS_COMPLICATED}</option>
+							<option value="6">{L_SN_UP_OPEN_RELATIONSHIP}</option>
+							<option value="7">{L_SN_UP_WIDOWED}</option>
+							<option value="8">{L_SN_UP_SEPARATED}</option>
+							<option value="9">{L_SN_UP_DIVORCED}</option>
+						</select>
+						<span id="relationship_partner">
+						  {L_SN_UP_TO}
+              <input type="text" name="relationship_user" id="relationship_user" value="" class="inputbox" style="width: 15%;" />  
+              <input type="text" name="anniversary_picker" id="anniversary_picker" value="" maxlength="10" class="inputbox" style="width: 15%;" />
+            </span>
+          </dd> 
+      	</dl> 
+      	<dl>
+      		<dt><label>{L_SN_UP_FAMILY}:</label></dt>
+          <dd>
+            <select name="family_status" id="family_status" style="width: 31%;">
+              <option value="">{L_SN_UP_SELECT_FAMILY_RELATION}</option>
+              <option value="20">{L_SN_UP_SISTER}</option>
+              <option value="21">{L_SN_UP_BROTHER}</option>
+              <option value="22">{L_SN_UP_DAUGHTER}</option>
+              <option value="23">{L_SN_UP_SON}</option>
+              <option value="24">{L_SN_UP_MOTHER}</option>
+              <option value="25">{L_SN_UP_FATHER}</option>
+              <option value="26">{L_SN_UP_AUNT}</option>
+              <option value="27">{L_SN_UP_UNCLE}</option>
+              <option value="28">{L_SN_UP_NIECE}</option>
+              <option value="29">{L_SN_UP_NEPHEW}</option>
+              <option value="30">{L_SN_UP_COUSIN_FEMALE}</option>
+              <option value="31">{L_SN_UP_COUSIN_MALE}</option>
+              <option value="32">{L_SN_UP_GRANDDAUGHTER}</option>
+              <option value="33">{L_SN_UP_GRANDSON}</option>
+              <option value="34">{L_SN_UP_GRANDMOTHER}</option>
+              <option value="35">{L_SN_UP_GRANDFATHER}</option>
+              <option value="36">{L_SN_UP_SISTER_IN_LAW}</option>
+      			  <option value="37">{L_SN_UP_BROTHER_IN_LAW}</option>
+      			  <option value="38">{L_SN_UP_MOTHER_IN_LAW}</option>
+      			  <option value="39">{L_SN_UP_FATHER_IN_LAW}</option>
+      			  <option value="40">{L_SN_UP_DAUGHTER_IN_LAW}</option>
+      			  <option value="41">{L_SN_UP_SON_IN_LAW}</option>
+						</select>
+						<span id="family_partner">
+      		    <input type="text" name="family_user" id="family_user" value="" class="inputbox" style="width: 15%;" />  
+      		  </span>
+          </dd> 
+      	</dl>  
+    	</fieldset>
+  
+  	<span class="corners-bottom"><span></span></span></div>
+  </div>                    
+
+  <fieldset class="submit-buttons">
+    <input type="reset" value="{L_RESET}" name="reset" class="button2" />&nbsp; 
+  	<input type="submit" name="submit" value="{L_SUBMIT}" class="button1" />
+  	{S_FORM_TOKEN}
+  </fieldset>
+</form>
+
+<div class="panel">
+	<div class="inner">
+		<span class="corners-top"><span></span></span>
+		
+		  <h3>{L_SN_UP_RELATIONSHIP}</h3> 
+		  
+      <!-- IF .relationship -->
+        <div class="snFMSUsers">
+          <!-- BEGIN relationship -->
+            <div class="snFasFriend ui-widget-content ui-corner-all" style="width: 200px;" uid="{relationship.USER_ID}" title="{relationship.USERNAME_NO_COLOR}">
+            	<div class="snActions">
+            		<a href="{relationship.U_DELETE}"><div class="snActionClose"></div></a>
+            	</div>
+            	<!-- IF relationship.U_PROFILE_LINK --><a href="{relationship.U_PROFILE_LINK}"><!-- ENDIF --><span class="user_avatar ui-widget ui- widget-header ui- corner-all">{relationship.AVATAR}</span><!-- IF relationship.U_PROFILE_LINK --></a><!-- ENDIF -->
+            	<!-- IF relationship.U_RELATIVE --><span class="snFmsUsername">{relationship.U_RELATIVE}</span><br /><!-- ENDIF -->
+            	<span>
+                {relationship.STATUS}
+                <!-- IF relationship.ANNIVERSARY --><br >{relationship.ANNIVERSARY}<!-- ENDIF -->
+                <!-- IF not relationship.APPROVED --><br >({L_SN_UP_NOT_APPROVED})<!-- ENDIF -->
+              </span>
+            </div> 
+          <!-- END relationship -->
+        </div>
+      <!-- ELSE -->
+        {L_SN_UP_APPROVE_RELATION_NO_RELATIONSHIP}
+      <!-- ENDIF -->
+      
+		<span class="corners-bottom"><span></span></span>
+	</div>
+</div>
+
+<div class="panel">
+	<div class="inner">
+		<span class="corners-top"><span></span></span>
+		
+		  <h3>{L_SN_UP_FAMILY}</h3> 
+		  
+      <!-- IF .family -->
+        <div class="snFMSUsers">
+      		<!-- BEGIN family -->
+            <div class="snFasFriend ui-widget-content ui-corner-all" style="width: 200px;" uid="{family.USER_ID}" title="{family.USERNAME_NO_COLOR}">
+            	<div class="snActions">
+            		<a href="{family.U_DELETE}"><div class="snActionClose"></div></a>
+            	</div>
+            	<a href="{family.U_PROFILE_LINK}"><span class="user_avatar ui-widget ui- widget-header ui- corner-all">{family.AVATAR}</span></a>
+            	<span class="snFmsUsername">{family.U_RELATIVE}</span>
+            	<br />
+            	<span>{family.STATUS}<!-- IF not family.APPROVED --><br >({L_SN_UP_NOT_APPROVED})<!-- ENDIF --></span>
+            </div> 
+          <!-- END family -->
+        </div>
+      <!-- ELSE -->
+        {L_SN_UP_APPROVE_NO_FAMILY_MEMBER}
+      <!-- ENDIF -->
+      
+		<span class="corners-bottom"><span></span></span>
+	</div>
+</div>
+	
+<!-- INCLUDE ucp_footer.html -->

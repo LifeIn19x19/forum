@@ -1,0 +1,349 @@
+/* Styles for player containers */
+.wp-eidogo .player-container, .wp-eidogo iframe {
+	border: 0;
+	overflow: hidden;
+}
+
+.wp-eidogo-compact .player-container, .wp-eidogo-compact iframe,
+.wp-eidogo-compact-inline .player-container, .wp-eidogo-compact-inline iframe {
+	width: 423px;
+	height: 621px;
+}
+
+.wp-eidogo-full .player-container, .wp-eidogo-full iframe,
+.wp-eidogo-full-inline .player-container, .wp-eidogo-full-inline iframe {
+	width: 720px;
+	height: 600px;
+}
+
+/* Styles for more compact/organized full eidogo theme */
+.eidogo-player.theme-full {
+	width: 710px !important;
+}
+
+.eidogo-player.theme-full .controls-container {
+	width: 284px !important;
+}
+
+.eidogo-player.theme-full .move-number {
+	left: 177px !important;
+	top: 10px !important;
+	width: 59px;
+	height: 19px;
+	line-height: 19px;
+	padding: 0;
+	text-align: center;
+}
+
+.eidogo-player.theme-full .controls {
+	padding-left: 5px !important;
+}
+
+.eidogo-player.theme-full .controls .control {
+	margin-left: -1px !important;
+}
+
+.eidogo-player.theme-full .nav-slider {
+	width: 274px !important;
+}
+
+.eidogo-player.theme-full .variations-container {
+	width: 250px !important;
+}
+
+.eidogo-player.theme-full .tools-container {
+	width: 274px !important;
+}
+
+.eidogo-player.theme-full .comments {
+	width: 268px !important;
+	height: 244px !important;
+	border: 0 !important;
+}
+
+.eidogo-player.theme-full .comments-edit {
+	width: 285px !important;
+	height: 269px !important;
+}
+
+.eidogo-player.theme-full .comments-edit-ta {
+	width: 285px !important;
+	margin: 0 !important;
+	border: 0 !important;
+	height: 269px !important;
+}
+
+.eidogo-player.theme-full .comments-edit-done, .eidogo-player.theme-full .game-info-edit-done {
+	width: 271px !important;
+	margin-right: 0 !important;
+}
+
+.eidogo-player.theme-full .game-info-edit {
+	width: 285px !important;
+	height: 299px !important;
+}
+
+.eidogo-player.theme-full .game-info-edit-form {
+	padding: 10px 10px 0 10px !important;
+	height: 259px !important;
+}
+
+.eidogo-player.theme-full .game-info-edit-form input {
+	width: 150px !important;
+}
+
+.eidogo-player.theme-full .game-info-edit-form table {
+	font-size: 100%;
+}
+
+.eidogo-player.theme-full .nav-tree-container {
+	width: 279px !important;
+	height: 120px !important;
+}
+
+.eidogo-player.theme-full .nav-tree-container ul {
+	padding-bottom: 0.1px !important;
+}
+
+.eidogo-player.theme-full .nav-tree-container ul li:last-child {
+	margin-bottom: -19px !important;
+}
+
+.eidogo-player.theme-full .options {
+	width: 289px !important;
+}
+
+.eidogo-player.theme-full .options a {
+	width: 127px !important;
+	margin-bottom: 0px !important;
+	margin-top: 0px !important;
+}
+
+.eidogo-player.theme-full .info .game {
+	height: 106px !important;
+	overflow: auto;
+	clear: left;
+}
+
+.eidogo-player.theme-full .search-container {
+	width: 275px !important;
+	border: 0 !important;
+	height: 254px !important;
+	padding: 15px 5px 30px !important;
+	overflow-x: hidden !important;
+}
+
+.eidogo-player.theme-full .search-container .search-result .pw {
+	width: 65px !important;
+}
+
+.eidogo-player.theme-full .search-container .search-result .pb {
+	width: 65px !important;
+}
+
+.eidogo-player.theme-full .search-container .search-result .re {
+	width: 30px !important;
+}
+
+.eidogo-player.theme-full .search-container .search-result .dt {
+	width: 55px !important;
+	text-align: right;
+}
+
+/* Fix for options in compact theme */
+.eidogo-player.theme-compact .options {
+	width: 421px;
+}
+
+.eidogo-player.theme-compact .options a {
+	width: 207px;
+}
+
+/* Use black and white depending on context (more readable than red) */
+.eidogo-player .board .point.marker.label {
+	color: black !important;
+	padding: 0 !important;
+	height: 19px !important;
+	width: 19px !important;
+	line-height: 19px !important;
+	text-align: center;
+}
+
+.eidogo-player .board .point.marker.label.on-black {
+	color: white !important;
+}
+
+.eidogo-player .board .point.marker {
+	background: transparent url(images/markers.png) no-repeat scroll -76px 0px !important;
+}
+
+.eidogo-player .board .point.marker.dim {
+	background: transparent url(eidogo/player/images/dim.png) no-repeat scroll left top !important;
+}
+
+.eidogo-player .board .point.marker.triangle          { background-position:   0px -19px !important; }
+.eidogo-player .board .point.marker.square            { background-position: -19px -19px !important; }
+.eidogo-player .board .point.marker.circle            { background-position: -38px -19px !important; }
+.eidogo-player .board .point.marker.ex                { background-position: -57px -19px !important; }
+.eidogo-player .board .point.marker.current           { background-position: -76px -19px !important; }
+.eidogo-player .board .point.marker.territory-white   { background-position: -95px -19px !important; }
+.eidogo-player .board .point.marker.territory-black   { background-position: -95px   0px !important; }
+.eidogo-player .board .point.marker.triangle.on-black { background-position:   0px   0px !important; }
+.eidogo-player .board .point.marker.square.on-black   { background-position: -19px   0px !important; }
+.eidogo-player .board .point.marker.circle.on-black   { background-position: -38px   0px !important; }
+.eidogo-player .board .point.marker.ex.on-black       { background-position: -57px   0px !important; }
+
+/* For problem mode, make sure three lines are exactly visible for neatness */
+.eidogo-player.theme-problem .comments {
+	height: 39px !important;
+	line-height: 13px;
+}
+
+.eidogo-player.theme-problem .comments .comment-status,
+.eidogo-player.theme-problem .comments .comment-pass {
+	margin-bottom: 0;
+}
+
+/* Some fancy markup for comments */
+.eidogo-player .comments .right {
+	color: #0000aa;
+	font-style: inherit;
+}
+
+.eidogo-player .comments .wrong {
+	color: #aa0000;
+	font-style: inherit;
+}
+
+.eidogo-player .comments .wstone {
+	background: transparent url(images/tiny-theme/w.png) no-repeat scroll center center;
+	padding: 4px;
+	font-style: inherit;
+	color: black;
+}
+
+.eidogo-player .comments .bstone {
+	background: transparent url(images/tiny-theme/b.png) no-repeat scroll center center;
+	padding: 4px;
+	font-style: inherit;
+	color: white;
+}
+
+/* Basic layout within the page */
+.wp-eidogo  {
+	margin: 1.25em 0;
+}
+
+.wp-eidogo.alignleft {
+	display: inline; /* IE6 fix for float margins */
+	float: left;
+	margin: 0 10px 10px 0;
+}
+
+.wp-eidogo.alignright {
+	display: inline; /* IE6 fix for float margins */
+	float: right;
+	margin: 0 0 10px 10px;
+}
+
+.wp-eidogo.aligncenter {
+	clear: both;
+}
+
+.wp-eidogo.aligncenter .player-container,
+.wp-eidogo-problem.aligncenter .eidogo-player {
+	margin: 0 auto;
+}
+
+/* Make theme for widget more compact */
+.widget-random-go-problem .wp-eidogo {
+	text-align: center;
+}
+
+.widget-random-go-problem .player-container .eidogo-player {
+	margin: 0 auto;
+}
+
+.widget-random-go-problem .eidogo-player.theme-problem .board.size19 {
+	width: 253px !important;
+	height: 253px !important;
+	background-image: url(images/tiny-theme/board-19.png);
+}
+
+.widget-random-go-problem .eidogo-player.theme-problem .board.size13 {
+	width: 175px !important;
+	height: 175px !important;
+	background-image: url(images/tiny-theme/board-13.png);
+}
+
+.widget-random-go-problem .eidogo-player.theme-problem .board.size9 {
+	width: 123px !important;
+	height: 123px !important;
+	background-image: url(images/tiny-theme/board-9.png);
+}
+
+.widget-random-go-problem .eidogo-player.theme-problem .board .point {
+	width: 13px !important;
+	height: 13px !important;
+	overflow: hidden; /* for IE6 */
+}
+
+.widget-random-go-problem .eidogo-player.theme-problem .board .point.stone.white {
+	background-image: url(images/tiny-theme/w.png);
+}
+
+.widget-random-go-problem .eidogo-player.theme-problem .board .point.stone.black {
+	background-image: url(images/tiny-theme/b.png);
+}
+
+.widget-random-go-problem .eidogo-player.theme-problem .board .point.marker.dim {
+	background-image: url(images/tiny-theme/dim.png);
+}
+
+.widget-random-go-problem .eidogo-player .board .point.marker {
+	background: transparent url(images/tiny-theme/markers.png) no-repeat scroll -52px 0px !important;
+}
+
+.widget-random-go-problem .eidogo-player .board .point.marker.triangle          { background-position:   0px -13px !important; }
+.widget-random-go-problem .eidogo-player .board .point.marker.square            { background-position: -13px -13px !important; }
+.widget-random-go-problem .eidogo-player .board .point.marker.circle            { background-position: -26px -13px !important; }
+.widget-random-go-problem .eidogo-player .board .point.marker.ex                { background-position: -39px -13px !important; }
+.widget-random-go-problem .eidogo-player .board .point.marker.current           { background-position: -52px -13px !important; }
+.widget-random-go-problem .eidogo-player .board .point.marker.territory-white   { background-position: -65px -13px !important; }
+.widget-random-go-problem .eidogo-player .board .point.marker.territory-black   { background-position: -65px   0px !important; }
+.widget-random-go-problem .eidogo-player .board .point.marker.triangle.on-black { background-position:   0px   0px !important; }
+.widget-random-go-problem .eidogo-player .board .point.marker.square.on-black   { background-position: -13px   0px !important; }
+.widget-random-go-problem .eidogo-player .board .point.marker.circle.on-black   { background-position: -26px   0px !important; }
+.widget-random-go-problem .eidogo-player .board .point.marker.ex.on-black       { background-position: -39px   0px !important; }
+
+/* Make tiny text in widget aligned correctly and more readable */
+.widget-random-go-problem .eidogo-player.theme-problem .board .point.marker.label {
+	padding: 0;
+	font-size: 10px;
+	line-height: 13px !important;
+	height: 13px !important;
+	width: 13px !important;
+	text-align: center;
+	background: none;
+	font-weight: normal;
+}
+
+/* Smaller comment layout for widget */
+.widget-random-go-problem .eidogo-player.theme-problem .comments {
+	height: auto !important;
+	min-height: 33px !important;
+	line-height: 11px !important;
+	font-size: 10px;
+	padding: 3px;
+}
+
+/* Fix controls for really tiny problems */
+.widget-random-go-problem .eidogo-player.theme-problem {
+	overflow: hidden;
+}
+
+.widget-random-go-problem .eidogo-player.theme-problem .controls {
+	min-width: 88px;
+}
+
+/* vim: set ts=4 sts=4 sw=4 noet : */

@@ -1,0 +1,1738 @@
+/*******************************************************\
+|* SOCIALNET - GENERAL                                 *|
+\*******************************************************/
+.rtl ul.linklist.leftside li, .rtl ul.linklist.rightside li {
+	float: right;
+}
+
+.snUsername {
+  font-weight: bold;
+}
+
+#dialog .submit-buttons, #dialog a {
+	display: none;
+}
+
+.ui-dialog .ui-dialog-buttonp ane button {
+	float: right;
+}
+
+.ui-widget-content {
+	border-color: #ddd;
+}
+
+a.button1, a.button1:link, a.button1:visited, a.button1:active, a.button2, a.button2:link, a.button2:visited, a.button2:active {
+	background-position: left top;
+}
+
+
+/*
+* navbar icon
+*/
+.icon-profile, .icon-mainpage {
+	background-position: 0 50%;
+	background-repeat: no-repeat;
+	background-image: none;
+	padding: 1px 0 0 17px;
+}
+
+.rtl .icon-profile, .rtl .icon-mainpage {
+	background-position: 100% 50%;
+	padding: 1px 17px 0 0;
+}
+
+.icon-profile		{ background-image: url("{T_IMAGESET_PATH}/socialnet/icon_profile.gif"); }
+.icon-mainpage		{ background-image: url("{T_IMAGESET_PATH}/socialnet/icon_mainpage.gif"); }
+
+.snUserAvatar, .snUserAvatar-1 {
+	float:left;
+	text-align:center;
+	display: block;
+	text-align:center;
+	margin: 0;
+	height: auto;
+}
+
+.rtl .snUserAvatar, .rtl .snUserAvatar-1 {
+	float: right;
+}
+
+.snUserAvatar-1 {
+	border: 1px solid #CCC;
+}
+
+/*******************************************************\
+|* SOCIALNET - ACTION BUTTONS                          *|
+\*******************************************************/
+.snActions {
+  float: right;
+}
+
+.rtl .snActions {
+  float: left;
+}
+
+.snActionsProfile a {
+	margin: 0 4px;
+}
+
+.snActions .snActionClose, .snActions .snActionDelete {
+  background: transparent url("{T_IMAGESET_PATH}/socialnet/close.png") no-repeat 0 0;
+  height: 15px;
+  width: 15px;
+  cursor: pointer;
+  position: absolute;
+  opacity: 1;
+}
+
+.snActionBlock:hover .snActions .snActionClose, .snActionBlock:hover .snActions .snActionDelete {
+  background-position: 0 -15px;
+}
+
+.snActionBlock:hover .snActions .snActionClose:hover, .snActionBlock:hover .snActions .snActionDelete:hover, .snActionBlockHidden:hover .snActions .snActionClose:hover, .snActionBlockHidden:hover .snActions .snActionDelete:hover,
+:not(.snActionBlock) .snActions .snActionClose:hover, .snActionBlock:hover .snActions .snActionDelete:hover, .snActionBlockHidden:hover .snActions .snActionClose:hover, .snActionBlockHidden:hover .snActions .snActionDelete:hover {
+  background-position: 100% 100%;
+}
+
+.snActions .snActionClose,.snActions .snActionDelete, .snActions .snActionDelete.delete_comment {
+  margin-left: -15px;
+}
+
+.rtl .snActions .snActionClose, .rtl .snActions .snActionDelete.delete_comment {
+  margin-right: -15px;
+  margin-left: 0px;
+}
+
+.snActionBlockHidden .snActions {
+  display: none;
+}
+
+.snActionBlockHidden:hover .snActions {
+  display: block;
+}
+
+#socialnet_im .snActions {
+  margin: 5px 0 0;
+}
+
+.snUsStatusBlock .snActions {
+  padding: 3px 0;
+}
+
+.snUsMoreBottom, .snMpMoreBottom, .snUsMore{
+  background-color: #EDEFF4;
+  padding: 5px;
+  margin-top: 3px;
+  font-size: 10px;
+  border-top: 1px solid #D2D9E7;
+  border-bottom: 1px solid #D2D9E7;
+}
+
+.snUsMore a, .snUsMoreBottom a, .snMpMore a, .snMpMoreBottom a {
+  cursor: pointer;
+  padding-right: 12px;
+  background: transparent url("{T_IMAGESET_PATH}/socialnet/arrow-down.png") no-repeat 100% 60%;
+}
+
+.rtl .snUsMore a, .rtl .snUsMoreBottom a, .rtl .snMpMore a, .rtl .snMpMoreBottom a {
+  padding-right: 0px;
+  padding-left: 12px;
+  background-position: 0 60%;
+}
+
+/*******************************************************\
+ |* SOCIALNET - INSTANT MESSENGER                       *|
+ \*******************************************************/
+#phpbb.im-page {
+	margin-bottom: 20px;
+}
+
+#socialnet_im.snImDockWrapper {
+	position: fixed;
+	bottom: 0;
+	height: 24px;
+	left: auto;
+	right: 20px;
+	z-index: 999;
+	border-right: 1px solid #999;
+}
+
+.rtl #socialnet_im.snImDockWrapper {
+	right: auto;
+	left: 20px;
+	border-right: none;
+	border-left: 1px solid #999;
+}
+
+
+#socialnet_im .snImGroup {
+	position: relative;
+	float: right;
+}
+
+.rtl #socialnet_im .snImGroup {
+	float: left;
+}
+
+#socialnet_im .snImButton {
+	/*position: relative;*/ /* Schovat vrchni linku pri otevreni bloku */
+	line-height: 24px;
+	font-weight: bold;
+	padding: 0 5px;
+	cursor: pointer;
+	border-top: 1px solid #999;
+	border-left: 1px solid #999;
+	width: 180px;
+	background: #eee url("{T_IMAGESET_PATH}/socialnet/im_toolbarbg.gif") repeat-x 0 0;
+	text-overflow: ellipsis;
+	/* Vsechny prohlizece krome FF, jinak W3C Validator hlasi chybu */
+	white-space: nowrap;
+	z-index: 99;
+}
+
+.rtl #socialnet_im .snImButton {
+	border-left: none;
+	border-right: 1px solid #999;
+}
+
+#socialnet_im .snImButton:hover, #socialnet_im .snImButton.snImOpener {
+	background-color: #fafafa;
+	background-image: none;
+}
+
+#socialnet_im .snImNav {
+	width: auto;
+	font-weight: bold;
+}
+
+#socialnet_im .snImButton.snImOpener {
+	border-top: 1px solid #fafafa;
+}
+
+#socialnet_im #snImOnline .snImButton {
+	width: 167px;
+	padding-left: 28px;
+	background-repeat: no-repeat;
+	background-position: 3px 50%;
+}
+
+.rtl #socialnet_im #snImOnline .snImButton {
+	padding-left: 0px;
+	padding-right: 28px;
+	background-position: 98% 50%;
+}
+
+#socialnet_im #snImOnline .label {
+	float: left;
+	padding-right: 5px;
+}
+
+.rtl #socialnet_im #snImOnline .label {
+	float: right;
+	padding-right: 0;
+	padding-left: 5px;
+}
+
+.snImButton .snImStatus, .snImTyping {
+	background: transparent none no-repeat 50% 50%;
+	padding: 4px;
+	margin-left: 3px;
+}
+
+.rtl .snImButton .onlineStatus {
+	margin-left: 0;
+	margin-right: 3px;
+}
+
+.snImButton .snImStatus.snImOnline {
+	background-image: url("{T_IMAGESET_PATH}/socialnet/im_online.png");
+}
+
+.snImButton .snImStatus.snImAway {
+	background-image: url("{T_IMAGESET_PATH}/socialnet/im_away.png");
+}
+
+.snImButton .snImStatus.snImOffline {
+	background-image: url("{T_IMAGESET_PATH}/socialnet/im_offline.png");
+}
+
+.snImButton .snImUnread {
+	position: absolute;
+	top: -7px;
+	padding: 2px;
+	background-color: #ff0000;
+	color: #fff;
+	display: block;
+	line-height: 10px;
+	z-index:290;
+}
+
+.ltr .snImButton .snImUnread {
+	right: 20px;
+}
+
+.rtl .snImButton .snImUnread {
+	left: 20px;
+}
+
+#socialnet_im .snImBlock {
+	position: absolute;
+	background: #fff;
+	bottom: 24px;
+	left: auto;
+	right: -1px;
+	width: 260px;
+	border: 1px solid #999;
+	z-index: 190;
+}
+
+.rtl #socialnet_im .snImBlock {
+	left: -1px;
+	right: auto;
+}
+
+#socialnet_im #snImOnline .snImBlock {
+	width: 200px;
+}
+
+#socialnet_im .snImBlock .snImTitle {
+	padding: 0px 5px;
+	line-height: 24px;
+	font-weight: bold;
+	background: #0076B1 url("{T_THEME_PATH}/images/bg_list.gif") repeat-x 0 -10px;
+	color: #efefef;
+	border-bottom: 1px solid #999;
+	cursor: pointer;
+}
+
+#socialnet_im .snImButtons {
+	background-color: #efefef;
+	padding-bottom: 1px;
+}
+
+.snImSound.ui-icon {
+	float: left;
+	margin: 3px 0 3px 10px;
+	height: 11px;
+	cursor: pointer;
+	background: transparent url("{T_IMAGESET_PATH}/socialnet/sound.png") no-repeat 0 0;
+}
+
+.snImSound.ui-icon.ui-icon-volume-off {
+	background-position: 0 100%;
+}
+
+.rtl .snImSound {
+	float: right;
+	margin: 3px 3px 3px 0;
+}
+
+.snImLoginLogout {
+	float: right;
+	margin: 1px 3px 1px 0;
+}
+
+.rtl .snImLoginLogout {
+	float: left;
+	margin: 1px 0 1px 3px;
+}
+
+.snImLogin, .snImLogout, .snImLogin span, .snImLogout span {
+	background: transparent url("{T_IMAGESET_PATH}/socialnet/im_login.gif") repeat-x 0 0;
+	display: block;
+	float: left;
+}
+
+.snImLogin span, .snImLogout span {
+	line-height: 15px;
+	display: block;
+	background-repeat: no-repeat;
+	font-weight: bold;
+	padding: 0px 4px;
+	font-size: 8px;
+}
+
+.snImLogin span {
+	background-position: left -30px;
+}
+
+.snImLogout span {
+	background-position: right -60px;
+}
+
+.snImLogout.selected {
+	background-position: 0 -15px;
+}
+
+.snImLogout.selected span {
+	background-position: right -75px;
+	color: #fff;
+}
+
+.snImLogin.selected {
+	background-position: 0 -15px;
+}
+
+.snImLogin.selected span {
+	background-position: left -45px;
+	color: #fff;
+}
+
+.rtl label.snImLogin {
+	padding-left: 0;
+}
+
+.snImLoginLogout label {
+	cursor: pointer;
+	padding: 0;
+	margin: 0;
+}
+
+#socialnet_im #snImOnlineList {
+	overflow-x: hidden;
+	overflow-y: auto;
+	max-height: 400px;
+}
+
+#socialnet_im .snImUserLine {
+	clear: left;
+	background: #fff none no-repeat 98% 50%;
+	line-height: 23px;
+	height: 26px;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	/* Vsechny prohlizece krome FF, jinak W3C Validator hlasi chybu */
+	padding-right: 16px;
+	padding-left: 3px;
+	/*width: 183px;*/
+	cursor: pointer;
+}
+
+.rtl #socialnet_im .snImUserLine {
+	background-position: 2% 50%;
+	padding-right: 0;
+	padding-left: 16px;
+	clear: right;
+}
+
+.snImUserLine span {
+	float: left;
+	padding: 2px 5px;
+	overflow: hidden;
+}
+
+.rtl .snImUserLine span {
+	float: right;
+	padding: 2px 5px;
+}
+
+#socialnet_im .snImUserLine:hover {
+	background-color: #ddd;
+}
+
+#socialnet_im.snImDockWrapper .snImBlock .snImTextarea {
+	background: #fff url("{T_IMAGESET_PATH}/socialnet/im_message.png") no-repeat 2px 2px;
+	padding-left: 20px;
+	border-top: 1px solid #ccc;
+	padding-top: 2px;
+	/*bottom: 25px;
+	position: fixed;*/
+	width: 240px;
+}
+
+.rtl #socialnet_im .snImBlock .snImTextarea {
+	background-position: 99% 2px;
+	padding-left: 0;
+	padding-right: 20px;
+}
+
+#socialnet_im .snImBlock .snImMsgs {
+	height: 240px;
+	padding: 5px 5px;
+	/*position: relative;*/
+	overflow-x: hidden;
+	overflow-y: auto;
+	display: block;
+	font-size: 11px;
+	color: #333333;
+}
+
+.rtl #socialnet_im .snImBlock .snImMsgs strong {
+	float: right;
+}
+
+.snImMsg {
+	padding: 6px 0;
+	border-top: 1px solid #EEEEEE;
+	display: block;
+/*	position: relative;*/
+}
+
+.snImMsg:first-child {
+	border-top: none;
+	padding-top: 0;
+}
+
+.snImMsg:last-child {
+	padding-bottom: 0;
+}
+
+.snImMsgTime {
+	color:#888;
+	font-size: 9px;
+	position: relative;
+	float: right;
+	right: 0px;
+	top: -2px;
+	display:none;
+}
+
+#socialnet_im .snImBlock .snImTextarea textarea.snImMessage {
+	height: 16px;
+	width: 234px;
+	border: none;
+}
+
+#socialnet_im .snUsername a {
+	color: #333;
+	text-decoration: none;
+}
+
+.snImChatBox .snImButtons .ui-icon {
+	height:18px;
+	width:18px;
+	float:right;
+	cursor: pointer;
+	background-position: 50% 50%;
+}
+
+.rtl .snImChatBox .snImButtons .ui-icon {
+	float: left;
+}
+
+.snImCBAvatar {
+	float:left;
+	margin-top:0px;
+	margin-left: -5px;
+	margin-right: 4px;
+	height:30px;
+	display:inline-block;
+}
+
+.rtl .snImCBAvatar {
+	float: right;
+	margin-left: 4px;
+	margin-right: -5px;
+}
+
+.ui-icon.snImCBSmiley {
+	background-image:url('{T_IMAGESET_PATH}/socialnet/cb_bar_smiley.png');
+}
+
+.ui-icon.snImCBHistory {
+	background-image:url('{T_IMAGESET_PATH}/socialnet/cb_bar_history.png');
+}
+
+.ui-icon.snImCBProfile {
+	background-image:url('{T_IMAGESET_PATH}/socialnet/cb_bar_user.png');
+}
+
+.snImTyping {
+	background-image:url('{T_IMAGESET_PATH}/socialnet/im_typing.png');
+	padding: 12px 9px;
+	position: absolute;
+	display: none;
+}
+
+.snImHistory {
+	background: transparent url("{T_IMAGESET_PATH}/socialnet/im_history_outgoing.png") no-repeat 0 0;
+	padding-left: 16px;
+}
+
+.rtl .snImHistory {
+	background-position: 100% 0;
+	padding-left: 0px;
+	padding-right: 16px;
+}
+
+.snImHistory.incoming {
+	background-image: url("{T_IMAGESET_PATH}/socialnet/im_history_incoming.png");
+}
+
+
+/****
+ * MOBILE
+ */
+#socialnet_im.snImDockWrapper-mobile {
+	/*position: absolute;*/
+	height: 24px;
+	left: auto;
+	right: 20px;
+	z-index: 999;
+	border-right: 1px solid #999;
+	font-size: 1.2em;
+}
+
+.rtl #socialnet_im.snImDockWrapper-mobile {
+	right: auto;
+	left: 20px;
+	border-right: none;
+	border-left: 1px solid #999;
+}
+
+#socialnet_im.snImDockWrapper-mobile .snImBlock .snImTextarea {
+	background: #fff url("{T_IMAGESET_PATH}/socialnet/im_message.png") no-repeat 2px 2px;
+	padding-left: 20px;
+	border-top: 1px solid #ccc;
+	padding-top: 2px;
+	width: 240px;
+}
+
+.rtl #socialnet_im.snImDockWrapper-mobile .snImBlock .snImTextarea {
+	background-position: 99% 2px;
+	padding-left: 0;
+	padding-right: 20px;
+}
+
+/*******************************************************\
+ |* SOCIALNET - USER STATUS                             *|
+ \*******************************************************/
+#socialnet_us.snUsHeader {
+	margin: 0 auto;
+	padding: 0;
+	z-index: 99;
+	width: 600px;
+}
+
+#socialnet_us .snUsMembShareStatus, .snUsProfile {
+	min-width: 500px;
+	overflow: hidden;
+	display: block;
+	margin: 0 auto;
+	margin-bottom: 5px;
+}
+
+#socialnet_us.snUsHeader .snUsShared {
+	display: none;
+}
+
+#socialnet_us .snUsShare.navbar {
+	position: absolute;
+	width: 580px;
+	padding: 0px 6px;
+}
+
+#socialnet_us .snUsShare textarea {
+	width: 99%;
+	border: solid 1px #AEAEAE;
+	line-height: 21px;
+	/*font-size: 12px; */
+	height: 22px;
+}
+
+#socialnet_us .snUsShare .snUsWatermark {
+	color: #888;
+}
+
+#snUsNoStatus {
+	/*font-size: 12px;*/
+	padding-top: 5px;
+}
+
+.snUsShare .snUsButtonOver, .snUsShareComment .snUsButtonCommentOver {
+	display: none;
+}
+
+.snUsShare span.corners-bottom {
+	margin: 0 -6px;
+}
+
+.snUsShare .ui-button {
+	margin-top: 5px;
+	float: right;
+	padding: 1px 8px;
+}
+
+.rtl .snUsShare .ui-button {
+	float: left;
+}
+
+.snUsProfile .snUsStatusBlock {
+	border-top: 1px solid #E9E9E9;
+	padding: 10px 0;
+	padding-left: 60px;
+}
+
+.rtl .snUsProfile .snUsStatusBlock {
+	padding-left: 0;
+	padding-right: 60px;
+}
+
+.snUsStatusBox {
+	font-size: 11px;
+	min-height: 50px;
+	padding-right: 5px;
+}
+
+.rtl .snUsStatusBox {
+	padding-left: 5px;
+	padding-right: 0;
+}
+
+.snUsCommentBox {
+	background-color: #EDEFF4;
+	padding: 5px;
+	font-size: 11px;
+	margin-top: 1px;
+	border-bottom: 1px solid #D2D9E7;
+}
+
+.snUsStatusBox .status_time, .snUsCommentBox .status_time {
+	color: #999;
+	display: block;
+	padding: 5px 0;
+	padding-left: 37px;
+}
+
+.rtl .snUsStatusBox .status_time, .rtl .snUsCommentBox .status_time {
+	padding-left: 0;
+	padding-right: 37px;
+}
+
+.snUsStatusBox .status_time {
+	padding-left: 0;
+}
+
+.rtl .snUsStatusBox .status_time {
+	padding-right: 0;
+}
+
+.snUsProfile .status_poster_avatar {
+	display:inline-block;
+	max-width: 50px;
+	max-height: 50px;
+	margin-left: -60px;
+	padding:2px;
+	float: left;
+}
+
+.rtl .snUsProfile .status_poster_avatar {
+	float: right;
+	margin-left: 0;
+	margin-right: -60px;
+}
+
+.snUsProfile .comment_poster_avatar img {
+	border: 0;
+	max-width: 30px;
+	max-height: 30px;
+	padding-right: 7px;
+}
+
+.rtl .snUsProfile .comment_poster_avatar img {
+	padding-right: 0px;
+	padding-left: 7px;
+}
+
+.snUsProfile .comment_text {
+	padding-left: 37px;
+	padding-right: 20px;
+}
+
+.rtl .snUsProfile .comment_text {
+	padding-left: 20px;
+	padding-right: 37px;
+}
+
+.snUsProfile .snUsShareComment {
+	background-color: #EDEFF4;
+	padding: 5px;
+	margin-top: 1px;
+	border-bottom: 1px solid #D2D9E7;
+}
+
+.snUsProfile .snUsShareComment textarea {
+	width: 99%;
+	border: solid 1px #BDC7D8;
+	/*font-size: 11px;*/
+	color: #000;
+	line-height: 21px;
+}
+
+.snUsProfile .snUsShareComment .snUsWatermarkComment {
+	color: #888;
+}
+
+.snUsProfile .snUsShareComment .ui-button {
+	margin-top: 5px;
+	float: right;
+	font-weight: normal;
+	padding: 1px 8px;
+}
+
+.rtl .snUsProfile .snUsShareComment .ui-button {
+	float: left;
+}
+
+/************
+ * FETCH
+ ***********/
+.snUsFetchBlock .loader {
+	text-align: center;
+	align: center;
+	padding: 4px 0;
+	display:none;
+}
+
+.snUsFetchBlock .snUsFetchPreview, .snUsThumbs {
+	display: none;
+	padding: 4px 0;
+}
+
+.snUsFetchAdditional {
+	margin-bottom: 10px;
+}
+
+.snUsFetchImages {
+	width: 120px;
+	float: left;
+}
+
+.rtl .snUsFetchImages {
+	float: right;
+}
+
+.snUsFetchData .title {
+	font-size: 1.2em;
+	font-weight: bold;
+}
+
+.snUsFetchButton.ui-button {
+	margin: 2px;
+	display:none;
+	float: left;
+}
+
+.rtl .snUsFetchButton.ui-button {
+	float: right;
+}
+
+.snUsPageURL {
+	padding: 3px 0;
+}
+.snUsPageTitle {
+	font-weight: bold;
+}
+.snUsPageDesc, .snUsPageAdditional {
+	font-size: .9em;
+	margin-top: 10px;
+}
+.snUsPageInfo {
+	margin-top: 15px;
+}
+.snUsPageProvider {
+	font-size: .85em;
+}
+
+
+.snUsPagePreview {
+	float: left;
+	padding: 2px 0 0;
+}
+
+.rtl .snUsPagePreview {
+	float: right;
+	padding: 0 0 2px;
+}
+
+.snUsPageVideo {
+	float: left;
+	padding: 0 5px 0 2px; 
+}
+
+.rtl .snUsPageVideo {
+	float: right;
+	padding: 0 2px 0 5px;
+}
+
+.snUsVideoOverlay {
+	background: #000;
+	width:150px;
+	height:150px;
+	position:relative;
+	margin-left:2px;
+	opacity:0.4;
+	cursor:pointer;
+}
+
+.rtl .snUsVideoOverlay {
+	margin-left: 0;
+	margin-right: 2px;
+}
+
+.snUsPageImage {
+	float:left;
+	padding: 0px 5px 0px 2px;
+}
+
+.rtl .snUsPageImage {
+	float: right;
+	padding: 0 2px 0 5px;
+}
+
+/********************************************\
+|* MAINPAGE                                 *|
+\********************************************/
+
+#socialnet_mainpage {
+	margin-top: 8px;
+}
+
+#socialnet_mainpage .snMpLeftColumn {
+  width: 20%;
+  float: left;
+  font-size: 11px;
+}
+
+.rtl #socialnet_mainpage .snMpLeftColumn {
+  float: right;
+}
+
+#socialnet_mainpage .snMpRightColumn {
+  width: 22%;
+  float: right;
+  font-size: 11px;
+}
+
+.rtl #socialnet_mainpage .snMpRightColumn {
+  float: left;
+}
+
+* #middle_column.snUsProfile {
+  width:54% ;
+  min-width: 200px;
+  min-height: 550px;
+  border-left: 1px solid #ccc;
+  border-right: 1px solid #ccc;
+  padding: 0 10px;
+}
+
+#middle_column.snUsProfile.snMpNoRightBorder {
+	width: 55%;
+}
+
+.ltr #middle_column.snUsProfile.snMpNoRightBorder {
+	border-right: none;
+	padding-right: 0px;
+}
+
+.rtl #middle_column.snUsProfile.snMpNoRightBorder {
+	border-left: none;	
+	padding-left: 0px;
+}
+
+/*.snMpRightColumn h3, .snMpLeftColumn h3 {
+  margin: 0 0 2px 0;
+  padding: 3px;
+  border: 0;
+  border-top: 1px solid #ddd;
+  text-transform: none;
+  color: #000;
+  background-color: #EFF2F7;
+  font-size: 12px;
+}
+
+.snMpLeftColumn h3, .rtl .snMpLeftColumn  h3 {
+}
+
+.rtl .snMpRightColumn  h3, .rtl .snMpLeftColumn  h3 {
+  padding: 3px;
+}*/
+
+.snMpH3SeeAll a {
+  float: right;
+  font-weight: normal;
+}
+
+#socialnet_mainpage .header dl dt {
+  font-size: 11px;  
+}
+
+/*
+* Left column
+*/
+
+.snMpLeftColumn ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.snMpLeftColumn ul li:not(.header):hover {
+  background-color: #EFF2F7;
+}
+
+.snMpLeftColumn ul li.active {
+  background-color: #DBE2EE;
+  font-weight: bold;
+}
+
+.snMpLeftColumn ul li a {
+  color: #000;
+  display: block;
+  padding: 3px 10px 3px 7px;
+}
+
+.rtl .snMpLeftColumn ul li a {
+  padding: 3px 7px 3px 10px;
+}
+
+.snMpLeftColumn ul li a:hover {
+  color: #000;
+  text-decoration: none;
+}
+
+.snMpLeftColumn ul li .num_cube {
+  float: right;
+  background-color: #D3DBE7;
+  min-width: 14px;
+  height: 14px;
+  font-size: 9px;  
+  text-align: center;
+  margin-top: 1px;
+}
+
+.rtl .snMpLeftColumn ul li .num_cube {
+  float: left;
+}
+
+.snMpLeftColumn .snMpProfileMy {
+  margin-bottom: 15px;
+  height: 50px;
+}
+
+.snMpProfileMy .snMpAvatar {
+	padding: 0 10px 0 0;
+	display: inline-block;
+	float: left;
+}
+
+.rtl .snNpProfileMy .snMpAvatar {
+	padding: 0 0 0 10px;
+	float: right;
+}
+
+.snMpProfileMy .snMpAvatar img {
+  max-width: 50px;
+  max-height: 50px;
+  border: 0;
+}
+
+.rtl .snMpProfileMy .snMpAvatar img {
+  float: right;
+}
+
+.snMpSearch {
+  margin: 10px 0px;
+}
+
+.snMpSearch #search-text {
+  float: left;
+  padding: 0;
+  padding-left: 3px;
+  border: 0;
+  border: 1px solid #bbb;
+  border-right: none;
+  line-height: 20px;
+  height: 20px;
+}
+
+.rtl .snMpSearch #search-text {
+  float: right;
+  padding-left: 0;
+  padding-right: 3px;
+  border-left: 0;
+  border-right: 1px solid #bbb;
+}
+
+.snMpSearch #search-submit {
+  float: left;
+  padding: 0;
+  border: 1px solid #bbb;
+  border-left: none;
+}
+
+.rtl .snMpSearch #search-submit {
+  float: right;
+  border-left: 1px solid #bbb;
+  border-right: none;
+}
+
+.mpImOnlineUsers {
+  height: 300px;
+  overflow: auto;
+}
+
+.mpImOnlineUsers .snImUserLine {
+  clear: left;
+  background: #fff none no-repeat 95% 50%;
+  line-height: 26px;
+  height: 26px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  padding-right: 30px;
+  padding-left: 3px;
+  cursor: pointer;
+  color: #000;
+}
+
+.rtl .mpImOnlineUsers .snImUserLine {
+  background-position: 5% 50%;
+  padding-right: 0;
+  padding-left: 30px;
+}
+
+.mpImOnlineUsers .snImUserLine img {
+  float: left;
+  padding: 2px 5px 2px 0;
+}
+
+.rtl .mpImOnlineUsers .snImUserLine img {
+  float: right;
+  padding: 2px 5px;
+}
+
+.mpImOnlineUsers .snImUserLine:hover {
+  background-color: #EFF2F7;
+}
+
+/**
+* Right Column
+*/
+.snMpRightBlock {
+}
+
+.snMpRightBlocktext {
+  padding: 2px 0 2px 3px;
+  margin-bottom: 8px;
+}
+
+.rtl .snMpRightBlocktext {
+  padding: 2px 3px 2px 0px;
+}
+
+.snMpRightBlocktext a {
+  text-decoration: none;
+}
+
+.snMpPostTime {
+  line-height: 10px;
+}
+
+.snMpPostTime, .snMpPostTime a {
+  color: #888;
+}
+
+.snMpRightBlock:not(.forabg) ul.topiclist, .snMpLeftBlock:not(.forabg) ul.topiclist {
+	display: none;
+}
+
+.snMpRightBlock.forabg h3, .snMpLeftBlock.forabg h3 {
+	display: none;
+}
+
+.snMpRightBlock:not(.forabg) .bg1, .snMpLeftBlock .bg1 {
+	background: transparent;
+}
+
+.snMpRightBlock.forabg span a:hover {
+  text-decoration: none;
+  color: #CDEAFC;  
+}
+
+.snMpLeftBlock.forabg .bg1 {
+	background: #fff;
+}
+
+/**
+* Middle Column
+*/
+.snUsProfile .snMpTextBlock {
+  padding: 10px 0;
+  padding-left: 60px;
+  border-top: 1px solid #E9E9E9;
+  font-size: 11px;
+}
+
+.snUsProfile .add_user {
+  background: transparent url("{T_IMAGESET_PATH}/socialnet/add_user.png") no-repeat 40px 50%;
+}
+
+.snUsProfile .profile_changed {
+  background: transparent url("{T_IMAGESET_PATH}/socialnet/profile_changed.png") no-repeat 40px 8px;
+}
+
+.snUsProfile .new_family {
+  background: transparent url("{T_IMAGESET_PATH}/socialnet/new_family.png") no-repeat 40px 50%;
+}
+
+.snUsProfile .new_relationship {
+  background: transparent url("{T_IMAGESET_PATH}/socialnet/new_relationship.png") no-repeat 40px 50%;
+}
+
+.snUsProfile .snMpNoEntry {
+  padding: 15px 0;
+  color: #000;
+}
+
+#snMpShareStatus textarea {
+  width: 99%;
+  border: solid 1px #AEAEAE;
+  line-height: 21px;
+  height: 22px;
+  /*font-size: 12px;*/
+  padding: 5px 2px;
+}
+
+#snMpShareStatus .snUsWatermark {
+  color: #888;
+}
+
+#snMpShareStatus .snMpButtonOver {
+  display: none;
+}
+
+#snMpShareStatus input.ui-button {
+  margin-top: 5px;
+  float: right;
+  padding: 1px 8px;
+}
+
+.rtl #snMpShareStatus input.ui-button {
+  float: left;
+}
+
+#socialnet_mainpage .pagination {
+}
+
+.snMpLoadNewsOver {
+  text-align: right;
+  padding: 3px 4px;
+  font-size: 11px;
+}
+
+.rtl .snMpLoadNewsOver {
+  text-align: left;
+}
+
+.snMpLoadNews {
+  cursor: pointer;
+  padding-right: 12px;
+  background: transparent url("{T_IMAGESET_PATH}/socialnet/arrow-down.png") no-repeat 100% 60%;
+}
+
+.rtl .snMpLoadNews {
+  padding-right: 0px;
+  padding-left: 12px;
+  background-position: 0 60%;
+}
+
+.snMpMutualFriend {
+  float: left;
+  width: 49%;
+  margin-bottom: 10px;
+}
+
+.rtl .snMpMutualFriend {
+  float: right;
+}
+
+.snMpFriendRequest.snFasFriend {
+	width: 44% !important;
+	border: 0;
+}
+.snMpFriendRequest span:not(.user_avatar) {
+	clear: both;
+	display: inline-block;
+	width: 100%;
+}
+.snMpFriendRequest span.user_avatar {
+	float: none;
+}
+
+.rtl .snMpFriendRequest {
+  float: right;
+}
+
+.snMpLogin fieldset {
+	width: 80%;
+	margin: 0 auto;
+}
+
+.snMpLogin fieldset dl {
+	line-height: 0.8em;
+	padding: 2px 0;
+}
+.snMpLogin input.inputbox {
+	width: 95%;
+}
+.snMpLogin fieldset dl.snMpLoginHeader dt, .snMpLogin fieldset dl.snMpLoginHeader dd {
+	font-weight: bold;
+}
+
+.snMpLogin fieldset dl dt {
+	width: 44%;
+	float: left;
+}
+.snMpLogin fieldset dl dd {
+	width: 43%;
+	margin-left: 0%;
+	float: left;
+}
+.snMpLogin fieldset dl dd.snMpLoginButton {
+	width: 9%;
+}
+
+.snMpLogin fieldset dl dd.snMpLoginRegister {
+	width: 52%;
+}
+
+.rtl .snMpLogin fieldset dl dt {
+	float: right;
+}
+
+.rtl .snMpLogin fieldset dl dd {
+	margin-right: 0%;
+	float: right;
+}
+
+/********************************************\
+|* FRIEND APPROVAL SYSTEM                   *|
+\********************************************/
+
+.snFasFriendsBlock {
+}
+.rtl .snfasFriendsBlock {
+}
+
+.user_avatar {
+	display: inline-block;
+}
+
+.snFasFriend {      
+  width: 180px;
+  display:inline-block;
+  padding: 5px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+	font-size: 11px;
+	margin: 1px 4px 1px 0px;
+}
+
+/*fieldset .snFasFriend {
+	font-size: 1.0em;
+} */
+
+.snFasFriend.checked {
+  background: #ECD5D8;
+  color: #BC2A4D;
+}     
+
+.snFasFriendsBlock > a:link, .snFasFriendsBlock > a:active, .snFasFriendsBlock > a:visited, .snFasFriendsBlock > a:hover {
+  text-decoration: none;
+}
+
+.snFasFriend input[type=checkbox] {
+  display: none;
+}
+
+.snFasFriend span {
+  text-overflow: ellipsis; /* Vsechny prohlizece krome FF, jinak W3C Validator hlasi chybu */
+  overflow: hidden;
+}
+
+.snFasFriend span a {
+  padding: 2px 0;
+}
+
+fieldset .snFasFriend span a {
+  font-weight: normal;  
+}
+
+.snFasFriend span.snFmsUsername a {
+  font-weight: bold;  
+}
+
+fieldset dd.snFasBlock {
+  margin-left: 1%;
+}
+
+.rtl fieldset dd.snFasBlock {
+  margin-left: 0px;
+  margin-right: 1%;
+}
+
+.snFMSUsers span.user_avatar {
+	display: inline-block;
+	float: left;
+	margin-right: 5px;
+}
+
+.rtl .snFMSUsers span.user_avatar {
+	float: right;
+	margin-right: 0;
+	margin-left: 5px;
+}
+
+.snMpMutualFriend {
+	padding:2px;
+}
+
+.snMpMutualFriend  span, .snMpMutualFriend > a span {
+	text-align:center;
+	display: inline-block;
+	width:100%;
+}
+
+.snFMSUser-suggestion {
+	width: 44%;
+	border: 0;
+}
+
+.snFMSUser-suggestion span:not(.user_avatar) {
+	clear: both;
+	display: inline-block;
+	width: 100%;
+}
+
+.snFMSUser-suggestion span.user_avatar {
+	float: none;
+}
+
+.snMpTextBlock .snActionBlock {
+  margin-right: 20px;
+}
+
+#snNtfNotify {
+	padding-left: 3px;
+	display: inline-block;
+}
+
+.rtl #snNtfNotify {
+	padding-left: 0px;
+	padding-right: 3px;
+}
+div.jGrowl div.jGrowl-notification.blue, div.jGrowl div.jGrowl-closer.blue {
+	background-color: #109EE5;
+	color: #fff;
+}      
+
+div.jGrowl div.jGrowl-notification.green, div.jGrowl div.jGrowl-closer.green {
+	background-color: #78AF85;
+	color: #fff;
+}
+
+div.jGrowl div.jGrowl-notification.red, div.jGrowl div.jGrowl-closer.red {
+	background-color: #DF8B8B;
+	color: #fff;
+}
+
+div.jGrowl div.jGrowl-notification.orange, div.jGrowl div.jGrowl-closer.orange {
+	background-color: #EF9859;
+	color: #fff;
+}
+
+.ltr div.jGrowl div.jGrowl-notification .jGrowl-message span {
+  margin-right: 10px;
+}
+
+.rtl div.jGrowl div.jGrowl-notification .jGrowl-message span {
+  margin-left: 10px;
+
+}
+
+/********************************************\
+ |* USER PROFILE                              *|
+ \********************************************/
+
+#socialnet_profile {
+	margin-top: 8px;
+}
+
+#socialnet_profile #left-column {
+	width: 20%;
+	float: left;
+}
+
+.rtl #socialnet_profile #left-column {
+	float: right;
+}
+
+#socialnet_profile #middle_column {
+	float: right;
+	width: 78%;
+	min-width: 200px;
+	min-height: 550px;
+	border-left: 1px solid #ccc;
+	padding: 0 0 0 0.9%;
+}
+
+.rtl #socialnet_profile #middle_column {
+	float: left;
+	border-left: none;
+	border-right: 1px solid #ccc;
+	padding: 0 0.9% 0 0;
+}
+
+/*
+ * Left column
+ */
+.snMpLeftColumn .snFasFriend {
+	width: auto;
+	display: block;
+	margin: 0 0 4px 0;
+}
+
+#socialnet_profile .header dl dt {
+  font-size: 11px;
+}
+
+.snMPInactiveUser {
+	font-weight: bold;
+	padding: 10px 10px 0 10px;
+}
+
+#socialnet_profile .snMenu {
+	width: 100%;
+	border: none;
+	margin: 10px 0;
+}
+
+/*
+ * Middle Column
+ */
+#snProfiletabs {
+	border: 0;
+	margin-bottom: 4px;
+	font-size: 12px;
+}
+
+
+#socialnet_profile .details dt {
+	padding: 0;
+	line-height:19px;
+}
+
+#socialnet_profile .details dd {
+	padding: 0px 2px 0px 4px;
+	line-height: 19px;
+}
+
+
+.snUpEditable {
+	display:inline-block;
+	/*border: 1px solid transparent;*/
+	/*position: relative;*/
+	padding-top: 0;
+	padding-bottom: 0;
+}
+.ltr #socialnet_profile .details .snUpEditable {
+	padding-right:18px;
+}
+.rtl #socialnet_profile .details .snUpEditable {
+	padding-left: 18px;
+}
+
+.snUpEditable .snUpEditableButton {
+	width: 17px;
+	height: 17px;
+	display: inline-block;
+	position: absolute;
+	/*top: 0;*/
+	background: transparent url("{T_IMAGESET_PATH}/socialnet/icon_profile_edit.png") no-repeat 50% -100px;
+	cursor: pointer;
+}
+
+.ltr .snUpEditableButton {
+	/*right: 0;*/
+	margin-left: 5px;
+}
+.rtl .snUpEditableButton {
+	/*left: 0;*/
+	margin-right: 5px;
+}
+
+.snUpEditable:hover .snUpEditableButton {
+	background-position: 50% 0%;
+}
+.snUpEditable:hover .snUpEditableButton:hover {
+	background-position: 50% 100%;
+}
+
+
+
+#socialnet_profile #middle_column .ui-tabs {
+	padding: 0;
+}
+
+#socialnet_profile #middle_column .ui-tabs .ui-tabs-panel {
+	padding-left: 0;
+	padding-right: 0;
+}
+
+
+.rtl .ui-tabs .ui-tabs-nav li {
+	float: right;
+	margin: 0 0 1px .2em;
+}
+
+.snUpUsername {
+	margin: 0;
+	padding: 0 0 5px 0;
+	font-weight: bold;
+	float: left;
+	font-size: 24px;
+	line-height: 29px;
+}
+
+.snUpUsername img {
+	vertical-align: middle;
+	padding: 0 0 5px 0;
+}
+
+.rtl .snUpUsername {
+	float: right;
+	padding: 5px 0 0;
+}
+
+/**
+ * 	ADD Friend 2 Group
+ */
+.snUpAdd2Group {
+  float: left;
+  position:relative;
+}
+
+.snUpAdd2Group .hovering, .ui-state-hover, a.ui-button.ui-state-hover {
+	border-color: #999;
+	background: #DADADA url("{T_THEME_PATH}/images/ui-bg_glass_75_dadada_1x400.png") repeat-x 50% 50%;
+	color: #bc2a4d;
+}
+
+.snUpAdd2GroupDetail {
+	display: none;
+	top:+21px;
+	right:-2px;
+	position: absolute;
+	z-index: 999;
+	padding: 2px;
+	
+}
+
+
+.snUpAdd2GroupContent {
+	color: #222;
+	font-size: 1.1em;
+	background: #E6E6E6 url("{T_THEME_PATH}/images/ui-bg_glass_75_e6e6e6_1x400.png") repeat-x  50% 50%; 
+	/*padding: 5px;*/
+	overflow: auto;
+	width: 200px;
+	max-height: 200px;
+	border-color: #aaa;
+}
+
+.snUpAdd2GroupContent .snFMSInGroup {
+	border-top: 1px solid #AAA;
+}
+
+.snUpAdd2GroupContent .snFMSInGroup:hover {
+	background: #DADADA url("{T_THEME_PATH}/images/ui-bg_glass_75_dadada_1x400.png") repeat-x 50% 50% ;
+	color: #d31141;
+}
+
+.snUpAdd2GroupContent .snFMSInGroup:first-child {
+	border-top: none;
+}
+
+.ui-icon.ui-icon-no {
+	background-position: 100px 100px;
+}
+
+.snUpAdd2GroupContent.ui-widget-content .ui-icon {
+	background-image: url("{T_THEME_PATH}/images/ui-icons_888888_256x240.png");
+}
+
+.snFMSInGroup {
+	padding: 4px;
+}
+
+.snFMSInGroup:hover {
+	cursor: pointer;
+	background-color: #E2E2E2;
+}
+
+.snUpAdd2GroupContent.ui-widget-content .snFMSInGroup:hover .ui-icon {
+	background-image: url("{T_THEME_PATH}/images/ui-icons_222222_256x240.png");
+}
+
+a.ui-button {
+	color: #222;
+}
+
+.snMenu.ui-menu .ui-menu-item {
+	margin: 0;
+	border-bottom: 1px solid #E4E4E4;
+	font-size: 11px;
+}
+
+.snMenu.ui-menu .ui-menu-item:first-child {
+	border-top: 1px solid #E4E4E4;
+}
+
+.snMenu.ui-menu .ui-menu-item.active, .snMenu.ui-menu.ui-widget-content .ui-state-active, .snMenu.ui-menu.ui-widget-content .ui-state-focus {
+	background: #29A0DA none 50% 50% repeat-x;
+	font-weight: normal;
+	color: #ffffff;
+}
+
+.snMenu.ui-menu .ui-menu-item:hover, .snMenu.ui-menu.ui-widget-content .ui-state-active, .snMenu.ui-menu.ui-widget-content .ui-state-focus {
+	background-color: #E2E2E2;
+	color: #000;
+}
+
+.snMenu.ui-menu .ui-menu-item a {
+	color: #000;
+	display: block;
+	padding: 3px 10px 3px 7px;
+}
+
+.snMenu.ui-menu .ui-menu-item.active {
+	background-color: #29A0DA;
+	font-weight: bold;
+}
+
+.snMenu.ui-menu .ui-menu-item.active a, .snMenu.ui-menu .ui-menu-item.active a.ui-state-active {
+	color: #fff;
+}
+
+.snMenu.ui-menu .ui-menu-item.active a.ui-state-focus {
+	background-color: #2687B7;
+	color: #fff;
+}
+
+.snMenu.ui-widget-content .ui-state-focus, .snMenu.ui-widget-content .ui-state-active {
+	border-color: #fff;
+}
+
+.snMenu.ui-menu .ui-corner-all {
+	border-radius: 0;
+}
+
+.snMenu.ui-menu .ui-menu {
+	padding: 1px;
+}
+
+.snMenu.ui-menu .ui-menu-item:hover .num_cube, .snMenu.ui-menu.ui-widget-content .ui-state-active .num_cube, .snMenu.ui-menu.ui-widget-content .ui-state-focus .num_cube {
+	background-color: #ffffff;
+}
+

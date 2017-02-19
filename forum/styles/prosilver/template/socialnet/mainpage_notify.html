@@ -1,0 +1,24 @@
+<!-- IF .mp_notify -->
+<!-- BEGIN mp_notify -->
+<div class="snMpTextBlock">
+    <div class="snActionBlock">
+        <div class="snActions" style="display:none">
+            <div class="snUsDeleteNotify snActionDelete" name="{us_status.STATUS_ID}"></div>
+        </div>
+    </div>
+    <span class="status_poster_avatar">
+        <a href="{mp_notify.U_POSTER_PROFILE}">
+        {mp_notify.POSTER_AVATAR}
+        </a>
+    </span>
+    {mp_notify.DATA}
+    <div class="clear">
+    </div>
+</div>
+<!-- END mp_notify -->
+<!-- ELSE -->
+<div>
+    {L_SN_NO_NOTIFY}
+</div>
+<!-- ENDIF -->
+

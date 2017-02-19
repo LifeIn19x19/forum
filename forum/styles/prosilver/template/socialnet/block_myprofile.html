@@ -1,0 +1,18 @@
+		<!-- IF S_USER_LOGGED_IN and B_SN_BLOCK_MYPROFILE_ENABLED -->
+		<div class="snMpProfileMy">
+			<div class="inner"><span class="corners-top"><span></span></span>
+				<div class="">
+					<span class="snMpAvatar">
+						<a href="{U_MY_USERNAME_LINK}">
+						<!-- IF S_MY_USER_AVATAR -->{S_MY_USER_AVATAR}<!-- ELSE -->
+						<img src="{T_SOCIALNET_IMAGES_PATH}/im_no_avatar_50.png" alt="{L_AVATAR}" />
+						<!-- ENDIF -->
+						</a>
+					</span>
+					<span class="snUsername">{S_MY_USERNAME}</span>
+					<br />
+					<span class="snMpProfileEdit"><a href="{U_EDIT_MY_PROFILE}">{L_SN_MP_MANAGE_PROFILE}</a></span>
+				</div>
+			<span class="corners-bottom"><span></span></span></div>
+		</div>
+		<!-- ENDIF -->

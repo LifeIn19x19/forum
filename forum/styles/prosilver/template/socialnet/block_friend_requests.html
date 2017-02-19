@@ -1,0 +1,24 @@
+<!-- IF B_SN_BLOCK_FRIEND_REQUESTS_ENABLED and .friend_requests -->
+	<div class="snMpRightBlock forabg">
+		<div class="inner"><span class="corners-top"><span></span></span>
+			<ul class="topiclist"><li class="header"><dl><dt style="width:100%;display;block">
+				{L_SN_MP_REQUESTS_LIST}
+				<span class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" style="padding:0 3px;float: right;margin-top:-3px;margin-right:5px;text-transform:none;"><a href="{U_MANAGE_FRIEND}" style="color:#222;font-size:0.8em;">{L_SN_MP_SEE_ALL}</a></span>
+				</dt></dl></li></ul>
+			<h3>{L_SN_MP_REQUESTS_LIST}</h3>
+		</div>
+	</div>
+	<div class="snMpRightBlocktext">
+		<!-- BEGIN friend_requests -->
+    <span class="snFasFriend snMpFriendRequest ui-widget-content ui-corner-all">
+  		<a href="{friend_requests.USERNAME_PROFILE}">
+        <span class="user_avatar ui-widget ui- widget-header ui- corner-all">{friend_requests.AVATAR}</span>
+      </a>
+  		<span class="snFmsUsername">{friend_requests.USERNAME}</span>
+  		<br />
+      <span><a href="{U_ADD_FRIEND}&add={friend_requests.USERNAME_CLEAN}">{L_ADD_FRIEND}</a></span>
+    </span>
+		<!-- END friend_requests -->
+		<div class="clear"></div>
+	</div>
+<!-- ENDIF -->
