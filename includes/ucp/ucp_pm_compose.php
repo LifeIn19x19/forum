@@ -20,7 +20,7 @@ if (!defined('IN_PHPBB'))
 * Compose private message
 * Called from ucp_pm with mode == 'compose'
 */
-function compose_pm($id, $mode, $action)
+function compose_pm($id, $mode, $action, $user_folders = array())
 {
 	global $template, $db, $auth, $user;
 	global $phpbb_root_path, $phpEx, $config;
@@ -135,6 +135,7 @@ function compose_pm($id, $mode, $action)
 	}
 
 	$sql = '';
+	$folder_id = 0;
 
 	// What is all this following SQL for? Well, we need to know
 	// some basic information in all cases before we do anything.
@@ -270,19 +271,16 @@ function compose_pm($id, $mode, $action)
 			// Passworded forum?
 			if ($post['forum_id'])
 			{
-				$sql = 'SELECT forum_password
+				$sql = 'SELECT forum_id, forum_name, forum_password
 					FROM ' . FORUMS_TABLE . '
 					WHERE forum_id = ' . (int) $post['forum_id'];
 				$result = $db->sql_query($sql);
-				$forum_password = (string) $db->sql_fetchfield('forum_password');
+				$forum_data = $db->sql_fetchrow($result);
 				$db->sql_freeresult($result);
 
-				if ($forum_password)
+				if (!empty($forum_data['forum_password']))
 				{
-					login_forum_box(array(
-						'forum_id'			=> $post['forum_id'],
-						'forum_password'	=> $forum_password,
-					));
+					login_forum_box($forum_data);
 				}
 			}
 		}
@@ -358,7 +356,7 @@ function compose_pm($id, $mode, $action)
 		$message_attachment = 0;
 		$message_text = $message_subject = '';
 
-		if ($to_user_id && $action == 'post')
+		if ($to_user_id && $to_user_id != ANONYMOUS && $action == 'post')
 		{
 			$address_list['u'][$to_user_id] = 'to';
 		}
@@ -398,7 +396,7 @@ function compose_pm($id, $mode, $action)
 	unset($message_text);
 
 	$s_action = append_sid("{$phpbb_root_path}ucp.$phpEx", "i=$id&amp;mode=$mode&amp;action=$action", true, $user->session_id);
-	$s_action .= ($msg_id) ? "&amp;p=$msg_id" : '';
+	$s_action .= (($folder_id) ? "&amp;f=$folder_id" : '') . (($msg_id) ? "&amp;p=$msg_id" : '');
 
 	// Delete triggered ?
 	if ($action == 'delete')
@@ -741,10 +739,31 @@ function compose_pm($id, $mode, $action)
 			$msg_id = submit_pm($action, $subject, $pm_data);
 
 			$return_message_url = append_sid("{$phpbb_root_path}ucp.$phpEx", 'i=pm&amp;mode=view&amp;p=' . $msg_id);
-			$return_folder_url = append_sid("{$phpbb_root_path}ucp.$phpEx", 'i=pm&amp;folder=outbox');
-			meta_refresh(3, $return_message_url);
+			$inbox_folder_url = append_sid("{$phpbb_root_path}ucp.$phpEx", 'i=pm&amp;folder=inbox');
+			$outbox_folder_url = append_sid("{$phpbb_root_path}ucp.$phpEx", 'i=pm&amp;folder=outbox');
 
-			$message = $user->lang['MESSAGE_STORED'] . '<br /><br />' . sprintf($user->lang['VIEW_PRIVATE_MESSAGE'], '<a href="' . $return_message_url . '">', '</a>') . '<br /><br />' . sprintf($user->lang['CLICK_RETURN_FOLDER'], '<a href="' . $return_folder_url . '">', '</a>', $user->lang['PM_OUTBOX']);
+			$folder_url = '';
+			if (($folder_id > 0) && isset($user_folders[$folder_id]))
+			{
+				$folder_url = append_sid("{$phpbb_root_path}ucp.$phpEx", 'i=pm&amp;folder=' . $folder_id);
+			}
+
+			$return_box_url = ($action === 'post' || $action === 'edit') ? $outbox_folder_url : $inbox_folder_url;
+			$return_box_lang = ($action === 'post' || $action === 'edit') ? 'PM_OUTBOX' : 'PM_INBOX';
+
+
+			$save_message = ($action === 'edit') ? $user->lang['MESSAGE_EDITED'] : $user->lang['MESSAGE_STORED'];
+			$message = $save_message . '<br /><br />' . $user->lang('VIEW_PRIVATE_MESSAGE', '<a href="' . $return_message_url . '">', '</a>');
+
+			$last_click_type = 'CLICK_RETURN_FOLDER';
+			if ($folder_url)
+			{
+				$message .= '<br /><br />' . sprintf($user->lang['CLICK_RETURN_FOLDER'], '<a href="' . $folder_url . '">', '</a>', $user_folders[$folder_id]['folder_name']);
+				$last_click_type = 'CLICK_GOTO_FOLDER';
+			}
+			$message .= '<br /><br />' . sprintf($user->lang[$last_click_type], '<a href="' . $return_box_url . '">', '</a>', $user->lang[$return_box_lang]);
+
+			meta_refresh(3, $return_message_url);
 			trigger_error($message);
 		}
 

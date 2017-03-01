@@ -21,6 +21,7 @@ if (!defined('IN_PHPBB'))
 * make_jumpbox()
 * bump_topic_allowed()
 * get_context()
+* phpbb_clean_search_string()
 * decode_message()
 * strip_bbcode()
 * generate_text_for_display()
@@ -361,6 +362,23 @@ function get_context($text, $words, $length = 400)
 }
 
 /**
+* Cleans a search string by removing single wildcards from it and replacing multiple spaces with a single one.
+*
+* @param string $search_string The full search string which should be cleaned.
+*
+* @return string The cleaned search string without any wildcards and multiple spaces.
+*/
+function phpbb_clean_search_string($search_string)
+{
+	// This regular expressions matches every single wildcard.
+	// That means one after a whitespace or the beginning of the string or one before a whitespace or the end of the string.
+	$search_string = preg_replace('#(?<=^|\s)\*+(?=\s|$)#', '', $search_string);
+	$search_string = trim($search_string);
+	$search_string = preg_replace(array('#\s+#u', '#\*+#u'), array(' ', '*'), $search_string);
+	return $search_string;
+}
+
+/**
 * Decode text whereby text is coming from the db and expected to be pre-parsed content
 * We are placing this outside of the message parser because we are often in need of it...
 */
@@ -413,7 +431,7 @@ function generate_text_for_display($text, $uid, $bitfield, $flags)
 {
 	static $bbcode;
 
-	if (!$text)
+	if ($text === '')
 	{
 		return '';
 	}
@@ -459,7 +477,7 @@ function generate_text_for_storage(&$text, &$uid, &$bitfield, &$flags, $allow_bb
 	$uid = $bitfield = '';
 	$flags = (($allow_bbcode) ? OPTION_FLAG_BBCODE : 0) + (($allow_smilies) ? OPTION_FLAG_SMILIES : 0) + (($allow_urls) ? OPTION_FLAG_LINKS : 0);
 
-	if (!$text)
+	if ($text === '')
 	{
 		return;
 	}
@@ -1107,7 +1125,7 @@ function extension_allowed($forum_id, $extension, &$extensions)
 * @param int $max_length Maximum length of string (multibyte character count as 1 char / Html entity count as 1 char)
 * @param int $max_store_length Maximum character length of string (multibyte character count as 1 char / Html entity count as entity chars).
 * @param bool $allow_reply Allow Re: in front of string 
-* 	NOTE: This parameter can cause undesired behavior (returning strings longer than $max_store_legnth) and is deprecated. 
+* 	NOTE: This parameter can cause undesired behavior (returning strings longer than $max_store_length) and is deprecated. 
 * @param string $append String to be appended
 */
 function truncate_string($string, $max_length = 60, $max_store_length = 255, $allow_reply = false, $append = '')

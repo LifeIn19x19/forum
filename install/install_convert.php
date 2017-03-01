@@ -417,7 +417,7 @@ class install_convert extends module
 
 			if (!isset($available_dbms[$src_dbms]) || !$available_dbms[$src_dbms]['AVAILABLE'])
 			{
-				$error['db'][] = $lang['INST_ERR_NO_DB'];
+				$error[] = $lang['INST_ERR_NO_DB'];
 				$connect_test = false;
 			}
 			else
@@ -1716,19 +1716,16 @@ class install_convert extends module
 
 			fix_empty_primary_groups();
 
-			if (!isset($config['board_startdate']))
-			{
-				$sql = 'SELECT MIN(user_regdate) AS board_startdate
-					FROM ' . USERS_TABLE;
-				$result = $db->sql_query($sql);
-				$row = $db->sql_fetchrow($result);
-				$db->sql_freeresult($result);
+			$sql = 'SELECT MIN(user_regdate) AS board_startdate
+				FROM ' . USERS_TABLE;
+			$result = $db->sql_query($sql);
+			$row = $db->sql_fetchrow($result);
+			$db->sql_freeresult($result);
 
-				if (($row['board_startdate'] < $config['board_startdate'] && $row['board_startdate'] > 0) || !isset($config['board_startdate']))
-				{
-					set_config('board_startdate', $row['board_startdate']);
-					$db->sql_query('UPDATE ' . USERS_TABLE . ' SET user_regdate = ' . $row['board_startdate'] . ' WHERE user_id = ' . ANONYMOUS);
-				}
+			if (!isset($config['board_startdate']) || ($row['board_startdate'] < $config['board_startdate'] && $row['board_startdate'] > 0))
+			{
+				set_config('board_startdate', $row['board_startdate']);
+				$db->sql_query('UPDATE ' . USERS_TABLE . ' SET user_regdate = ' . $row['board_startdate'] . ' WHERE user_id = ' . ANONYMOUS);
 			}
 
 			update_dynamic_config();
@@ -2090,7 +2087,7 @@ class install_convert extends module
 			// Because we should not rely on correct settings, we simply use the relative path here directly.
 			$template->assign_vars(array(
 				'S_REFRESH'	=> true,
-				'META'		=> '<meta http-equiv="refresh" content="5;url=' . $url . '" />')
+				'META'		=> '<meta http-equiv="refresh" content="5; url=' . $url . '" />')
 			);
 		}
 	}

@@ -2,9 +2,8 @@
 /**
 *
 * @package phpBB3
-* @version $Id$
 * @copyright (c) 2005 phpBB Group
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
 */
 
@@ -223,7 +222,7 @@ die("\n\nALL TESTS PASSED SUCCESSFULLY\n");
 * Download a file to the develop/ dir
 *
 * @param	string	$url		URL of the file to download
-* @return	void
+* @return	null
 */
 function download($url)
 {

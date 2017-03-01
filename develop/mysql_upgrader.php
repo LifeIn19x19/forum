@@ -2,14 +2,12 @@
 /**
 *
 * @package phpBB3
-* @version $Id$
 * @copyright (c) 2006 phpBB Group
-* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+* @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
 * This file creates SQL statements to upgrade phpBB on MySQL 3.x/4.0.x to 4.1.x/5.x
 *
 */
-
 
 //
 // Security message:
@@ -21,6 +19,7 @@
 die("Please read the first lines of this script for instructions on how to enable it");
 
 define('IN_PHPBB', true);
+$phpbb_root_path = (defined('PHPBB_ROOT_PATH')) ? PHPBB_ROOT_PATH : './';
 $phpEx = substr(strrchr(__FILE__, '.'), 1);
 include($phpbb_root_path . 'common.' . $phpEx);
 
@@ -150,7 +149,8 @@ foreach ($schema_data as $table_name => $table_data)
 			list($orig_column_type, $column_length) = explode(':', $column_data[0]);
 			$column_type = sprintf($dbms_type_map['mysql_41'][$orig_column_type . ':'], $column_length);
 
-			if (isset($dbms_type_map['mysql_40'][$orig_column_type . ':']['limit'][0]))
+			if (isset($dbms_type_map['mysql_40'][$orig_column_type . ':']['limit']) &&
+				isset($dbms_type_map['mysql_40'][$orig_column_type . ':']['limit'][0]))
 			{
 				switch ($dbms_type_map['mysql_40'][$orig_column_type . ':']['limit'][0])
 				{
@@ -252,7 +252,7 @@ foreach ($schema_data as $table_name => $table_data)
 	// Do we now need to re-add the fulltext index? ;)
 	if ($table_name == ($prefix . 'posts') && $drop_index)
 	{
-		echo "ALTER TABLE $table_name ADD FULLTEXT (post_subject), ADD FULLTEXT (post_text), ADD FULLTEXT post_content (post_subject, post_text){$newline}";
+		echo "ALTER TABLE $table_name ADD FULLTEXT (post_subject), ADD FULLTEXT (post_text), ADD FULLTEXT post_content (post_subject, post_text);{$newline}";
 	}
 }
 
@@ -414,7 +414,7 @@ function get_schema_struct()
 
 	$schema_data['phpbb_bbcodes'] = array(
 		'COLUMNS'		=> array(
-			'bbcode_id'				=> array('TINT:3', 0),
+			'bbcode_id'				=> array('USINT', 0),
 			'bbcode_tag'			=> array('VCHAR:16', ''),
 			'bbcode_helpline'		=> array('VCHAR_UNI', ''),
 			'display_on_posting'	=> array('BOOL', 0),
@@ -695,6 +695,24 @@ function get_schema_struct()
 		),
 	);
 
+	$schema_data['phpbb_login_attempts'] = array(
+		'COLUMNS'		=> array(
+			'attempt_ip'			=> array('VCHAR:40', ''),
+			'attempt_browser'		=> array('VCHAR:150', ''),
+			'attempt_forwarded_for'	=> array('VCHAR:255', ''),
+			'attempt_time'			=> array('TIMESTAMP', 0),
+			'user_id'				=> array('UINT', 0),
+			'username'				=> array('VCHAR_UNI:255', 0),
+			'username_clean'		=> array('VCHAR_CI', 0),
+		),
+		'KEYS'			=> array(
+			'att_ip'				=> array('INDEX', array('attempt_ip', 'attempt_time')),
+			'att_for'		=> array('INDEX', array('attempt_forwarded_for', 'attempt_time')),
+			'att_time'				=> array('INDEX', array('attempt_time')),
+			'user_id'					=> array('INDEX', 'user_id'),
+		),
+	);
+
 	$schema_data['phpbb_moderator_cache'] = array(
 		'COLUMNS'		=> array(
 			'forum_id'				=> array('UINT', 0),
@@ -898,6 +916,7 @@ function get_schema_struct()
 			'field_default_value'	=> array('VCHAR_UNI', ''),
 			'field_validation'		=> array('VCHAR_UNI:20', ''),
 			'field_required'		=> array('BOOL', 0),
+			'field_show_novalue'	=> array('BOOL', 0),
 			'field_show_on_reg'		=> array('BOOL', 0),
 			'field_show_on_vt'		=> array('BOOL', 0),
 			'field_show_profile'	=> array('BOOL', 0),
@@ -1397,5 +1416,3 @@ function get_schema_struct()
 
 	return $schema_data;
 }
-
-?>

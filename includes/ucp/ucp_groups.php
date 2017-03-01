@@ -193,47 +193,43 @@ class ucp_groups
 								if ($group_row[$group_id]['group_type'] == GROUP_FREE)
 								{
 									group_user_add($group_id, $user->data['user_id']);
-
-									$email_template = 'group_added';
 								}
 								else
 								{
 									group_user_add($group_id, $user->data['user_id'], false, false, false, 0, 1);
 
-									$email_template = 'group_request';
+									include_once($phpbb_root_path . 'includes/functions_messenger.' . $phpEx);
+									$messenger = new messenger();
+
+									$sql = 'SELECT u.username, u.username_clean, u.user_email, u.user_notify_type, u.user_jabber, u.user_lang
+										FROM ' . USER_GROUP_TABLE . ' ug, ' . USERS_TABLE . " u
+										WHERE ug.user_id = u.user_id
+											AND ug.group_leader = 1
+											AND ug.group_id = $group_id";
+									$result = $db->sql_query($sql);
+
+									while ($row = $db->sql_fetchrow($result))
+									{
+										$messenger->template('group_request', $row['user_lang']);
+
+										$messenger->to($row['user_email'], $row['username']);
+										$messenger->im($row['user_jabber'], $row['username']);
+
+										$messenger->assign_vars(array(
+											'USERNAME'			=> htmlspecialchars_decode($row['username']),
+											'GROUP_NAME'		=> htmlspecialchars_decode($group_row[$group_id]['group_name']),
+											'REQUEST_USERNAME'	=> $user->data['username'],
+
+											'U_PENDING'		=> generate_board_url() . "/ucp.$phpEx?i=groups&mode=manage&action=list&g=$group_id",
+											'U_GROUP'		=> generate_board_url() . "/memberlist.$phpEx?mode=group&g=$group_id")
+										);
+
+										$messenger->send($row['user_notify_type']);
+									}
+									$db->sql_freeresult($result);
+
+									$messenger->save_queue();
 								}
-
-								include_once($phpbb_root_path . 'includes/functions_messenger.' . $phpEx);
-								$messenger = new messenger();
-
-								$sql = 'SELECT u.username, u.username_clean, u.user_email, u.user_notify_type, u.user_jabber, u.user_lang
-									FROM ' . USER_GROUP_TABLE . ' ug, ' . USERS_TABLE . ' u
-									WHERE ug.user_id = u.user_id
-										AND ' . (($group_row[$group_id]['group_type'] == GROUP_FREE) ? "ug.user_id = {$user->data['user_id']}" : 'ug.group_leader = 1') . "
-										AND ug.group_id = $group_id";
-								$result = $db->sql_query($sql);
-
-								while ($row = $db->sql_fetchrow($result))
-								{
-									$messenger->template($email_template, $row['user_lang']);
-
-									$messenger->to($row['user_email'], $row['username']);
-									$messenger->im($row['user_jabber'], $row['username']);
-
-									$messenger->assign_vars(array(
-										'USERNAME'			=> htmlspecialchars_decode($row['username']),
-										'GROUP_NAME'		=> htmlspecialchars_decode($group_row[$group_id]['group_name']),
-										'REQUEST_USERNAME'	=> $user->data['username'],
-
-										'U_PENDING'		=> generate_board_url() . "/ucp.$phpEx?i=groups&mode=manage&action=list&g=$group_id",
-										'U_GROUP'		=> generate_board_url() . "/memberlist.$phpEx?mode=group&g=$group_id")
-									);
-
-									$messenger->send($row['user_notify_type']);
-								}
-								$db->sql_freeresult($result);
-
-								$messenger->save_queue();
 
 								add_log('user', $user->data['user_id'], 'LOG_USER_GROUP_JOIN' . (($group_row[$group_id]['group_type'] == GROUP_FREE) ? '' : '_PENDING'), $group_row[$group_id]['group_name']);
 
@@ -599,6 +595,13 @@ class ucp_groups
 								$error[] = $user->lang['FORM_INVALID'];
 							}
 
+							// Validate submitted colour value
+							if ($colour_error = validate_data($submit_ary, array('colour'	=> array('hex_colour', true))))
+							{
+								// Replace "error" string with its real, localised form
+								$error = array_merge($error, $colour_error);
+							}
+
 							if (!sizeof($error))
 							{
 								// Only set the rank, colour, etc. if it's changed or if we're adding a new
@@ -639,6 +642,7 @@ class ucp_groups
 
 							if (sizeof($error))
 							{
+								$error = array_map(array(&$user, 'lang'), $error);
 								$group_rank = $submit_ary['rank'];
 
 								$group_desc_data = array(

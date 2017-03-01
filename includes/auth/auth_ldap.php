@@ -156,7 +156,11 @@ function login_ldap(&$username, &$password)
 	{
 		if (!@ldap_bind($ldap, htmlspecialchars_decode($config['ldap_user']), htmlspecialchars_decode($config['ldap_password'])))
 		{
-			return $user->lang['LDAP_NO_SERVER_CONNECTION'];
+			return array(
+				'status'		=> LOGIN_ERROR_EXTERNAL_AUTH,
+				'error_msg'		=> 'LDAP_NO_SERVER_CONNECTION',
+				'user_row'		=> array('user_id' => ANONYMOUS),
+			);
 		}
 	}
 
@@ -278,7 +282,7 @@ function ldap_user_filter($username)
 {
 	global $config;
 
-	$filter = '(' . $config['ldap_uid'] . '=' . ldap_escape(htmlspecialchars_decode($username)) . ')';
+	$filter = '(' . $config['ldap_uid'] . '=' . phpbb_ldap_escape(htmlspecialchars_decode($username)) . ')';
 	if ($config['ldap_user_filter'])
 	{
 		$_filter = ($config['ldap_user_filter'][0] == '(' && substr($config['ldap_user_filter'], -1) == ')') ? $config['ldap_user_filter'] : "({$config['ldap_user_filter']})";
@@ -290,7 +294,7 @@ function ldap_user_filter($username)
 /**
 * Escapes an LDAP AttributeValue
 */
-function ldap_escape($string)
+function phpbb_ldap_escape($string)
 {
 	return str_replace(array('*', '\\', '(', ')'), array('\\*', '\\\\', '\\(', '\\)'), $string);
 }
@@ -335,7 +339,7 @@ function acp_ldap(&$new)
 	</dl>
 	<dl>
 		<dt><label for="ldap_password">' . $user->lang['LDAP_PASSWORD'] . ':</label><br /><span>' . $user->lang['LDAP_PASSWORD_EXPLAIN'] . '</span></dt>
-		<dd><input type="password" id="ldap_password" size="40" name="config[ldap_password]" value="' . $new['ldap_password'] . '" /></dd>
+		<dd><input type="password" id="ldap_password" size="40" name="config[ldap_password]" value="' . $new['ldap_password'] . '" autocomplete="off" /></dd>
 	</dl>
 	';
 

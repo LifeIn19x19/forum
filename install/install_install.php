@@ -53,11 +53,13 @@ class install_install extends module
 
 	function main($mode, $sub)
 	{
-		global $lang, $template, $language, $phpbb_root_path;
+		global $lang, $template, $language, $phpbb_root_path, $cache;
 
 		switch ($sub)
 		{
 			case 'intro':
+				$cache->purge();
+
 				$this->page_title = $lang['SUB_INTRO'];
 
 				$template->assign_vars(array(
@@ -105,6 +107,7 @@ class install_install extends module
 				$this->add_language($mode, $sub);
 				$this->add_bots($mode, $sub);
 				$this->email_admin($mode, $sub);
+				$this->disable_avatars_if_unwritable();
 
 				// Remove the lock file
 				@unlink($phpbb_root_path . 'cache/install_lock');
@@ -166,25 +169,28 @@ class install_install extends module
 			'S_LEGEND'		=> false,
 		));
 
-		// Check for register_globals being enabled
-		if (@ini_get('register_globals') == '1' || strtolower(@ini_get('register_globals')) == 'on')
+		// Don't check for register_globals on 5.4+
+		if (version_compare($php_version, '5.4.0-dev') < 0)
 		{
-			$result = '<strong style="color:red">' . $lang['NO'] . '</strong>';
+			// Check for register_globals being enabled
+			if (@ini_get('register_globals') == '1' || strtolower(@ini_get('register_globals')) == 'on')
+			{
+				$result = '<strong style="color:red">' . $lang['NO'] . '</strong>';
+			}
+			else
+			{
+				$result = '<strong style="color:green">' . $lang['YES'] . '</strong>';
+			}
+
+			$template->assign_block_vars('checks', array(
+				'TITLE'			=> $lang['PHP_REGISTER_GLOBALS'],
+				'TITLE_EXPLAIN'	=> $lang['PHP_REGISTER_GLOBALS_EXPLAIN'],
+				'RESULT'		=> $result,
+
+				'S_EXPLAIN'		=> true,
+				'S_LEGEND'		=> false,
+			));
 		}
-		else
-		{
-			$result = '<strong style="color:green">' . $lang['YES'] . '</strong>';
-		}
-
-		$template->assign_block_vars('checks', array(
-			'TITLE'			=> $lang['PHP_REGISTER_GLOBALS'],
-			'TITLE_EXPLAIN'	=> $lang['PHP_REGISTER_GLOBALS_EXPLAIN'],
-			'RESULT'		=> $result,
-
-			'S_EXPLAIN'		=> true,
-			'S_LEGEND'		=> false,
-		));
-
 
 		// Check for url_fopen
 		if (@ini_get('allow_url_fopen') == '1' || strtolower(@ini_get('allow_url_fopen')) == 'on')
@@ -267,8 +273,8 @@ class install_install extends module
 			$checks = array(
 				array('func_overload', '&', MB_OVERLOAD_MAIL|MB_OVERLOAD_STRING),
 				array('encoding_translation', '!=', 0),
-				array('http_input', '!=', 'pass'),
-				array('http_output', '!=', 'pass')
+				array('http_input', '!=', array('pass', '')),
+				array('http_output', '!=', array('pass', ''))
 			);
 
 			foreach ($checks as $mb_checks)
@@ -289,7 +295,8 @@ class install_install extends module
 					break;
 
 					case '!=':
-						if ($ini_val != $mb_checks[2])
+						if (!is_array($mb_checks[2]) && $ini_val != $mb_checks[2] ||
+							is_array($mb_checks[2]) && !in_array($ini_val, $mb_checks[2]))
 						{
 							$result = '<strong style="color:red">' . $lang['NO'] . '</strong>';
 							$passed['mbstring'] = false;
@@ -544,6 +551,11 @@ class install_install extends module
 			if (!isset($available_dbms[$data['dbms']]) || !$available_dbms[$data['dbms']]['AVAILABLE'])
 			{
 				$error[] = $lang['INST_ERR_NO_DB'];
+				$connect_test = false;
+			}
+			else if (!preg_match(get_preg_expression('table_prefix'), $data['table_prefix']))
+			{
+				$error[] = $lang['INST_ERR_DB_INVALID_PREFIX'];
 				$connect_test = false;
 			}
 			else
@@ -876,34 +888,8 @@ class install_install extends module
 
 		@chmod($phpbb_root_path . 'cache/install_lock', 0777);
 
-		$load_extensions = implode(',', $load_extensions);
-
 		// Time to convert the data provided into a config file
-		$config_data = "<?php\n";
-		$config_data .= "// phpBB 3.0.x auto-generated configuration file\n// Do not change anything in this file!\n";
-
-		$config_data_array = array(
-			'dbms'			=> $available_dbms[$data['dbms']]['DRIVER'],
-			'dbhost'		=> $data['dbhost'],
-			'dbport'		=> $data['dbport'],
-			'dbname'		=> $data['dbname'],
-			'dbuser'		=> $data['dbuser'],
-			'dbpasswd'		=> htmlspecialchars_decode($data['dbpasswd']),
-			'table_prefix'	=> $data['table_prefix'],
-			'acm_type'		=> 'file',
-			'load_extensions'	=> $load_extensions,
-		);
-
-		foreach ($config_data_array as $key => $value)
-		{
-			$config_data .= "\${$key} = '" . str_replace("'", "\\'", str_replace('\\', '\\\\', $value)) . "';\n";
-		}
-		unset($config_data_array);
-
-		$config_data .= "\n@define('PHPBB_INSTALLED', true);\n";
-		$config_data .= "// @define('DEBUG', true);\n";
-		$config_data .= "// @define('DEBUG_EXTRA', true);\n";
-		$config_data .= '?' . '>'; // Done this to prevent highlighting editors getting confused!
+		$config_data = phpbb_create_config_file_data($data, $available_dbms[$data['dbms']]['DRIVER'], $load_extensions);
 
 		// Attempt to write out the config file directly. If it works, this is the easiest way to do it ...
 		if ((file_exists($phpbb_root_path . 'config.' . $phpEx) && phpbb_is_writable($phpbb_root_path . 'config.' . $phpEx)) || phpbb_is_writable($phpbb_root_path))
@@ -1040,8 +1026,8 @@ class install_install extends module
 			}
 
 			// Replace backslashes and doubled slashes (could happen on some proxy setups)
-			$name = str_replace(array('\\', '//', '/install'), '/', $name);
-			$data['script_path'] = trim(dirname($name));
+			$name = str_replace(array('\\', '//'), '/', $name);
+			$data['script_path'] = trim(dirname(dirname($name)));
 		}
 
 		foreach ($this->advanced_config_options as $config_key => $vars)
@@ -1173,14 +1159,13 @@ class install_install extends module
 		$dbms_schema = 'schemas/' . $available_dbms[$data['dbms']]['SCHEMA'] . '_schema.sql';
 
 		// How should we treat this schema?
-		$remove_remarks = $available_dbms[$data['dbms']]['COMMENTS'];
 		$delimiter = $available_dbms[$data['dbms']]['DELIM'];
 
 		$sql_query = @file_get_contents($dbms_schema);
 
 		$sql_query = preg_replace('#phpbb_#i', $data['table_prefix'], $sql_query);
 
-		$remove_remarks($sql_query);
+		$sql_query = phpbb_remove_comments($sql_query);
 
 		$sql_query = split_sql_file($sql_query, $delimiter);
 
@@ -1218,8 +1203,7 @@ class install_install extends module
 		// Change language strings...
 		$sql_query = preg_replace_callback('#\{L_([A-Z0-9\-_]*)\}#s', 'adjust_language_keys_callback', $sql_query);
 
-		// Since there is only one schema file we know the comment style and are able to remove it directly with remove_remarks
-		remove_remarks($sql_query);
+		$sql_query = phpbb_remove_comments($sql_query);
 		$sql_query = split_sql_file($sql_query, ';');
 
 		foreach ($sql_query as $sql)
@@ -1641,6 +1625,45 @@ class install_install extends module
 				$_module->move_module_by($row, 'move_up', 5);
 			}
 
+			if ($module_class == 'mcp')
+			{
+				// Move pm report details module 3 down...
+				$sql = 'SELECT *
+					FROM ' . MODULES_TABLE . "
+					WHERE module_basename = 'pm_reports'
+						AND module_class = 'mcp'
+						AND module_mode = 'pm_report_details'";
+				$result = $db->sql_query($sql);
+				$row = $db->sql_fetchrow($result);
+				$db->sql_freeresult($result);
+
+				$_module->move_module_by($row, 'move_down', 3);
+
+				// Move closed pm reports module 3 down...
+				$sql = 'SELECT *
+					FROM ' . MODULES_TABLE . "
+					WHERE module_basename = 'pm_reports'
+						AND module_class = 'mcp'
+						AND module_mode = 'pm_reports_closed'";
+				$result = $db->sql_query($sql);
+				$row = $db->sql_fetchrow($result);
+				$db->sql_freeresult($result);
+
+				$_module->move_module_by($row, 'move_down', 3);
+
+				// Move open pm reports module 3 down...
+				$sql = 'SELECT *
+					FROM ' . MODULES_TABLE . "
+					WHERE module_basename = 'pm_reports'
+						AND module_class = 'mcp'
+						AND module_mode = 'pm_reports'";
+				$result = $db->sql_query($sql);
+				$row = $db->sql_fetchrow($result);
+				$db->sql_freeresult($result);
+
+				$_module->move_module_by($row, 'move_down', 3);
+			}
+
 			if ($module_class == 'ucp')
 			{
 				// Move attachment module 4 down...
@@ -1876,13 +1899,14 @@ class install_install extends module
 				'user_timezone'			=> 0,
 				'user_dateformat'		=> $lang['default_dateformat'],
 				'user_allow_massemail'	=> 0,
+				'user_allow_pm'			=> 0,
 			);
 
 			$user_id = user_add($user_row);
 
 			if (!$user_id)
 			{
-				// If we can't insert this user then continue to the next one to avoid inconsistant data
+				// If we can't insert this user then continue to the next one to avoid inconsistent data
 				$this->p_master->db_error('Unable to insert bot into users table', $db->sql_error_sql, __LINE__, __FILE__, true);
 				continue;
 			}
@@ -1940,10 +1964,7 @@ class install_install extends module
 
 			$messenger->to($data['board_email1'], $data['admin_name']);
 
-			$messenger->headers('X-AntiAbuse: Board servername - ' . $config['server_name']);
-			$messenger->headers('X-AntiAbuse: User_id - ' . $user->data['user_id']);
-			$messenger->headers('X-AntiAbuse: Username - ' . $user->data['username']);
-			$messenger->headers('X-AntiAbuse: User IP - ' . $user->ip);
+			$messenger->anti_abuse_headers($config, $user);
 
 			$messenger->assign_vars(array(
 				'USERNAME'		=> htmlspecialchars_decode($data['admin_name']),
@@ -1962,6 +1983,21 @@ class install_install extends module
 			'L_SUBMIT'	=> $lang['INSTALL_LOGIN'],
 			'U_ACTION'	=> append_sid($phpbb_root_path . 'adm/index.' . $phpEx, 'i=send_statistics&amp;mode=send_statistics'),
 		));
+	}
+
+	/**
+	* Check if the avatar directory is writable and disable avatars
+	* if it isn't writable.
+	*/
+	function disable_avatars_if_unwritable()
+	{
+		global $phpbb_root_path;
+
+		if (!phpbb_is_writable($phpbb_root_path . 'images/avatars/upload/'))
+		{
+			set_config('allow_avatar', 0);
+			set_config('allow_avatar_upload', 0);
+		}
 	}
 
 	/**
@@ -2032,7 +2068,7 @@ class install_install extends module
 		'dbname'				=> array('lang' => 'DB_NAME',		'type' => 'text:25:100', 'explain' => false),
 		'dbuser'				=> array('lang' => 'DB_USERNAME',	'type' => 'text:25:100', 'explain' => false),
 		'dbpasswd'				=> array('lang' => 'DB_PASSWORD',	'type' => 'password:25:100', 'explain' => false),
-		'table_prefix'			=> array('lang' => 'TABLE_PREFIX',	'type' => 'text:25:100', 'explain' => false),
+		'table_prefix'			=> array('lang' => 'TABLE_PREFIX',	'type' => 'text:25:100', 'explain' => true),
 	);
 	var $admin_config_options = array(
 		'legend1'				=> 'ADMIN_CONFIG',
@@ -2049,8 +2085,8 @@ class install_install extends module
 		'smtp_delivery'			=> array('lang' => 'USE_SMTP',			'type' => 'radio:yes_no', 'explain' => true),
 		'smtp_host'				=> array('lang' => 'SMTP_SERVER',		'type' => 'text:25:50', 'explain' => false),
 		'smtp_auth'				=> array('lang' => 'SMTP_AUTH_METHOD',	'type' => 'select', 'options' => '$this->module->mail_auth_select(\'{VALUE}\')', 'explain' => true),
-		'smtp_user'				=> array('lang' => 'SMTP_USERNAME',		'type' => 'text:25:255', 'explain' => true),
-		'smtp_pass'				=> array('lang' => 'SMTP_PASSWORD',		'type' => 'password:25:255', 'explain' => true),
+		'smtp_user'				=> array('lang' => 'SMTP_USERNAME',		'type' => 'text:25:255', 'explain' => true, 'options' => array('autocomplete' => 'off')),
+		'smtp_pass'				=> array('lang' => 'SMTP_PASSWORD',		'type' => 'password:25:255', 'explain' => true, 'options' => array('autocomplete' => 'off')),
 
 		'legend2'				=> 'SERVER_URL_SETTINGS',
 		'cookie_secure'			=> array('lang' => 'COOKIE_SECURE',		'type' => 'radio:enabled_disabled', 'explain' => true),
@@ -2108,9 +2144,9 @@ class install_install extends module
 		'Alexa [Bot]'				=> array('ia_archiver', ''),
 		'Alta Vista [Bot]'			=> array('Scooter/', ''),
 		'Ask Jeeves [Bot]'			=> array('Ask Jeeves', ''),
-		'Baidu [Spider]'			=> array('Baiduspider+(', ''),
-		'Bing [Bot]'                => array('bingbot/', ''),
-		'Exabot [Bot]'				=> array('Exabot/', ''),
+		'Baidu [Spider]'			=> array('Baiduspider', ''),
+		'Bing [Bot]'				=> array('bingbot/', ''),
+		'Exabot [Bot]'				=> array('Exabot', ''),
 		'FAST Enterprise [Crawler]'	=> array('FAST Enterprise Crawler', ''),
 		'FAST WebCrawler [Crawler]'	=> array('FAST-WebCrawler/', ''),
 		'Francis [Bot]'				=> array('http://www.neomo.de/', ''),
@@ -2129,27 +2165,21 @@ class install_install extends module
 		'MSN NewsBlogs'				=> array('msnbot-NewsBlogs/', ''),
 		'MSN [Bot]'					=> array('msnbot/', ''),
 		'MSNbot Media'				=> array('msnbot-media/', ''),
-		'NG-Search [Bot]'			=> array('NG-Search/', ''),
 		'Nutch [Bot]'				=> array('http://lucene.apache.org/nutch/', ''),
-		'Nutch/CVS [Bot]'			=> array('NutchCVS/', ''),
-		'OmniExplorer [Bot]'		=> array('OmniExplorer_Bot/', ''),
 		'Online link [Validator]'	=> array('online link validator', ''),
 		'psbot [Picsearch]'			=> array('psbot/0', ''),
-		'Seekport [Bot]'			=> array('Seekbot/', ''),
 		'Sensis [Crawler]'			=> array('Sensis Web Crawler', ''),
 		'SEO Crawler'				=> array('SEO search Crawler/', ''),
 		'Seoma [Crawler]'			=> array('Seoma [SEO Crawler]', ''),
 		'SEOSearch [Crawler]'		=> array('SEOsearch/', ''),
 		'Snappy [Bot]'				=> array('Snappy/1.1 ( http://www.urltrends.com/ )', ''),
 		'Steeler [Crawler]'			=> array('http://www.tkl.iis.u-tokyo.ac.jp/~crawler/', ''),
-		'Synoo [Bot]'				=> array('SynooBot/', ''),
 		'Telekom [Bot]'				=> array('crawleradmin.t-info@telekom.de', ''),
 		'TurnitinBot [Bot]'			=> array('TurnitinBot/', ''),
-		'Voyager [Bot]'				=> array('voyager/1.0', ''),
+		'Voyager [Bot]'				=> array('voyager/', ''),
 		'W3 [Sitesearch]'			=> array('W3 SiteSearch Crawler', ''),
 		'W3C [Linkcheck]'			=> array('W3C-checklink/', ''),
-		'W3C [Validator]'			=> array('W3C_*Validator', ''),
-		'WiseNut [Bot]'				=> array('http://www.WISEnutbot.com', ''),
+		'W3C [Validator]'			=> array('W3C_Validator', ''),
 		'YaCy [Bot]'				=> array('yacybot', ''),
 		'Yahoo MMCrawler [Bot]'		=> array('Yahoo-MMCrawler/', ''),
 		'Yahoo Slurp [Bot]'			=> array('Yahoo! DE Slurp', ''),

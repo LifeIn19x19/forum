@@ -163,6 +163,22 @@ class messenger
 	}
 
 	/**
+	* Adds X-AntiAbuse headers
+	*
+	* @param array $config		Configuration array
+	* @param user $user			A user object
+	*
+	* @return null
+	*/
+	function anti_abuse_headers($config, $user)
+	{
+		$this->headers('X-AntiAbuse: Board servername - ' . mail_encode($config['server_name']));
+		$this->headers('X-AntiAbuse: User_id - ' . $user->data['user_id']);
+		$this->headers('X-AntiAbuse: Username - ' . mail_encode($user->data['username']));
+		$this->headers('X-AntiAbuse: User IP - ' . $user->ip);
+	}
+
+	/**
 	* Set the email priority
 	*/
 	function set_mail_priority($priority = MAIL_NORMAL_PRIORITY)
@@ -374,6 +390,28 @@ class messenger
 	}
 
 	/**
+	* Generates a valid message id to be used in emails
+	*
+	* @return string message id
+	*/
+	function generate_message_id()
+	{
+		global $config;
+
+		$domain = 'phpbb.generated';
+		if ($config['server_name'])
+		{
+			$domain = $config['server_name'];
+		}
+		else if (!empty($_SERVER['SERVER_NAME']))
+		{
+			$domain = $_SERVER['SERVER_NAME'];
+		}
+
+		return md5(unique_id(time())) . '@' . $domain;
+	}
+
+	/**
 	* Return email header
 	*/
 	function build_header($to, $cc, $bcc)
@@ -399,7 +437,7 @@ class messenger
 		$headers[] = 'Return-Path: <' . $config['board_email'] . '>';
 		$headers[] = 'Sender: <' . $config['board_email'] . '>';
 		$headers[] = 'MIME-Version: 1.0';
-		$headers[] = 'Message-ID: <' . md5(unique_id(time())) . '@' . $config['server_name'] . '>';
+		$headers[] = 'Message-ID: <' . $this->generate_message_id() . '>';
 		$headers[] = 'Date: ' . date('r', time());
 		$headers[] = 'Content-Type: text/plain; charset=UTF-8'; // format=flowed
 		$headers[] = 'Content-Transfer-Encoding: 8bit'; // 7bit
@@ -552,7 +590,7 @@ class messenger
 		if (!$use_queue)
 		{
 			include_once($phpbb_root_path . 'includes/functions_jabber.' . $phpEx);
-			$this->jabber = new jabber($config['jab_host'], $config['jab_port'], $config['jab_username'], $config['jab_password'], $config['jab_use_ssl']);
+			$this->jabber = new jabber($config['jab_host'], $config['jab_port'], $config['jab_username'], htmlspecialchars_decode($config['jab_password']), $config['jab_use_ssl']);
 
 			if (!$this->jabber->connect())
 			{
@@ -699,13 +737,20 @@ class queue
 
 		$lock_fp = $this->lock();
 
-		set_config('last_queue_run', time(), true);
-
-		if (!file_exists($this->cache_file) || filemtime($this->cache_file) > time() - $config['queue_interval'])
+		// avoid races, check file existence once
+		$have_cache_file = file_exists($this->cache_file);
+		if (!$have_cache_file || $config['last_queue_run'] > time() - $config['queue_interval'])
 		{
+			if (!$have_cache_file)
+			{
+				set_config('last_queue_run', time(), true);
+			}
+
 			$this->unlock($lock_fp);
 			return;
 		}
+
+		set_config('last_queue_run', time(), true);
 
 		include($this->cache_file);
 
@@ -753,7 +798,7 @@ class queue
 					}
 
 					include_once($phpbb_root_path . 'includes/functions_jabber.' . $phpEx);
-					$this->jabber = new jabber($config['jab_host'], $config['jab_port'], $config['jab_username'], $config['jab_password'], $config['jab_use_ssl']);
+					$this->jabber = new jabber($config['jab_host'], $config['jab_port'], $config['jab_username'], htmlspecialchars_decode($config['jab_password']), $config['jab_use_ssl']);
 
 					if (!$this->jabber->connect())
 					{
@@ -975,9 +1020,16 @@ function smtpmail($addresses, $subject, $message, &$err_msg, $headers = false)
 	$smtp->add_backtrace('Connecting to ' . $config['smtp_host'] . ':' . $config['smtp_port']);
 
 	// Ok we have error checked as much as we can to this point let's get on it already.
-	ob_start();
+	if (!class_exists('phpbb_error_collector'))
+	{
+		global $phpbb_root_path, $phpEx;
+		include($phpbb_root_path . 'includes/error_collector.' . $phpEx);
+	}
+	$collector = new phpbb_error_collector;
+	$collector->install();
 	$smtp->socket = fsockopen($config['smtp_host'], $config['smtp_port'], $errno, $errstr, 20);
-	$error_contents = ob_get_clean();
+	$collector->uninstall();
+	$error_contents = $collector->format_errors();
 
 	if (!$smtp->socket)
 	{
@@ -999,7 +1051,7 @@ function smtpmail($addresses, $subject, $message, &$err_msg, $headers = false)
 	}
 
 	// Let me in. This function handles the complete authentication process
-	if ($err_msg = $smtp->log_into_server($config['smtp_host'], $config['smtp_username'], $config['smtp_password'], $config['smtp_auth_method']))
+	if ($err_msg = $smtp->log_into_server($config['smtp_host'], $config['smtp_username'], htmlspecialchars_decode($config['smtp_password']), $config['smtp_auth_method']))
 	{
 		$smtp->close_session($err_msg);
 		return false;
@@ -1608,18 +1660,27 @@ function mail_encode($str, $eol = "\r\n")
 */
 function phpbb_mail($to, $subject, $msg, $headers, $eol, &$err_msg)
 {
-	global $config;
+	global $config, $phpbb_root_path, $phpEx;
 
 	// We use the EOL character for the OS here because the PHP mail function does not correctly transform line endings. On Windows SMTP is used (SMTP is \r\n), on UNIX a command is used...
 	// Reference: http://bugs.php.net/bug.php?id=15841
 	$headers = implode($eol, $headers);
 
-	ob_start();
+	if (!class_exists('phpbb_error_collector'))
+	{
+		include($phpbb_root_path . 'includes/error_collector.' . $phpEx);
+	}
+
+	$collector = new phpbb_error_collector;
+	$collector->install();
+
 	// On some PHP Versions mail() *may* fail if there are newlines within the subject.
 	// Newlines are used as a delimiter for lines in mail_encode() according to RFC 2045 section 6.8.
 	// Because PHP can't decide what is wanted we revert back to the non-RFC-compliant way of separating by one space (Use '' as parameter to mail_encode() results in SPACE used)
 	$result = $config['email_function_name']($to, mail_encode($subject, ''), wordwrap(utf8_wordwrap($msg), 997, "\n", true), $headers);
-	$err_msg = ob_get_clean();
+
+	$collector->uninstall();
+	$err_msg = $collector->format_errors();
 
 	return $result;
 }

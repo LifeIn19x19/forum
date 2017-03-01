@@ -458,13 +458,16 @@ class fileerror extends filespec
 class fileupload
 {
 	var $allowed_extensions = array();
-	var $disallowed_content = array();
+	var $disallowed_content = array('body', 'head', 'html', 'img', 'plaintext', 'a href', 'pre', 'script', 'table', 'title'); 
 	var $max_filesize = 0;
 	var $min_width = 0;
 	var $min_height = 0;
 	var $max_width = 0;
 	var $max_height = 0;
 	var $error_prefix = '';
+
+	/** @var int Timeout for remote upload */
+	var $upload_timeout = 6;
 
 	/**
 	* Init file upload class.
@@ -539,7 +542,7 @@ class fileupload
 	{
 		if ($disallowed_content !== false && is_array($disallowed_content))
 		{
-			$this->disallowed_content = $disallowed_content;
+			$this->disallowed_content = array_diff($disallowed_content, array(''));
 		}
 	}
 
@@ -751,6 +754,31 @@ class fileupload
 		$filename = $url['path'];
 		$filesize = 0;
 
+		$remote_max_filesize = $this->max_filesize;
+		if (!$remote_max_filesize)
+		{
+			$max_filesize = @ini_get('upload_max_filesize');
+
+			if (!empty($max_filesize))
+			{
+				$unit = strtolower(substr($max_filesize, -1, 1));
+				$remote_max_filesize = (int) $max_filesize;
+
+				switch ($unit)
+				{
+					case 'g':
+						$remote_max_filesize *= 1024;
+					// no break
+					case 'm':
+						$remote_max_filesize *= 1024;
+					// no break
+					case 'k':
+						$remote_max_filesize *= 1024;
+					// no break
+				}
+			}
+		}
+
 		$errno = 0;
 		$errstr = '';
 
@@ -770,18 +798,33 @@ class fileupload
 		fputs($fsock, "HOST: " . $host . "\r\n");
 		fputs($fsock, "Connection: close\r\n\r\n");
 
+		// Set a proper timeout for the socket
+		socket_set_timeout($fsock, $this->upload_timeout);
+
 		$get_info = false;
 		$data = '';
-		while (!@feof($fsock))
+		$length = false;
+		$timer_stop = time() + $this->upload_timeout;
+
+		while ((!$length || $filesize < $length) && !@feof($fsock))
 		{
 			if ($get_info)
 			{
-				$block = @fread($fsock, 1024);
+				if ($length)
+				{
+					// Don't attempt to read past end of file if server indicated length
+					$block = @fread($fsock, min($length - $filesize, 1024));
+				}
+				else
+				{
+					$block = @fread($fsock, 1024);
+				}
+
 				$filesize += strlen($block);
 
-				if ($this->max_filesize && $filesize > $this->max_filesize)
+				if ($remote_max_filesize && $filesize > $remote_max_filesize)
 				{
-					$max_filesize = get_formatted_filesize($this->max_filesize, false);
+					$max_filesize = get_formatted_filesize($remote_max_filesize, false);
 
 					$file = new fileerror(sprintf($user->lang[$this->error_prefix . 'WRONG_FILESIZE'], $max_filesize['value'], $max_filesize['unit']));
 					return $file;
@@ -807,9 +850,9 @@ class fileupload
 					{
 						$length = (int) str_replace('content-length: ', '', strtolower($line));
 
-						if ($length && $length > $this->max_filesize)
+						if ($remote_max_filesize && $length && $length > $remote_max_filesize)
 						{
-							$max_filesize = get_formatted_filesize($this->max_filesize, false);
+							$max_filesize = get_formatted_filesize($remote_max_filesize, false);
 
 							$file = new fileerror(sprintf($user->lang[$this->error_prefix . 'WRONG_FILESIZE'], $max_filesize['value'], $max_filesize['unit']));
 							return $file;
@@ -821,6 +864,15 @@ class fileupload
 						return $file;
 					}
 				}
+			}
+
+			$stream_meta_data = stream_get_meta_data($fsock);
+
+			// Cancel upload if we exceed timeout
+			if (!empty($stream_meta_data['timed_out']) || time() >= $timer_stop)
+			{
+				$file = new fileerror($user->lang[$this->error_prefix . 'REMOTE_UPLOAD_TIMEOUT']);
+				return $file;
 			}
 		}
 		@fclose($fsock);

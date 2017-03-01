@@ -2296,35 +2296,15 @@ function auto_prune($forum_id, $prune_mode, $prune_flags, $prune_days, $prune_fr
 /**
 * remove_comments will strip the sql comment lines out of an uploaded sql file
 * specifically for mssql and postgres type files in the install....
+*
+* @deprecated		Use phpbb_remove_comments() instead.
 */
 function remove_comments(&$output)
 {
-	$lines = explode("\n", $output);
-	$output = '';
+	// Remove /* */ comments (http://ostermiller.org/findcomment.html)
+	$output = preg_replace('#/\*(.|[\r\n])*?\*/#', "\n", $output);
 
-	// try to keep mem. use down
-	$linecount = sizeof($lines);
-
-	$in_comment = false;
-	for ($i = 0; $i < $linecount; $i++)
-	{
-		if (trim($lines[$i]) == '/*')
-		{
-			$in_comment = true;
-		}
-
-		if (!$in_comment)
-		{
-			$output .= $lines[$i] . "\n";
-		}
-
-		if (trim($lines[$i]) == '*/')
-		{
-			$in_comment = false;
-		}
-	}
-
-	unset($lines);
+	// Return by reference and value.
 	return $output;
 }
 
@@ -2506,6 +2486,7 @@ function cache_moderators()
 
 /**
 * View log
+* If $log_count is set to false, we will skip counting all entries in the database.
 */
 function view_log($mode, &$log, &$log_count, $limit = 0, $offset = 0, $forum_id = 0, $topic_id = 0, $user_id = 0, $limit_days = 0, $sort_by = 'l.log_time DESC', $keywords = '')
 {
@@ -2591,7 +2572,37 @@ function view_log($mode, &$log, &$log_count, $limit = 0, $offset = 0, $forum_id 
 		{
 			$sql_keywords .= $db->sql_in_set('l.log_operation', $operations) . ' OR ';
 		}
-		$sql_keywords .= 'LOWER(l.log_data) ' . implode(' OR LOWER(l.log_data) ', $keywords) . ')';
+		$sql_lower = $db->sql_lower_text('l.log_data');
+		$sql_keywords .= "$sql_lower " . implode(" OR $sql_lower ", $keywords) . ')';
+	}
+
+	if ($log_count !== false)
+	{
+		$sql = 'SELECT COUNT(l.log_id) AS total_entries
+			FROM ' . LOG_TABLE . ' l, ' . USERS_TABLE . " u
+			WHERE l.log_type = $log_type
+				AND l.user_id = u.user_id
+				AND l.log_time >= $limit_days
+				$sql_keywords
+				$sql_forum";
+		$result = $db->sql_query($sql);
+		$log_count = (int) $db->sql_fetchfield('total_entries');
+		$db->sql_freeresult($result);
+	}
+
+	// $log_count may be false here if false was passed in for it,
+	// because in this case we did not run the COUNT() query above.
+	// If we ran the COUNT() query and it returned zero rows, return;
+	// otherwise query for logs below.
+	if ($log_count === 0)
+	{
+		// Save the queries, because there are no logs to display
+		return 0;
+	}
+
+	if ($offset >= $log_count)
+	{
+		$offset = ($offset - $limit < 0) ? 0 : $offset - $limit;
 	}
 
 	$sql = "SELECT l.*, u.username, u.username_clean, u.user_colour
@@ -2761,18 +2772,7 @@ function view_log($mode, &$log, &$log_count, $limit = 0, $offset = 0, $forum_id 
 		}
 	}
 
-	$sql = 'SELECT COUNT(l.log_id) AS total_entries
-		FROM ' . LOG_TABLE . ' l, ' . USERS_TABLE . " u
-		WHERE l.log_type = $log_type
-			AND l.user_id = u.user_id
-			AND l.log_time >= $limit_days
-			$sql_keywords
-			$sql_forum";
-	$result = $db->sql_query($sql);
-	$log_count = (int) $db->sql_fetchfield('total_entries');
-	$db->sql_freeresult($result);
-
-	return;
+	return $offset;
 }
 
 /**
@@ -2903,6 +2903,12 @@ function view_inactive_users(&$users, &$user_count, $limit = 0, $offset = 0, $li
 	$result = $db->sql_query($sql);
 	$user_count = (int) $db->sql_fetchfield('user_count');
 	$db->sql_freeresult($result);
+
+	if ($user_count == 0)
+	{
+		// Save the queries, because there are no users to display
+		return 0;
+	}
 
 	if ($offset >= $user_count)
 	{
@@ -3051,8 +3057,24 @@ function get_database_size()
 		case 'mssql':
 		case 'mssql_odbc':
 		case 'mssqlnative':
+			$sql = 'SELECT @@VERSION AS mssql_version';
+			$result = $db->sql_query($sql);
+			$row = $db->sql_fetchrow($result);
+			$db->sql_freeresult($result);
+			
 			$sql = 'SELECT ((SUM(size) * 8.0) * 1024.0) as dbsize
 				FROM sysfiles';
+
+			if ($row)
+			{
+				// Azure stats are stored elsewhere
+				if (strpos($row['mssql_version'], 'SQL Azure') !== false)
+				{
+					$sql = 'SELECT ((SUM(reserved_page_count) * 8.0) * 1024.0) as dbsize 
+					FROM sys.dm_db_partition_stats';
+				}
+			}
+
 			$result = $db->sql_query($sql, 7200);
 			$database_size = ($row = $db->sql_fetchrow($result)) ? $row['dbsize'] : false;
 			$db->sql_freeresult($result);
@@ -3109,15 +3131,18 @@ function get_database_size()
 /**
 * Retrieve contents from remotely stored file
 */
-function get_remote_file($host, $directory, $filename, &$errstr, &$errno, $port = 80, $timeout = 10)
+function get_remote_file($host, $directory, $filename, &$errstr, &$errno, $port = 80, $timeout = 6)
 {
 	global $user;
 
 	if ($fsock = @fsockopen($host, $port, $errno, $errstr, $timeout))
 	{
-		@fputs($fsock, "GET $directory/$filename HTTP/1.1\r\n");
+		@fputs($fsock, "GET $directory/$filename HTTP/1.0\r\n");
 		@fputs($fsock, "HOST: $host\r\n");
 		@fputs($fsock, "Connection: close\r\n\r\n");
+
+		$timer_stop = time() + $timeout;
+		stream_set_timeout($fsock, $timeout);
 
 		$file_info = '';
 		$get_info = false;
@@ -3140,6 +3165,14 @@ function get_remote_file($host, $directory, $filename, &$errstr, &$errno, $port 
 					$errstr = $user->lang['FILE_NOT_FOUND'] . ': ' . $filename;
 					return false;
 				}
+			}
+
+			$stream_meta_data = stream_get_meta_data($fsock);
+
+			if (!empty($stream_meta_data['timed_out']) || time() >= $timer_stop)
+			{
+				$errstr = $user->lang['FSOCK_TIMEOUT'];
+				return false;
 			}
 		}
 		@fclose($fsock);
@@ -3302,7 +3335,7 @@ function obtain_latest_version_info($force_update = false, $warn_fail = false, $
 		$info = get_remote_file('version.phpbb.com', '/phpbb',
 				((defined('PHPBB_QA')) ? '30x_qa.txt' : '30x.txt'), $errstr, $errno);
 
-		if ($info === false)
+		if (empty($info))
 		{
 			$cache->destroy('versioncheck');
 			if ($warn_fail)
@@ -3326,7 +3359,7 @@ function obtain_latest_version_info($force_update = false, $warn_fail = false, $
  * @param int		$flag			The binary flag which is OR-ed with the current column value
  * @param string	$sql_more		This string is attached to the sql query generated to update the table.
  *
- * @return void
+ * @return null
  */
 function enable_bitfield_column_flag($table_name, $column_name, $flag, $sql_more = '')
 {

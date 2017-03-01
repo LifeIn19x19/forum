@@ -122,7 +122,7 @@ class custom_profile
 
 			case FIELD_BOOL:
 				$field_value = (bool) $field_value;
-			
+
 				if (!$field_value && $field_data['field_required'])
 				{
 					return 'FIELD_REQUIRED';
@@ -134,7 +134,7 @@ class custom_profile
 				{
 					return false;
 				}
-				
+
 				$field_value = (int) $field_value;
 
 				if ($field_value < $field_data['field_minlen'])
@@ -149,7 +149,18 @@ class custom_profile
 
 			case FIELD_DROPDOWN:
 				$field_value = (int) $field_value;
-			
+
+				// retrieve option lang data if necessary
+				if (!isset($this->options_lang[$field_data['field_id']]) || !isset($this->options_lang[$field_data['field_id']][$field_data['lang_id']]) || !sizeof($this->options_lang[$file_data['field_id']][$field_data['lang_id']]))
+				{
+					$this->get_option_lang($field_data['field_id'], $field_data['lang_id'], FIELD_DROPDOWN, false);
+				}
+
+				if (!isset($this->options_lang[$field_data['field_id']][$field_data['lang_id']][$field_value]))
+				{
+					return 'FIELD_INVALID_VALUE';
+				}
+
 				if ($field_value == $field_data['field_novalue'] && $field_data['field_required'])
 				{
 					return 'FIELD_REQUIRED';
@@ -302,6 +313,7 @@ class custom_profile
 				switch ($cp_result)
 				{
 					case 'FIELD_INVALID_DATE':
+					case 'FIELD_INVALID_VALUE':
 					case 'FIELD_REQUIRED':
 						$error = sprintf($user->lang[$cp_result], $row['lang_name']);
 					break;
@@ -444,6 +456,8 @@ class custom_profile
 
 			$user_fields = array();
 
+			$user_ids = $user_id;
+
 			// Go through the fields in correct order
 			foreach (array_keys($this->profile_cache) as $used_ident)
 			{
@@ -451,6 +465,15 @@ class custom_profile
 				{
 					$user_fields[$user_id][$used_ident]['value'] = $row['pf_' . $used_ident];
 					$user_fields[$user_id][$used_ident]['data'] = $this->profile_cache[$used_ident];
+				}
+
+				foreach ($user_ids as $user_id)
+				{
+					if (!isset($user_fields[$user_id][$used_ident]) && $this->profile_cache[$used_ident]['field_show_novalue'])
+					{
+						$user_fields[$user_id][$used_ident]['value'] = '';
+						$user_fields[$user_id][$used_ident]['data'] = $this->profile_cache[$used_ident];
+					}
 				}
 			}
 
@@ -509,7 +532,7 @@ class custom_profile
 		switch ($this->profile_types[$field_type])
 		{
 			case 'int':
-				if ($value === '')
+				if (($value === '' || $value === null) && !$ident_ary['data']['field_show_novalue'])
 				{
 					return NULL;
 				}
@@ -518,7 +541,7 @@ class custom_profile
 
 			case 'string':
 			case 'text':
-				if (!$value)
+				if (!$value && !$ident_ary['data']['field_show_novalue'])
 				{
 					return NULL;
 				}
@@ -536,7 +559,7 @@ class custom_profile
 				$month = (isset($date[1])) ? (int) $date[1] : 0;
 				$year = (isset($date[2])) ? (int) $date[2] : 0;
 
-				if (!$day && !$month && !$year)
+				if (!$day && !$month && !$year && !$ident_ary['data']['field_show_novalue'])
 				{
 					return NULL;
 				}
@@ -559,7 +582,7 @@ class custom_profile
 					$this->get_option_lang($field_id, $lang_id, FIELD_DROPDOWN, false);
 				}
 
-				if ($value == $ident_ary['data']['field_novalue'])
+				if ($value == $ident_ary['data']['field_novalue'] && !$ident_ary['data']['field_show_novalue'])
 				{
 					return NULL;
 				}
@@ -569,7 +592,14 @@ class custom_profile
 				// User not having a value assigned
 				if (!isset($this->options_lang[$field_id][$lang_id][$value]))
 				{
-					return NULL;
+					if ($ident_ary['data']['field_show_novalue'])
+					{
+						$value = $ident_ary['data']['field_novalue'];
+					}
+					else
+					{
+						return NULL;
+					}
 				}
 
 				return $this->options_lang[$field_id][$lang_id][$value];
@@ -581,6 +611,11 @@ class custom_profile
 				if (!isset($this->options_lang[$field_id][$lang_id]))
 				{
 					$this->get_option_lang($field_id, $lang_id, FIELD_BOOL, false);
+				}
+
+				if (!$value && $ident_ary['data']['field_show_novalue'])
+				{
+					$value = $ident_ary['data']['field_default_value'];
 				}
 
 				if ($ident_ary['data']['field_length'] == 1)
@@ -613,10 +648,10 @@ class custom_profile
 
 		$profile_row['field_ident'] = (isset($profile_row['var_name'])) ? $profile_row['var_name'] : 'pf_' . $profile_row['field_ident'];
 		$user_ident = $profile_row['field_ident'];
-		// checkbox - only testing for isset
+		// checkbox - set the value to "true" if it has been set to 1
 		if ($profile_row['field_type'] == FIELD_BOOL && $profile_row['field_length'] == 2)
 		{
-			$value = (isset($_REQUEST[$profile_row['field_ident']])) ? true : ((!isset($user->profile_fields[$user_ident]) || $preview) ? $default_value : $user->profile_fields[$user_ident]);
+			$value = (isset($_REQUEST[$profile_row['field_ident']]) && request_var($profile_row['field_ident'], $default_value) == 1) ? true : ((!isset($user->profile_fields[$user_ident]) || $preview) ? $default_value : $user->profile_fields[$user_ident]);
 		}
 		else if ($profile_row['field_type'] == FIELD_INT)
 		{

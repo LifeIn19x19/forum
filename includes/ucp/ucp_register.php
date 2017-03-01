@@ -56,7 +56,7 @@ class ucp_register
 		{
 			$use_lang = ($change_lang) ? basename($change_lang) : basename($user_lang);
 
-			if (file_exists($user->lang_path . $use_lang . '/'))
+			if (!validate_language_iso_name($use_lang))
 			{
 				if ($change_lang)
 				{
@@ -155,8 +155,8 @@ class ucp_register
 			$this->tpl_name = 'ucp_agreement';
 			return;
 		}
-		
-		
+
+
 		// The CAPTCHA kicks in here. We can't help that the information gets lost on language change. 
 		if ($config['enable_confirm'])
 		{
@@ -165,24 +165,8 @@ class ucp_register
 			$captcha->init(CONFIRM_REG);
 		}
 
-		// Try to manually determine the timezone and adjust the dst if the server date/time complies with the default setting +/- 1
-		$timezone = date('Z') / 3600;
-		$is_dst = date('I');
-
-		if ($config['board_timezone'] == $timezone || $config['board_timezone'] == ($timezone - 1))
-		{
-			$timezone = ($is_dst) ? $timezone - 1 : $timezone;
-
-			if (!isset($user->lang['tz_zones'][(string) $timezone]))
-			{
-				$timezone = $config['board_timezone'];
-			}
-		}
-		else
-		{
-			$is_dst = $config['board_dst'];
-			$timezone = $config['board_timezone'];
-		}
+		$is_dst = $config['board_dst'];
+		$timezone = $config['board_timezone'];
 
 		$data = array(
 			'username'			=> utf8_normalize_nfc(request_var('username', '', true)),
@@ -210,7 +194,7 @@ class ucp_register
 					array('email')),
 				'email_confirm'		=> array('string', false, 6, 60),
 				'tz'				=> array('num', false, -14, 14),
-				'lang'				=> array('match', false, '#^[a-z_\-]{2,}$#i'),
+				'lang'				=> array('language_iso_name'),
 			));
 
 			if (!check_form_key('ucp_register'))
@@ -366,10 +350,7 @@ class ucp_register
 
 					$messenger->to($data['email'], $data['username']);
 
-					$messenger->headers('X-AntiAbuse: Board servername - ' . $config['server_name']);
-					$messenger->headers('X-AntiAbuse: User_id - ' . $user->data['user_id']);
-					$messenger->headers('X-AntiAbuse: Username - ' . $user->data['username']);
-					$messenger->headers('X-AntiAbuse: User IP - ' . $user->ip);
+					$messenger->anti_abuse_headers($config, $user);
 
 					$messenger->assign_vars(array(
 						'WELCOME_MSG'	=> htmlspecialchars_decode(sprintf($user->lang['WELCOME_SUBJECT'], $config['sitename'])),

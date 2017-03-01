@@ -31,12 +31,7 @@ else if (isset($_SERVER['HTTP_USER_AGENT']) && strpos($_SERVER['HTTP_USER_AGENT'
 
 if (isset($_GET['avatar']))
 {
-	if (!defined('E_DEPRECATED'))
-	{
-		define('E_DEPRECATED', 8192);
-	}
-	error_reporting(E_ALL ^ E_NOTICE ^ E_DEPRECATED);
-
+	require($phpbb_root_path . 'includes/startup.' . $phpEx);
 	require($phpbb_root_path . 'config.' . $phpEx);
 
 	if (!defined('PHPBB_INSTALLED') || empty($dbms) || empty($acm_type))
@@ -64,7 +59,7 @@ if (isset($_GET['avatar']))
 	$browser = (!empty($_SERVER['HTTP_USER_AGENT'])) ? htmlspecialchars((string) $_SERVER['HTTP_USER_AGENT']) : 'msie 6.0';
 
 	$config = $cache->obtain_config();
-	$filename = $_GET['avatar'];
+	$filename = request_var('avatar', '');
 	$avatar_group = false;
 	$exit = false;
 
@@ -125,11 +120,13 @@ $user->setup('viewtopic');
 
 if (!$download_id)
 {
+	send_status_line(404, 'Not Found');
 	trigger_error('NO_ATTACHMENT_SELECTED');
 }
 
 if (!$config['allow_attachments'] && !$config['allow_pm_attach'])
 {
+	send_status_line(404, 'Not Found');
 	trigger_error('ATTACHMENT_FUNCTIONALITY_DISABLED');
 }
 
@@ -142,11 +139,13 @@ $db->sql_freeresult($result);
 
 if (!$attachment)
 {
+	send_status_line(404, 'Not Found');
 	trigger_error('ERROR_NO_ATTACHMENT');
 }
 
 if ((!$attachment['in_message'] && !$config['allow_attachments']) || ($attachment['in_message'] && !$config['allow_pm_attach']))
 {
+	send_status_line(404, 'Not Found');
 	trigger_error('ATTACHMENT_FUNCTIONALITY_DISABLED');
 }
 
@@ -159,6 +158,7 @@ if ($attachment['is_orphan'])
 
 	if (!$own_attachment || ($attachment['in_message'] && !$auth->acl_get('u_pm_download')) || (!$attachment['in_message'] && !$auth->acl_get('u_download')))
 	{
+		send_status_line(404, 'Not Found');
 		trigger_error('ERROR_NO_ATTACHMENT');
 	}
 
@@ -170,7 +170,7 @@ else
 	if (!$attachment['in_message'])
 	{
 		//
-		$sql = 'SELECT p.forum_id, f.forum_password, f.parent_id
+		$sql = 'SELECT p.forum_id, f.forum_name, f.forum_password, f.parent_id
 			FROM ' . POSTS_TABLE . ' p, ' . FORUMS_TABLE . ' f
 			WHERE p.post_id = ' . $attachment['post_msg_id'] . '
 				AND p.forum_id = f.forum_id';
@@ -191,6 +191,7 @@ else
 		}
 		else
 		{
+			send_status_line(403, 'Forbidden');
 			trigger_error('SORRY_AUTH_VIEW_ATTACH');
 		}
 	}
@@ -231,6 +232,7 @@ else
 	$extensions = array();
 	if (!extension_allowed($row['forum_id'], $attachment['extension'], $extensions))
 	{
+		send_status_line(404, 'Forbidden');
 		trigger_error(sprintf($user->lang['EXTENSION_DISABLED_AFTER_POSTING'], $attachment['extension']));
 	}
 }
@@ -253,6 +255,7 @@ $db->sql_freeresult($result);
 
 if (!$attachment)
 {
+	send_status_line(404, 'Not Found');
 	trigger_error('ERROR_NO_ATTACHMENT');
 }
 
@@ -282,7 +285,7 @@ else if (($display_cat == ATTACHMENT_CATEGORY_NONE/* || $display_cat == ATTACHME
 	$db->sql_query($sql);
 }
 
-if ($display_cat == ATTACHMENT_CATEGORY_IMAGE && $mode === 'view' && (strpos($attachment['mimetype'], 'image') === 0) && ((strpos(strtolower($user->browser), 'msie') !== false) && (strpos(strtolower($user->browser), 'msie 8.0') === false)))
+if ($display_cat == ATTACHMENT_CATEGORY_IMAGE && $mode === 'view' && (strpos($attachment['mimetype'], 'image') === 0) && (strpos(strtolower($user->browser), 'msie') !== false) && !phpbb_is_greater_ie_version($user->browser, 7))
 {
 	wrap_img_in_html(append_sid($phpbb_root_path . 'download/file.' . $phpEx, 'id=' . $attachment['attach_id']), $attachment['real_filename']);
 	file_gc();
@@ -295,6 +298,7 @@ else
 		// This presenting method should no longer be used
 		if (!@is_dir($phpbb_root_path . $config['upload_path']))
 		{
+			send_status_line(500, 'Internal Server Error');
 			trigger_error($user->lang['PHYSICAL_DOWNLOAD_NOT_POSSIBLE']);
 		}
 
@@ -339,8 +343,8 @@ function send_avatar_to_browser($file, $browser)
 
 		$image_data = @getimagesize($file_path);
 		header('Content-Type: ' . image_type_to_mime_type($image_data[2]));
-
-		if (strpos(strtolower($browser), 'msie') !== false && strpos(strtolower($browser), 'msie 8.0') === false)
+			
+		if ((strpos(strtolower($browser), 'msie') !== false) && !phpbb_is_greater_ie_version($browser, 7))
 		{
 			header('Content-Disposition: attachment; ' . header_filename($file));
 
@@ -419,7 +423,8 @@ function send_file_to_browser($attachment, $upload_dir, $category)
 
 	if (!@file_exists($filename))
 	{
-		trigger_error($user->lang['ERROR_NO_ATTACHMENT'] . '<br /><br />' . sprintf($user->lang['FILE_NOT_FOUND_404'], $filename));
+		send_status_line(404, 'Not Found');
+		trigger_error('ERROR_NO_ATTACHMENT');
 	}
 
 	// Correct the mime type - we force application/octetstream for all files, except images
@@ -445,9 +450,11 @@ function send_file_to_browser($attachment, $upload_dir, $category)
 		// PHP track_errors setting On?
 		if (!empty($php_errormsg))
 		{
+			send_status_line(500, 'Internal Server Error');
 			trigger_error($user->lang['UNABLE_TO_DELIVER_FILE'] . '<br />' . sprintf($user->lang['TRACKED_PHP_ERROR'], $php_errormsg));
 		}
 
+		send_status_line(500, 'Internal Server Error');
 		trigger_error('UNABLE_TO_DELIVER_FILE');
 	}
 
@@ -470,10 +477,9 @@ function send_file_to_browser($attachment, $upload_dir, $category)
 	*/
 
 	// Send out the Headers. Do not set Content-Disposition to inline please, it is a security measure for users using the Internet Explorer.
-	$is_ie8 = (strpos(strtolower($user->browser), 'msie 8.0') !== false);
 	header('Content-Type: ' . $attachment['mimetype']);
-
-	if ($is_ie8)
+		
+	if (phpbb_is_greater_ie_version($user->browser, 7))
 	{
 		header('X-Content-Type-Options: nosniff');
 	}
@@ -485,7 +491,7 @@ function send_file_to_browser($attachment, $upload_dir, $category)
 	}
 	else
 	{
-		if (empty($user->browser) || (!$is_ie8 && (strpos(strtolower($user->browser), 'msie') !== false)))
+		if (empty($user->browser) || ((strpos(strtolower($user->browser), 'msie') !== false) && !phpbb_is_greater_ie_version($user->browser, 7)))
 		{
 			header('Content-Disposition: attachment; ' . header_filename(htmlspecialchars_decode($attachment['real_filename'])));
 			if (empty($user->browser) || (strpos(strtolower($user->browser), 'msie 6.0') !== false))
@@ -496,16 +502,11 @@ function send_file_to_browser($attachment, $upload_dir, $category)
 		else
 		{
 			header('Content-Disposition: ' . ((strpos($attachment['mimetype'], 'image') === 0) ? 'inline' : 'attachment') . '; ' . header_filename(htmlspecialchars_decode($attachment['real_filename'])));
-			if ($is_ie8 && (strpos($attachment['mimetype'], 'image') !== 0))
+			if (phpbb_is_greater_ie_version($user->browser, 7) && (strpos($attachment['mimetype'], 'image') !== 0))
 			{
 				header('X-Download-Options: noopen');
 			}
 		}
-	}
-
-	if ($size)
-	{
-		header("Content-Length: $size");
 	}
 
 	// Close the db connection before sending the file
@@ -513,6 +514,13 @@ function send_file_to_browser($attachment, $upload_dir, $category)
 
 	if (!set_modified_headers($attachment['filetime'], $user->browser))
 	{
+		// Send Content-Length only if set_modified_headers() does not send
+		// status 304 - Not Modified
+		if ($size)
+		{
+			header("Content-Length: $size");
+		}
+
 		// Try to deliver in chunks
 		@set_time_limit(0);
 
@@ -673,7 +681,8 @@ function set_modified_headers($stamp, $browser)
 {
 	// let's see if we have to send the file at all
 	$last_load 	=  isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) ? strtotime(trim($_SERVER['HTTP_IF_MODIFIED_SINCE'])) : false;
-	if ((strpos(strtolower($browser), 'msie 6.0') === false) && (strpos(strtolower($browser), 'msie 8.0') === false))
+		
+	if (strpos(strtolower($browser), 'msie 6.0') === false && !phpbb_is_greater_ie_version($browser, 7))
 	{
 		if ($last_load !== false && $last_load >= $stamp)
 		{
@@ -700,6 +709,27 @@ function file_gc()
 	}
 	$db->sql_close();
 	exit;
+}
+
+/**
+* Check if the browser is internet explorer version 7+
+*
+* @param string $user_agent	User agent HTTP header
+* @param int $version IE version to check against
+*
+* @return bool true if internet explorer version is greater than $version
+*/
+function phpbb_is_greater_ie_version($user_agent, $version)
+{
+	if (preg_match('/msie (\d+)/', strtolower($user_agent), $matches))
+	{
+		$ie_version = (int) $matches[1];
+		return ($ie_version > $version);
+	}
+	else
+	{
+		return false;
+	}
 }
 
 ?>
