@@ -2,7 +2,6 @@
 /**
 *
 * @package Support Toolkit
-* @version $Id$
 * @copyright (c) 2009 phpBB Group
 * @license http://opensource.org/licenses/gpl-license.php GNU Public License
 *
@@ -29,13 +28,6 @@ $umil = new umil(true);
 // Set a constant so we know when the STK got to a point where it savely loaded all absolutely required stuff
 define('IN_STK', true);
 
-// The PHPBB_VERSION constant was introduced in phpBB 3.0.3, some tools rely on this constant
-// if it isn't set here fill it with $config['version'] for backward compatibility
-if (!defined('PHPBB_VERSION'))
-{
-	define('PHPBB_VERSION', $config['version']);
-}
-
 // Language path.  We are using a custom language path to keep all the files within the stk/ folder.  First check if the $user->data['user_lang'] path exists, if not, check if the default lang path exists, and if still not use english.
 stk_add_lang('common');
 
@@ -45,17 +37,13 @@ $template->set_custom_template(STK_ROOT_PATH . 'style', 'stk');
 // Work around for a bug in phpBB3.
 $user->theme['template_storedb'] = false;
 
-// Setup some variables
-$action = request_var('action', '');
-$submit = request_var('submit', false);
-
 // Perform some quick tasks here that don't require any authentication!
-perform_unauthed_quick_tasks($action);
+perform_unauthed_quick_tasks($action, $submit);
 
 /*
 * Start Login
 */
-$stk_passwd = $stk_passwd_expiration = FALSE;
+$stk_passwd = $stk_passwd_expiration = false;
 // See whether we have an emergency login file
 if (file_exists(STK_ROOT_PATH . 'passwd.' . PHP_EXT) && $user->data['user_type'] != USER_FOUNDER)
 {
@@ -65,8 +53,8 @@ if (file_exists(STK_ROOT_PATH . 'passwd.' . PHP_EXT) && $user->data['user_type']
 	// Can we use trust this password
 	if ($stk_passwd_expiration === false || time() > $stk_passwd_expiration)
 	{
-		// No. Unset the password and try to remove the file
-		unset($stk_passwd);
+		// No? Invalidate the password and try to remove the file
+		$stk_passwd = false;
 		perform_authed_quick_tasks('delpasswdfile');
 	}
 }

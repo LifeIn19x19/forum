@@ -1,15 +1,16 @@
 <?php
 /**
- *
- * @package Support Toolkit - Resynchronise report flags
- * @copyright (c) 2011 phpBB Group
- * @license http://opensource.org/licenses/gpl-license.php GNU Public License
- *
- */
+*
+* @package Support Toolkit - Purge Sessions
+* @version $Id$
+* @copyright (c) 2009 phpBB Group
+* @license http://opensource.org/licenses/gpl-license.php GNU Public License
+*
+*/
 
 /**
- * DO NOT CHANGE
- */
+* DO NOT CHANGE
+*/
 if (!defined('IN_PHPBB'))
 {
 	exit;
@@ -37,8 +38,7 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, array(
-	'RESYNC_REPORT_FLAGS'			=> 'Resynchronise report flags',
-	'RESYNC_REPORT_FLAGS_CONFIRM'	=> 'This tool will resynchronise the report flags for all posts, topics and private messages.',
-	'RESYNC_REPORT_FLAGS_FINISHED'	=> 'All report flags have successfully been resynchronised!',
-	'RESYNC_REPORT_FLAGS_NEXT'		=> 'Resynchronising report flags in progress. Please do not interrupt this process.',
+	'PURGE_SESSIONS'			=> 'Purge Sessions',
+	'PURGE_SESSIONS_COMPLETE'	=> 'Sessions have been purged successfully.',
+	'PURGE_SESSIONS_CONFIRM'	=> 'This tool will remove all current sessions and log out all users. Are you sure that you want to continue?',
 ));

@@ -297,16 +297,22 @@ function stk_add_lang($lang_file, $fore_lang = false)
 	// Which phpBB version is the user using
 	if (is_null($is_302))
 	{
-		// There are different ways of handling language paths due to the changes
-		// made in phpBB 3.0.3 (set custom lang path)
-		if (version_compare($config['version'], '3.0.2', '<='))
-		{
-			$is_302 = true;
-		}
-		else
-		{
-			$is_302 = false;
-		}
+		// Guess the version based upon behavior, at this point a version
+		// check isn't sufficient as there are cases where the version
+		// information isn't available or isn't reliable.
+		/*
+		 * // There are different ways of handling language paths due to the changes
+		 * // made in phpBB 3.0.3 (set custom lang path)
+		 * if (version_compare(PHPBB_VERSION_NUMBER, '3.0.2', '<='))
+		 * {
+		 *	$is_302 = true;
+		 * }
+		 * else
+		 * {
+		 *	$is_302 = false;
+		 * }
+		 */
+		$is_302 = (file_exists($user->lang_path . 'common.' . PHP_EXT)) ? true : false;
 	}
 
 	// Switch to the STK language dir
@@ -352,10 +358,11 @@ function stk_add_lang($lang_file, $fore_lang = false)
  * Perform all quick tasks that has to be ran before we authenticate
  *
  * @param	String	$action	The action to perform
+ * @param   bool    $submit The form has been submitted
  */
-function perform_unauthed_quick_tasks($action)
+function perform_unauthed_quick_tasks($action, $submit = false)
 {
-	global $template, $user;
+	global $template, $umil, $user;
 
 	switch ($action)
 	{
@@ -365,6 +372,68 @@ function perform_unauthed_quick_tasks($action)
 			$user->unset_admin();
 			meta_refresh(3, append_sid(PHPBB_ROOT_PATH . 'index.' . PHP_EXT));
 			trigger_error('STK_LOGOUT_SUCCESS');
+		break;
+
+		// Can't rely on phpBB to get the phpBB version.
+		case 'request_phpbb_version' :
+			global $cache, $config;
+
+			$_version_number = $cache->get('_stk_phpbb_version_number');
+			if ($_version_number === false)
+			{
+				if ($submit)
+				{
+					if (!check_form_key('request_phpbb_version'))
+					{
+						trigger_error('FORM_INVALID');
+					}
+
+					$_version_number = request_var('version_number', $config['version']);
+					$cache->put('_stk_phpbb_version_number', $_version_number);
+				}
+				else
+				{
+					add_form_key('request_phpbb_version');
+					page_header($user->lang['REQUEST_PHPBB_VERSION'], false);
+
+					// Grep the latest phpBB version number
+					$info = $umil->version_check('version.phpbb.com', '/phpbb', '30x.txt');
+					list(,, $_phpbb_version) = explode('.', $info[0]);
+
+					// Build the options
+					$version_options = '';
+					for ($i = $_phpbb_version; $i > -1; $i--)
+					{
+						if (stripos($i, 'PL') !== false)
+						{
+							list($base_v, $pl_num) = explode('-PL', $_phpbb_version);
+							for ($j = $pl_num; $j > 0; $j--)
+							{
+								$v = "3.0.{$base_v}-PL{$j}";
+								$d = ($v == $config['version']) ? " default='default'" : '';
+								$version_options .= "<option value='{$v}'{$d}>{$v}</option>";
+							}
+							$i = $base_v;
+						}
+						$v = "3.0.{$i}";
+						$d = ($v == $config['version']) ? " default='default'" : '';
+						$version_options .= "<option value='{$v}'{$d}>{$v}</option>";
+					}
+
+					$template->assign_vars(array(
+						'PROCEED_TO_STK'				=> $user->lang('PROCEED_TO_STK', '', ''),
+						'REQUEST_PHPBB_VERSION_OPTIONS'	=> $version_options,
+						'U_ACTION'						=> append_sid(STK_INDEX, array('action' => 'request_phpbb_version')),
+					));
+
+					$template->set_filenames(array(
+						'body'	=> 'request_phpbb_version.html',
+					));
+					page_footer(false);
+				}
+			}
+
+			define('PHPBB_VERSION_NUMBER', $_version_number);
 		break;
 
 		// Generate the passwd file
@@ -434,6 +503,8 @@ if (!defined('IN_PHPBB') || !defined('STK_VERSION'))
 function perform_authed_quick_tasks($action)
 {
 	global $user;
+
+	$logout = false;
 
 	switch ($action)
 	{
@@ -521,62 +592,291 @@ function stk_version_check()
 }
 
 /**
-* Wrapper function for the default phpBB msg_handler method.
-* This function will overwrite the $phpbb_root_path variable
-* if $errno == E_USER_ERROR. This way the "return to index"
-* link on the error page will point towards the STK index
-* instead of the phpBB index
-*/
+ * Support Toolkit Error handler
+ *
+ * A wrapper for the phpBB `msg_handler` function, which is mainly used
+ * to update variables before calling the actual msg_handler and is able
+ * to handle various special cases.
+ *
+ * @global type $stk_no_error
+ * @global string $phpbb_root_path
+ * @param type $errno
+ * @param string $msg_text
+ * @param type $errfile
+ * @param type $errline
+ * @return boolean
+ */
 function stk_msg_handler($errno, $msg_text, $errfile, $errline)
 {
-	// Sometimes phpBB call this after finishing a certain task, this breaks the ERK!
-	// A little bit of fallback here, call the critical repair kit error handler
+	// First and foremost handle the case where phpBB calls trigger error
+	// but the STK really needs to continue.
+	global $critical_repair, $stk_no_error;
+	if ($stk_no_error === true)
+	{
+		return true;
+	}
+
+	// Do not display notices if we suppress them via @
+	if (error_reporting() == 0 && $errno != E_USER_ERROR && $errno != E_USER_WARNING && $errno != E_USER_NOTICE)
+	{
+		return;
+	}
+
+	if (!defined('E_DEPRECATED'))
+	{
+		define('E_DEPRECATED', 8192);
+	}
+
+	// Ignore Strict and Deprecated notices
+	if (in_array($errno, array(E_STRICT, E_DEPRECATED)))
+	{
+		return true;
+	}
+
+	// We encounter an error while in the ERK, this need some special treatment
 	if (defined('IN_ERK'))
 	{
-		global $critical_repair;
-		$critical_repair->trigger_error($msg_text, false, array($errno, $errfile, $errline));
+		$critical_repair->trigger_error($msg_text, ($errno == E_USER_ERROR ? false : true));
 	}
-
-	// If the STK triggers a fatal error before IN_STK is defined we'll show a page
-	// informing the user that the ERK *might* resolve this issue.
-	if (!defined('IN_STK') && in_array($errno, array(E_USER_ERROR, E_USER_WARNING, E_USER_NOTICE)))
+	else if (!defined('IN_STK'))
 	{
-		// Trigger error through the critical repair class
-		if (!class_exists('critical_repair'))
-		{
-			include STK_ROOT_PATH . 'includes/critical_repair.' . PHP_EXT;
-		}
-		$cr = new critical_repair();
-
+		// We're encountering an error before the STK is fully loaded
+		// Set out own message if needed
 		if ($errno == E_USER_ERROR)
 		{
-			$lines = array(
-				'The Support Toolkit encountered a fatal error.',
-				'The Support Toolkit includes an Emergency Repair Kit (ERK), a tool designed to resolve certain errors that prevent phpBB from functioning. It is advised that you run the ERK now so it can attempt to repair the error it has detected.<br />
-To run the ERK, click <a href="' . STK_ROOT_PATH . 'erk.php">here</a>.',
-			);
-			$redirect_stk = false;
+			$msg_text = 'The Support Toolkit encountered a fatal error.<br /><br />
+						 The Support Toolkit includes an Emergency Repair Kit (ERK), a tool designed to resolve certain errors that prevent phpBB from functioning.
+						 It is advised that you run the ERK now so it can attempt to repair the error it has detected.<br />
+						 To run the ERK, click <a href="' . STK_ROOT_PATH . 'erk.php">here</a>.';
 		}
-		else
+
+		if (!isset($critical_repair))
 		{
-			$lines = array($msg_text);
-			$redirect_stk = true;
+			$critical_repair = new critical_repair();
 		}
 
-		// Trigger
-		$cr->trigger_error($lines, $redirect_stk);
+		$critical_repair->trigger_error($msg_text, ($errno == E_USER_ERROR ? false : true));
 	}
 
-	// This is nasty :(
-	if ($errno == E_USER_ERROR)
+	//-- Normal phpBB msg_handler
+
+	global $cache, $db, $auth, $template, $config, $user;
+	global $phpEx, $phpbb_root_path, $msg_title, $msg_long_text;
+
+	// Message handler is stripping text. In case we need it, we are possible to define long text...
+	if (isset($msg_long_text) && $msg_long_text && !$msg_text)
 	{
-		global $phpbb_root_path;
-
-		$phpbb_root_path = STK_ROOT_PATH;
+		$msg_text = $msg_long_text;
 	}
 
-	// Call the phpBB error message handler
-	msg_handler($errno, $msg_text, $errfile, $errline);
+	if (!defined('E_DEPRECATED'))
+	{
+		define('E_DEPRECATED', 8192);
+	}
+
+	switch ($errno)
+	{
+		case E_NOTICE:
+		case E_WARNING:
+
+			// Check the error reporting level and return if the error level does not match
+			// If DEBUG is defined the default level is E_ALL
+			if (($errno & ((defined('DEBUG')) ? E_ALL : error_reporting())) == 0)
+			{
+				return;
+			}
+
+			if (strpos($errfile, 'cache') === false && strpos($errfile, 'template.') === false)
+			{
+				$errfile = stk_filter_root_path($errfile);
+				$msg_text = stk_filter_root_path($msg_text);
+				$error_name = ($errno === E_WARNING) ? 'PHP Warning' : 'PHP Notice';
+				echo '<b>[phpBB Debug] ' . $error_name . '</b>: in file <b>' . $errfile . '</b> on line <b>' . $errline . '</b>: <b>' . $msg_text . '</b><br />' . "\n";
+
+				// we are writing an image - the user won't see the debug, so let's place it in the log
+				if (defined('IMAGE_OUTPUT') || defined('IN_CRON'))
+				{
+					add_log('critical', 'LOG_IMAGE_GENERATION_ERROR', $errfile, $errline, $msg_text);
+				}
+				// echo '<br /><br />BACKTRACE<br />' . get_backtrace() . '<br />' . "\n";
+			}
+
+			return;
+
+		break;
+
+		case E_USER_ERROR:
+
+			if (!empty($user) && !empty($user->lang))
+			{
+				$msg_text = (!empty($user->lang[$msg_text])) ? $user->lang[$msg_text] : $msg_text;
+				$msg_title = (!isset($msg_title)) ? $user->lang['GENERAL_ERROR'] : ((!empty($user->lang[$msg_title])) ? $user->lang[$msg_title] : $msg_title);
+
+				$l_return_index = sprintf($user->lang['RETURN_INDEX'], '<a href="' . $phpbb_root_path . '">', '</a>');
+				$l_notify = '';
+
+				if (!empty($config['board_contact']))
+				{
+					$l_notify = '<p>' . sprintf($user->lang['NOTIFY_ADMIN_EMAIL'], $config['board_contact']) . '</p>';
+				}
+			}
+			else
+			{
+				$msg_title = 'General Error';
+				$l_return_index = '<a href="' . $phpbb_root_path . '">Return to index page</a>';
+				$l_notify = '';
+
+				if (!empty($config['board_contact']))
+				{
+					$l_notify = '<p>Please notify the board administrator or webmaster: <a href="mailto:' . $config['board_contact'] . '">' . $config['board_contact'] . '</a></p>';
+				}
+			}
+
+			$log_text = $msg_text;
+			$backtrace = get_backtrace();
+			if ($backtrace)
+			{
+				$log_text .= '<br /><br />BACKTRACE<br />' . $backtrace;
+			}
+
+			if (defined('IN_INSTALL') || defined('DEBUG_EXTRA') || isset($auth) && $auth->acl_get('a_'))
+			{
+				$msg_text = $log_text;
+			}
+
+			if ((defined('DEBUG') || defined('IN_CRON') || defined('IMAGE_OUTPUT')) && isset($db))
+			{
+				// let's avoid loops
+				$db->sql_return_on_error(true);
+				add_log('critical', 'LOG_GENERAL_ERROR', $msg_title, $log_text);
+				$db->sql_return_on_error(false);
+			}
+
+			// Do not send 200 OK, but service unavailable on errors
+			stk_send_status_line(503, 'Service Unavailable');
+
+			garbage_collection();
+
+			// Try to not call the adm page data...
+
+			echo '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">';
+			echo '<html xmlns="http://www.w3.org/1999/xhtml" dir="ltr">';
+			echo '<head>';
+			echo '<meta http-equiv="content-type" content="text/html; charset=utf-8" />';
+			echo '<title>' . $msg_title . '</title>';
+			echo '<style type="text/css">' . "\n" . '/* <![CDATA[ */' . "\n";
+			echo '* { margin: 0; padding: 0; } html { font-size: 100%; height: 100%; margin-bottom: 1px; background-color: #E4EDF0; } body { font-family: "Lucida Grande", Verdana, Helvetica, Arial, sans-serif; color: #536482; background: #E4EDF0; font-size: 62.5%; margin: 0; } ';
+			echo 'a:link, a:active, a:visited { color: #006699; text-decoration: none; } a:hover { color: #DD6900; text-decoration: underline; } ';
+			echo '#wrap { padding: 0 20px 15px 20px; min-width: 615px; } #page-header { text-align: right; height: 40px; } #page-footer { clear: both; font-size: 1em; text-align: center; } ';
+			echo '.panel { margin: 4px 0; background-color: #FFFFFF; border: solid 1px  #A9B8C2; } ';
+			echo '#errorpage #page-header a { font-weight: bold; line-height: 6em; } #errorpage #content { padding: 10px; } #errorpage #content h1 { line-height: 1.2em; margin-bottom: 0; color: #DF075C; } ';
+			echo '#errorpage #content div { margin-top: 20px; margin-bottom: 5px; border-bottom: 1px solid #CCCCCC; padding-bottom: 5px; color: #333333; font: bold 1.2em "Lucida Grande", Arial, Helvetica, sans-serif; text-decoration: none; line-height: 120%; text-align: left; } ';
+			echo "\n" . '/* ]]> */' . "\n";
+			echo '</style>';
+			echo '</head>';
+			echo '<body id="errorpage">';
+			echo '<div id="wrap">';
+			echo '	<div id="page-header">';
+			echo '		' . $l_return_index;
+			echo '	</div>';
+			echo '	<div id="acp">';
+			echo '	<div class="panel">';
+			echo '		<div id="content">';
+			echo '			<h1>' . $msg_title . '</h1>';
+
+			echo '			<div>' . $msg_text . '</div>';
+
+			echo $l_notify;
+
+			echo '		</div>';
+			echo '	</div>';
+			echo '	</div>';
+			echo '	<div id="page-footer">';
+			echo '		Powered by <a href="http://www.phpbb.com/">phpBB</a>&reg; Forum Software &copy; phpBB Group';
+			echo '	</div>';
+			echo '</div>';
+			echo '</body>';
+			echo '</html>';
+
+			exit_handler();
+
+			// On a fatal error (and E_USER_ERROR *is* fatal) we never want other scripts to continue and force an exit here.
+			exit;
+		break;
+
+		case E_USER_WARNING:
+		case E_USER_NOTICE:
+
+			define('IN_ERROR_HANDLER', true);
+
+			if (empty($user->data))
+			{
+				$user->session_begin();
+			}
+
+			// We re-init the auth array to get correct results on login/logout
+			$auth->acl($user->data);
+
+			if (empty($user->lang))
+			{
+				$user->setup();
+			}
+
+			if ($msg_text == 'ERROR_NO_ATTACHMENT' || $msg_text == 'NO_FORUM' || $msg_text == 'NO_TOPIC' || $msg_text == 'NO_USER')
+			{
+				stk_send_status_line(404, 'Not Found');
+			}
+
+			$msg_text = (!empty($user->lang[$msg_text])) ? $user->lang[$msg_text] : $msg_text;
+			$msg_title = (!isset($msg_title)) ? $user->lang['INFORMATION'] : ((!empty($user->lang[$msg_title])) ? $user->lang[$msg_title] : $msg_title);
+
+			if (!defined('HEADER_INC'))
+			{
+				if (defined('IN_ADMIN') && isset($user->data['session_admin']) && $user->data['session_admin'])
+				{
+					adm_page_header($msg_title);
+				}
+				else
+				{
+					page_header($msg_title, false);
+				}
+			}
+
+			$template->set_filenames(array(
+				'body' => 'message_body.html')
+			);
+
+			$template->assign_vars(array(
+				'MESSAGE_TITLE'		=> $msg_title,
+				'MESSAGE_TEXT'		=> $msg_text,
+				'S_USER_WARNING'	=> ($errno == E_USER_WARNING) ? true : false,
+				'S_USER_NOTICE'		=> ($errno == E_USER_NOTICE) ? true : false)
+			);
+
+			// We do not want the cron script to be called on error messages
+			define('IN_CRON', true);
+
+			if (defined('IN_ADMIN') && isset($user->data['session_admin']) && $user->data['session_admin'])
+			{
+				adm_page_footer();
+			}
+			else
+			{
+				page_footer();
+			}
+
+			exit_handler();
+		break;
+
+		// PHP4 compatibility
+		case E_DEPRECATED:
+			return true;
+		break;
+	}
+
+	// If we notice an error not handled here we pass this back to PHP by returning false
+	// This may not work for all php versions
+	return false;
 }
 
 //-- Wrappers for functions that only exist in newer php version
@@ -609,6 +909,29 @@ if (!function_exists('adm_back_link'))
 	{
 		return '<br /><br /><a href="' . $u_action . '">&laquo; ' . user_lang('BACK_TO_PREV') . '</a>';
 	}
+}
+
+/**
+* Removes absolute path to phpBB root directory from error messages
+* and converts backslashes to forward slashes.
+*
+* @param string $errfile	Absolute file path
+*							(e.g. /var/www/phpbb3/phpBB/includes/functions.php)
+*							Please note that if $errfile is outside of the phpBB root,
+*							the root path will not be found and can not be filtered.
+* @return string			Relative file path
+*							(e.g. /includes/functions.php)
+*/
+function stk_filter_root_path($errfile)
+{
+	static $root_path;
+
+	if (empty($root_path))
+	{
+		$root_path = phpbb_realpath(dirname(__FILE__) . '/../');
+	}
+
+	return str_replace(array($root_path, '\\'), array('[ROOT]', '/'), $errfile);
 }
 
 // php.net, laurynas dot butkus at gmail dot com, http://us.php.net/manual/en/function.html-entity-decode.php#75153
@@ -696,4 +1019,45 @@ function stk_array_walk_keys(&$array, $callback)
 		unset($array[$key]);
 	}
 	$array = $tmp_array;
+}
+
+/**
+* Outputs correct status line header.
+*
+* Depending on php sapi one of the two following forms is used:
+*
+* Status: 404 Not Found
+*
+* HTTP/1.x 404 Not Found
+*
+* HTTP version is taken from HTTP_VERSION environment variable,
+* and defaults to 1.0.
+*
+* Sample usage:
+*
+* send_status_line(404, 'Not Found');
+*
+* @param int $code HTTP status code
+* @param string $message Message for the status code
+* @return void
+*/
+function stk_send_status_line($code, $message)
+{
+	if (substr(strtolower(@php_sapi_name()), 0, 3) === 'cgi')
+	{
+		// in theory, we shouldn't need that due to php doing it. Reality offers a differing opinion, though
+		header("Status: $code $message", true, $code);
+	}
+	else
+	{
+		if (!empty($_SERVER['SERVER_PROTOCOL']))
+		{
+			$version = $_SERVER['SERVER_PROTOCOL'];
+		}
+		else
+		{
+			$version = 'HTTP/1.0';
+		}
+		header("$version $code $message", true, $code);
+	}
 }

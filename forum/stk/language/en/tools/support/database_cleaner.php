@@ -55,8 +55,8 @@ $lang = array_merge($lang, array(
 	'DATABASE_COLUMNS_SUCCESS'		=> 'The database columns have been updated successfully!',
 	'DATABASE_TABLES'				=> 'Database Tables',
 	'DATABASE_TABLES_SUCCESS'		=> 'The database tables have been updated successfully!',
-	'DATABASE_ROLE_DATA_SUCCESS'	=> 'The phpBB system roles where restored successfully!',
-	'DATABASE_ROLES_SUCCESS'		=> 'The roles where updated successfully!',
+	'DATABASE_ROLE_DATA_SUCCESS'	=> 'The phpBB system roles were restored successfully!',
+	'DATABASE_ROLES_SUCCESS'		=> 'The roles were updated successfully!',
 	'DATAFILE_NOT_FOUND'			=> 'The Support Toolkit couldn’t find the required data-file for your phpBB version!',
 
 	'EMPTY_PREFIX'					=> 'No database prefix',
@@ -96,6 +96,7 @@ $lang = array_merge($lang, array(
 	'RESET_REPORT_REASONS_SUCCESS'	=> 'The report reasons have successfully been reset!',
 	'RESET_ROLE_DATA'				=> 'Reset role data',
 	'RESET_ROLE_DATA_EXPLAIN'		=> 'This step will reset the phpBB system roles back to their original state, its highly advised to run this if you made changes in the previous step.',
+	'ROLE_SETTINGS'					=> 'Role Settings',
 	'ROWS'							=> 'Rows',
 
 	'SECTION_NOT_CHANGED_TITLE'		=> array(
@@ -115,9 +116,9 @@ $lang = array_merge($lang, array(
 		'config'			=> 'The configuration table doesn’t have any new/missing values',
 		'extension_groups'	=> 'The extension groups table doesn’t have any new/missing values',
 		'extensions'		=> 'The default extensions haven\'t changed',
-		'permissions'		=> 'There where no changes in the permission tables',
-		'groups'			=> 'There where no changes in the phpBB system groups',
-		'roles'				=> 'There where no roles added or removed',
+		'permissions'		=> 'There were no changes in the permission tables',
+		'groups'			=> 'There were no changes in the phpBB system groups',
+		'roles'				=> 'There were no roles added or removed',
 		'final_step'		=> 'This last step will clear the cache and re-enable the board.',
 	),
 	'SUCCESS'						=> 'Success',
